@@ -1,0 +1,8 @@
+/* responsive.css — a couple of container-level tweaks Tailwind's arbitrary
+   values get verbose for. Breakpoints themselves mirror config/layout.js. */
+@media (max-width: 480px) {
+  .font-display { letter-spacing: -0.005em; }
+}
+@media (min-width: 1536px) {
+  main { max-width: 1600px; margin-inline: auto; }
+}

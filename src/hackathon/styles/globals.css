@@ -1,0 +1,25 @@
+@import './variables.css';
+@import './typography.css';
+@import './animations.css';
+@import './responsive.css';
+@import './navbar.css';
+@import './hero.css';
+@import './buttons.css';
+@import './cards.css';
+@import './timeline.css';
+@import './forms.css';
+@import './footer.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Visible keyboard focus everywhere — accessibility floor, not optional. */
+:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+html {
+  scroll-behavior: smooth;
+}

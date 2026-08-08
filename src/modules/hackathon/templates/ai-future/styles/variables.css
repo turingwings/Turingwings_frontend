@@ -1,0 +1,21 @@
+/* variables.css — raw CSS custom properties mirroring config/theme.js,
+   for any plain-CSS/non-Tailwind consumer that gets embedded here. */
+:root {
+  --color-base: #0B0E14;
+  --color-base-raised: #11151F;
+  --color-card: #161B27;
+  --color-line: #232939;
+  --color-text: #F4F5F7;
+  --color-text-muted: #9AA3B2;
+  --color-text-faint: #5C6478;
+  --color-primary: #7C5CFF;
+  --color-secondary: #33E6CC;
+  --color-accent: #FFB238;
+  --color-danger: #FF5D7A;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+}

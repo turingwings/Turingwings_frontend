@@ -1,0 +1,12 @@
+/* typography.css — base type rhythm, layered on top of Tailwind's preflight. */
+body {
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+code, .font-mono {
+  font-family: var(--font-mono);
+}
