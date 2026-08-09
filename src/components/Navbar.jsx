@@ -14,10 +14,33 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // lock body scroll while drawer is open
+  // lock body scroll while drawer is open, WITHOUT causing layout jump/squeeze
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    if (menuOpen) {
+      const scrollY = window.scrollY
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.left = '0'
+      document.body.style.right = '0'
+      document.body.style.width = '100%'
+    } else {
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+      }
+    }
+    return () => {
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
+    }
   }, [menuOpen])
 
   // close drawer on route change
@@ -72,11 +95,11 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* MOBILE HAMBURGER BUTTON */}
+          {/* MOBILE HAMBURGER BUTTON — also acts as the close button when drawer is open */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden flex items-center justify-center p-2 rounded-full border border-black/20 text-black bg-white shrink-0 shadow-xs relative z-[70]"
-            aria-label="Toggle Navigation Menu"
+            aria-label={menuOpen ? 'Close Navigation Menu' : 'Toggle Navigation Menu'}
           >
             {menuOpen ? <X className="w-5 h-5 text-[#22C55E]" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -99,18 +122,11 @@ export default function Navbar() {
         ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex flex-col h-full">
-          {/* Drawer header */}
-          <div className="flex items-center justify-between px-6 h-14 border-b border-black/10 shrink-0">
+          {/* Drawer header — close button removed, hamburger button (now shown as X) handles closing */}
+          <div className="flex items-center px-6 h-14 border-b border-black/10 shrink-0">
             <span className="text-[10px] font-bold uppercase tracking-widest text-black/40">
               Menu
             </span>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-center p-1.5 rounded-full border border-black/20 text-black bg-white"
-              aria-label="Close Navigation Menu"
-            >
-              <X className="w-4 h-4" />
-            </button>
           </div>
 
           {/* Drawer nav items */}
