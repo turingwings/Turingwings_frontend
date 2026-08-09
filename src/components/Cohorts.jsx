@@ -1,8 +1,10 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './cohorts.css'
+import { cohortService } from '../services/cohort'
+import { COHORTS_METADATA } from '../data/cohortMetadata'
 
 // Cohort artwork — adjust the path below if your assets folder lives
 // somewhere other than "../assets" relative to this file.
@@ -30,34 +32,7 @@ if (typeof window !== 'undefined') {
 /* ═══════════════════════════════════════════════════════════════════════════
    COHORT DATA
    ═══════════════════════════════════════════════════════════════════════════ */
-const cohorts = [
-  {
-    id: 'ai-engineering',
-    number: '01',
-    title: 'AI Engineering Cohort',
-    description: 'From understanding the web to building, deploying, securing and launching modern AI-powered products.',
-    technologies: ['Antigravity', 'Cursor', 'Claude', 'React', 'Node.js', 'Supabase', 'Docker'],
-    duration: '4 weeks',
-    path: '/cohorts/ai-engineering',
-    image: aiEngineeringCohort,
-  },
-  {
-    id: 'ai-cybersecurity',
-    number: '02',
-    title: 'AI & Cybersecurity Cohort',
-    description: 'Networking Fundamentals, Web Security, AI-Assisted Scripting, and Autonomous AI Security Agents.',
-    technologies: ['Kali Linux', 'Burp Suite', 'Nmap', 'Python', 'Ollama', 'OpenClaw', 'MCP'],
-    duration: '4 weeks',
-    path: '/cohorts/ai-cybersecurity',
-    image: aiCybersecurityCohort,
-  },
-]
 
-const featuredCohorts = cohorts
-// When there's more than one cohort, append a closing "explore all cohorts"
-// card so people can jump to the full cohorts listing page.
-const showcaseItems =
-  featuredCohorts.length > 1 ? [...featuredCohorts, { id: 'explore' }] : featuredCohorts
 const socialLinks = [
   { label: 'LinkedIn', href: '#' },
   { label: 'Instagram', href: '#' },
@@ -220,12 +195,53 @@ export default function Cohorts() {
   const stRef = useRef(null)
   const prevActiveRef = useRef(-1)
 
+  const [cohorts, setCohorts] = useState([])
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
+    async function loadCohorts() {
+      try {
+        setLoading(true)
+        const result = await cohortService.getActiveCohorts()
+        if (result.success && Array.isArray(result.data)) {
+          const mapped = result.data.map((backendCohort, idx) => {
+            const slug = backendCohort.slug
+            const meta = COHORTS_METADATA[slug] || {
+              tools: [],
+              durationLabel: '4 weeks',
+            }
+            return {
+              id: slug,
+              number: String(idx + 1).padStart(2, '0'),
+              title: backendCohort.title,
+              description: backendCohort.description || meta.tagline || 'Master state-of-the-art skills.',
+              technologies: meta.tools || [],
+              duration: meta.durationLabel || '4 weeks',
+              path: `/cohorts/${slug}`,
+              image: slug === 'webdevxai' ? aiEngineeringCohort : slug === 'cyberxai' ? aiCybersecurityCohort : null,
+            }
+          })
+          setCohorts(mapped)
+        }
+      } catch (err) {
+        console.error('Error fetching cohorts for landing page:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadCohorts()
+  }, [])
+
+  const featuredCohorts = cohorts
+  const showcaseItems =
+    featuredCohorts.length > 1 ? [...featuredCohorts, { id: 'explore' }] : featuredCohorts
+
+  useEffect(() => {
+    if (loading || cohorts.length === 0) return
+
     const section = sectionRef.current
     const track = trackRef.current
     if (!section || !track) return
-
-    // All scroll-derived geometry lives here so it can be recomputed
     // on every ScrollTrigger refresh (resize, font-load, etc.) instead
     // of being frozen at mount time.
     const metrics = {}
@@ -368,7 +384,6 @@ export default function Cohorts() {
 
       stRef.current = st
     }, 150)
-
     return () => {
       clearTimeout(setupTimer)
       if (stRef.current) {
@@ -376,8 +391,7 @@ export default function Cohorts() {
         stRef.current = null
       }
     }
-  }, [])
-
+  }, [loading, cohorts.length])
   useEffect(() => {
     let resizeTimer
     const handleResize = () => {
@@ -393,6 +407,20 @@ export default function Cohorts() {
       clearTimeout(resizeTimer)
     }
   }, [])
+
+  if (loading) {
+    return (
+      <section id="cohorts" className="cohort-showcase-section min-h-[50vh] flex items-center justify-center">
+        <div className="text-center font-mono text-xs uppercase tracking-widest font-bold text-black/50">
+          Loading Cohorts...
+        </div>
+      </section>
+    )
+  }
+
+  if (cohorts.length === 0) {
+    return null
+  }
 
   return (
     <section ref={sectionRef} id="cohorts" className="cohort-showcase-section">
