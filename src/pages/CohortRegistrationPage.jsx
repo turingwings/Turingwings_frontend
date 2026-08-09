@@ -108,7 +108,7 @@ export default function CohortRegistrationPage() {
 
       // Backend API registration attempt (with fallback local persistence)
       try {
-        await fetch('https://turingwings-backend.onrender.com/api/cohorts/register', {
+        await fetch('https://adminwing.onrender.com/api/cohorts/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

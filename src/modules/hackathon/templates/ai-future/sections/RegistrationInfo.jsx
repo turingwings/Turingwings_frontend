@@ -30,7 +30,7 @@ export default function RegistrationInfo({ onSubmit }) {
       setStatus('Submitting registration to Turing Wings server...');
       
       const eventId = meta.slug || meta.name;
-      const res = await fetch(`https://turingwings-backend.onrender.com/api/events/${eventId}/register`, {
+      const res = await fetch(`https://adminwing.onrender.com/api/events/${eventId}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

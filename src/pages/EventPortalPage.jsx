@@ -16,7 +16,8 @@ export default function EventPortalPage() {
   const fetchEventDetails = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`https://turingwings-backend.onrender.com/api/events/${slug}`);
+      const API_URL = "https://adminwing.onrender.com/api/events";
+      const res = await fetch(`${API_URL}/${slug}`);
       if (res.ok) {
         const data = await res.json();
         

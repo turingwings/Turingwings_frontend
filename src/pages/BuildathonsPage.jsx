@@ -7,7 +7,7 @@ export default function BuildathonsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = "https://turingwings-backend.onrender.com/api/events";
+  const API_URL = "https://adminwing.onrender.com/api/events";
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
