@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -13,52 +13,35 @@ import {
   Bug,
 } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { cohortService } from '../services/cohort';
 
-/* ─────────────────────────────────────────────────────────────────────────
-   DATA — trimmed to what actually helps someone decide, nothing more
-   ───────────────────────────────────────────────────────────────────────── */
-const cohorts = [
-  {
-    id: 'ai-engineering',
-    flagship: 'FLAGSHIP 01',
+import { COHORTS_METADATA } from '../data/cohortMetadata';
+const mergeCohortData = (backendCohort) => {
+  const slug = backendCohort.slug;
+  const meta = COHORTS_METADATA[slug] || {
+    flagship: 'NEW COHORT',
     accent: '#22C55E',
     accentSoft: 'rgba(34,197,94,0.1)',
     icon: Cpu,
-    title: 'AI Engineering Cohort',
-    tagline: 'Build, deploy & launch AI products',
-    description:
-      'Ship a full-stack, AI-powered SaaS product in four weeks with Cursor, Claude & Supabase.',
+    tagline: 'Master state-of-the-art skills',
     stats: [
       { icon: Clock, label: '4 Weeks' },
-      { icon: Layers, label: '4 Modules' },
-      { icon: Terminal, label: '7 Tools' },
     ],
-    tools: ['Antigravity', 'Cursor', 'Claude', 'React', 'Node.js', 'Supabase', 'Docker'],
-    curriculumPath: '/cohorts/ai-engineering',
-    registerPath: '/cohorts/register?cohort=ai-engineering',
-    ctaLabel: 'View Curriculum',
-  },
-  {
-    id: 'ai-cybersecurity',
-    flagship: 'FLAGSHIP 02',
-    accent: '#0284C7',
-    accentSoft: 'rgba(2,132,199,0.1)',
-    icon: ShieldCheck,
-    title: 'AI & Cybersecurity Cohort',
-    tagline: 'Networking, pentesting & AI agents',
-    description:
-      'Master Kali Linux, web pentesting and build autonomous AI security agents with MCP.',
-    stats: [
-      { icon: Clock, label: '4 Weeks' },
-      { icon: Layers, label: '4 Modules' },
-      { icon: Bug, label: 'Live Pentests' },
-    ],
-    tools: ['Kali Linux', 'Burp Suite', 'Nmap', 'Wireshark', 'Python', 'Ollama', 'OpenClaw', 'MCP'],
-    curriculumPath: '/cohorts/ai-cybersecurity',
-    registerPath: '/cohorts/register?cohort=ai-cybersecurity',
-    ctaLabel: 'View Syllabus',
-  },
-];
+    tools: [],
+    ctaLabel: 'Learn More',
+  };
+
+  return {
+    ...meta,
+    uuid: backendCohort.id,
+    id: slug,
+    title: backendCohort.title,
+    description: backendCohort.description,
+    price: backendCohort.price,
+    curriculumPath: `/cohorts/${slug}`,
+    registerPath: `/cohorts/register?cohort=${slug}`,
+  };
+};
 
 /* ─────────────────────────────────────────────────────────────────────────
    MOTION VARIANTS
@@ -218,7 +201,7 @@ function CohortCard({ cohort, index }) {
               whileTap={{ scale: 0.96 }}
               className="w-full py-3 px-5 rounded-2xl bg-[#FAF8F5] text-[#090909] font-bold text-[11px] sm:text-xs text-center border border-black/15"
             >
-              Register ₹4,999
+              Register ₹{Number(cohort.price).toLocaleString('en-IN')}
             </motion.div>
           </Link>
         </div>
@@ -255,6 +238,31 @@ function AmbientBackground() {
    PAGE
    ───────────────────────────────────────────────────────────────────────── */
 export default function CohortsListPage() {
+  const [cohorts, setCohorts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadCohorts() {
+      try {
+        setLoading(true);
+        const result = await cohortService.getActiveCohorts();
+        if (result.success && Array.isArray(result.data)) {
+          const merged = result.data.map(mergeCohortData);
+          setCohorts(merged);
+        } else {
+          throw new Error(result.message || 'Failed to load cohorts');
+        }
+      } catch (err) {
+        console.error('Error fetching cohorts:', err);
+        setError(err.message || 'System error. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadCohorts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-mono flex flex-col relative">
       <Navbar />
@@ -286,18 +294,31 @@ export default function CohortsListPage() {
           </p>
         </motion.div>
 
-        {/* CARDS */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 lg:gap-8"
-        >
-          {cohorts.map((cohort, index) => (
-            <CohortCard key={cohort.id} cohort={cohort} index={index} />
-          ))}
-        </motion.div>
+        {loading ? (
+          <div className="py-24 text-center text-[#090909] text-xs uppercase tracking-widest font-bold font-mono">
+            Fetching active cohorts...
+          </div>
+        ) : error ? (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-3xl p-12 text-center space-y-4 shadow-sm max-w-xl mx-auto font-mono">
+            <h3 className="text-xl font-bold text-red-700">Unable to load cohorts</h3>
+            <p className="text-xs text-red-600 font-medium leading-relaxed">
+              {error}
+            </p>
+          </div>
+        ) : (
+          /* CARDS */
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 lg:gap-8"
+          >
+            {cohorts.map((cohort, index) => (
+              <CohortCard key={cohort.id} cohort={cohort} index={index} />
+            ))}
+          </motion.div>
+        )}
       </main>
 
       <Footer />

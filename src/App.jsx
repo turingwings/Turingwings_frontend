@@ -14,8 +14,7 @@ import EventPortalPage from "./pages/EventPortalPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import CohortsListPage from "./pages/CohortsListPage";
-import AiEngineeringCohortPage from "./pages/AiEngineeringCohortPage";
-import AiCybersecurityCohortPage from "./pages/AiCybersecurityCohortPage";
+import CohortPage from "./pages/CohortPage";
 import CohortRegistrationPage from "./pages/CohortRegistrationPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -81,8 +80,7 @@ export default function App() {
 
         {/* Flagship Cohorts Routes */}
         <Route path="/cohorts" element={<CohortsListPage />} />
-        <Route path="/cohorts/ai-engineering" element={<AiEngineeringCohortPage />} />
-        <Route path="/cohorts/ai-cybersecurity" element={<AiCybersecurityCohortPage />} />
+        <Route path="/cohorts/:slug" element={<CohortPage />} />
         <Route path="/cohorts/register" element={<CohortRegistrationPage />} />
 
         {/* Standalone Event Template Route */}

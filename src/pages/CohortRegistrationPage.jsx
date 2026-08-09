@@ -7,135 +7,327 @@ import {
   ArrowRight, ArrowLeft, AlertCircle, Building, User, Mail, Phone, Check, X, HelpCircle, Edit3
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import useRazorpay from '../hooks/useRazorpay';
+import { cohortService } from '../services/cohort';
+import { paymentService } from '../services/payment';
 
 export default function CohortRegistrationPage() {
   const [searchParams] = useSearchParams();
-  const initialCohort = searchParams.get('cohort') === 'ai-cybersecurity' ? 'ai-cybersecurity' : 'ai-engineering';
+  const slugParam = searchParams.get('cohort');
 
-  const [selectedCohort, setSelectedCohort] = useState(initialCohort);
+  const [cohort, setCohort] = useState(null);
+  const [cohortLoadingState, setCohortLoadingState] = useState('loading'); // 'loading' | 'ready' | 'not_found' | 'inactive' | 'error'
   const [currentPhase, setCurrentPhase] = useState(1); // Phase 1 = Fill Details, Phase 2 = Summary & Payment
 
   const [formData, setFormData] = useState({
     fullName: '',
+    mobileNumber: '',
     email: '',
-    phone: '',
-    collegeOrOrg: '',
-    gender: 'Male',
-    graduationYear: '2026',
-    studyStatus: '3rd Year Undergraduate',
-    experienceLevel: 'Zero Prior Knowledge (Beginner)',
+    collegeName: '',
+    stream: '',
+    branch: '',
+    currentYear: '1st Year',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showRazorpayModal, setShowRazorpayModal] = useState(false);
-  const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [transactionRef, setTransactionRef] = useState('');
+  const [successData, setSuccessData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    const cohortParam = searchParams.get('cohort');
-    if (cohortParam && (cohortParam === 'ai-engineering' || cohortParam === 'ai-cybersecurity')) {
-      setSelectedCohort(cohortParam);
-    }
-  }, [searchParams]);
+  const isRazorpayLoaded = useRazorpay();
 
-  const cohortDetails = {
-    'ai-engineering': {
-      id: 'ai-engineering',
-      name: 'AI Engineering Cohort',
+  useEffect(() => {
+    async function fetchCohort() {
+      if (!slugParam) {
+        setCohortLoadingState('not_found');
+        return;
+      }
+      try {
+        setCohortLoadingState('loading');
+        const result = await cohortService.getCohortBySlug(slugParam);
+        if (result.success && result.data) {
+          const fetchedCohort = result.data;
+          setCohort(fetchedCohort);
+          if (fetchedCohort.status && fetchedCohort.status.toUpperCase() === 'ACTIVE') {
+            setCohortLoadingState('ready');
+          } else {
+            setCohortLoadingState('inactive');
+          }
+        } else {
+          setCohortLoadingState('not_found');
+        }
+      } catch (err) {
+        console.error('Error loading cohort:', err);
+        if (err.status === 404) {
+          setCohortLoadingState('not_found');
+        } else {
+          setCohortLoadingState('error');
+          setErrorMessage(err.message || 'System error. Please try again later.');
+        }
+      }
+    }
+    fetchCohort();
+  }, [slugParam]);
+
+  const cohortMetadata = {
+    'webdevxai': {
       badge: 'FLAGSHIP 01',
       tagline: 'From Web Fundamentals to Building & Launching AI Products',
       launchDate: 'August 25, 2026',
       duration: '4 Weeks (Live Intensive)',
-      price: 4999,
-      originalPrice: 9999,
-      color: '#15803D',
+      color: '#22C55E',
       icon: Cpu,
     },
-    'ai-cybersecurity': {
-      id: 'ai-cybersecurity',
-      name: 'AI & Cybersecurity Cohort',
+    'cyberxai': {
       badge: 'FLAGSHIP 02',
       tagline: 'Networking, Kali Linux, Pentesting & AI Security Agents (MCP)',
       launchDate: 'September 01, 2026',
       duration: '4 Weeks (Hands-On Lab)',
-      price: 4999,
-      originalPrice: 9999,
       color: '#0284C7',
       icon: ShieldCheck,
     },
   };
 
-  const activeCohortObj = cohortDetails[selectedCohort];
-  const CohortIcon = activeCohortObj.icon;
+  const activeCohortMeta = cohortMetadata[slugParam] || {
+    badge: 'NEW COHORT',
+    tagline: cohort?.description || 'Build state-of-the-art applications',
+    launchDate: cohort ? new Date(cohort.created_at).toLocaleDateString() : 'Coming Soon',
+    duration: '4 Weeks',
+    color: '#22C55E',
+    icon: Cpu,
+  };
+
+  const CohortIcon = activeCohortMeta.icon;
+  const isCohortInactive = cohortLoadingState === 'inactive';
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errorMessage) setErrorMessage('');
   };
 
+  const validateForm = () => {
+    const trimmedName = formData.fullName.trim();
+    if (trimmedName.length < 3 || trimmedName.length > 100) {
+      return 'Full Name must be between 3 and 100 characters.';
+    }
+    if (!/^[a-zA-Z\s]+$/.test(trimmedName)) {
+      return 'Full Name must contain only letters and spaces.';
+    }
+
+    const trimmedEmail = formData.email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      return 'Please enter a valid email address.';
+    }
+
+    const trimmedMobile = formData.mobileNumber.trim();
+    if (!/^[6-9]\d{9}$/.test(trimmedMobile)) {
+      return 'Please enter a valid 10-digit Indian mobile number.';
+    }
+
+    const trimmedCollege = formData.collegeName.trim();
+    if (trimmedCollege.length < 3 || trimmedCollege.length > 150) {
+      return 'College Name must be between 3 and 150 characters.';
+    }
+
+    const trimmedStream = formData.stream.trim();
+    if (!trimmedStream) {
+      return 'Stream is required.';
+    }
+    if (trimmedStream.length > 50) {
+      return 'Stream must be less than 50 characters.';
+    }
+
+    const trimmedBranch = formData.branch.trim();
+    if (trimmedBranch && trimmedBranch.length > 50) {
+      return 'Branch must be less than 50 characters.';
+    }
+
+    const validYears = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year", "Alumni"];
+    if (!validYears.includes(formData.currentYear)) {
+      return 'Please select a valid year / status.';
+    }
+
+    return null;
+  };
+
   const handleGoToSummary = (e) => {
     e.preventDefault();
-    if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      setErrorMessage('Please fill in your Name, Email, and Phone Number before continuing.');
+    const errorMsg = validateForm();
+    if (errorMsg) {
+      setErrorMessage(errorMsg);
       return;
     }
     setCurrentPhase(2);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleRazorpayPaymentComplete = async () => {
+  const verifyPaymentOnBackend = async (razorpayResponse) => {
     try {
       setIsSubmitting(true);
-      const mockTxn = `PAY_TW_${Math.floor(100000 + Math.random() * 900000)}`;
-
+      setErrorMessage('');
+      
       const payload = {
-        cohortId: selectedCohort,
-        cohortName: activeCohortObj.name,
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        collegeOrOrg: formData.collegeOrOrg,
-        gender: formData.gender,
-        graduationYear: formData.graduationYear,
-        studyStatus: formData.studyStatus,
-        experienceLevel: formData.experienceLevel,
-        amountPaid: activeCohortObj.price,
-        transactionId: mockTxn,
-        registeredAt: new Date().toISOString(),
+        fullName: formData.fullName.trim(),
+        mobileNumber: formData.mobileNumber.trim(),
+        email: formData.email.trim().toLowerCase(),
+        collegeName: formData.collegeName.trim(),
+        stream: formData.stream.trim(),
+        branch: formData.branch.trim() || undefined,
+        currentYear: formData.currentYear,
+        cohortId: cohort.id,
+        razorpay_order_id: razorpayResponse.razorpay_order_id,
+        razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+        razorpay_signature: razorpayResponse.razorpay_signature,
       };
-
-      // Backend API registration attempt (with fallback local persistence)
-      try {
-        await fetch('https://adminwing.onrender.com/api/cohorts/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-      } catch (e) {
-        console.log('Backend sync offline, saved to local session:', e);
+      
+      const verificationResponse = await paymentService.verifyPayment(payload);
+      if (verificationResponse.success && verificationResponse.data) {
+        setSuccessData(verificationResponse.data);
+        setPaymentSuccess(true);
+      } else {
+        throw new Error(verificationResponse.message || 'Payment verification failed.');
       }
-
-      // Save registration locally
-      const existing = JSON.parse(localStorage.getItem('tw_cohort_registrations') || '[]');
-      localStorage.setItem('tw_cohort_registrations', JSON.stringify([...existing, payload]));
-
-      setTransactionRef(mockTxn);
-      setShowRazorpayModal(false);
-      setShowCancelConfirmModal(false);
-      setPaymentSuccess(true);
     } catch (err) {
-      setErrorMessage('Payment processing failed. Please try again.');
+      console.error('Error verifying payment:', err);
+      const paymentId = razorpayResponse.razorpay_payment_id;
+      setErrorMessage(
+        err.message || 
+        `Payment verification failed. If your account was debited, please contact manual support with Payment ID: ${paymentId}.`
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleConfirmCancelRegistration = () => {
-    setShowCancelConfirmModal(false);
-    setShowRazorpayModal(false);
+  const handleRazorpayPayment = async () => {
+    if (!isRazorpayLoaded) {
+      setErrorMessage('Razorpay SDK is still loading. Please wait or refresh the page.');
+      return;
+    }
+    
+    try {
+      setIsSubmitting(true);
+      setErrorMessage('');
+      
+      const orderResponse = await paymentService.createOrder(cohort.id);
+      if (!orderResponse.success || !orderResponse.data) {
+        throw new Error(orderResponse.message || 'Failed to create order on server.');
+      }
+      
+      const orderData = orderResponse.data;
+      
+      const options = {
+        key: orderData.razorpayKey,
+        order_id: orderData.orderId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Turing Wings',
+        description: `${cohort.title} Registration`,
+        prefill: {
+          name: formData.fullName.trim(),
+          email: formData.email.trim().toLowerCase(),
+          contact: formData.mobileNumber.trim()
+        },
+        handler: async function (response) {
+          await verifyPaymentOnBackend(response);
+        },
+        modal: {
+          ondismiss: function () {
+            setIsSubmitting(false);
+            setErrorMessage('Payment process cancelled by the user.');
+          }
+        },
+        theme: {
+          color: activeCohortMeta.color || '#22C55E'
+        }
+      };
+      
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (resp) {
+        setIsSubmitting(false);
+        setErrorMessage(resp.error.description || 'Payment failed. Please try again.');
+      });
+      rzp.open();
+    } catch (err) {
+      console.error('Error initiating Razorpay checkout:', err);
+      setErrorMessage(err.message || 'System error. Please try again later.');
+      setIsSubmitting(false);
+    }
   };
+
+  if (cohortLoadingState === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col relative">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center p-6">
+          <div className="text-center space-y-4 font-mono text-xs uppercase tracking-widest font-bold">
+            <span className="inline-block animate-pulse">Loading Cohort Registration...</span>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (cohortLoadingState === 'not_found') {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col relative">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center p-6">
+          <div className="bg-white border border-red-200 rounded-3xl p-8 text-center space-y-5 max-w-md shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-red-100 border border-red-200 text-red-600 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-7 h-7" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-extrabold text-[#090909]">Cohort Not Found</h3>
+              <p className="text-xs text-black/70 leading-relaxed font-mono">
+                The cohort you are trying to register for does not exist or has been removed.
+              </p>
+            </div>
+            <div className="pt-2 font-mono">
+              <Link
+                to="/cohorts"
+                className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold text-xs uppercase tracking-wider transition-all"
+              >
+                Back to Cohorts
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (cohortLoadingState === 'error') {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col relative">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center p-6">
+          <div className="bg-white border border-red-200 rounded-3xl p-8 text-center space-y-5 max-w-md shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-red-100 border border-red-200 text-red-600 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-7 h-7" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-extrabold text-[#090909]">System Error</h3>
+              <p className="text-xs text-black/70 leading-relaxed font-mono">
+                {errorMessage || 'System error. Please try again later.'}
+              </p>
+            </div>
+            <div className="pt-2 font-mono">
+              <button
+                onClick={() => window.location.reload()}
+                className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold text-xs uppercase tracking-wider transition-all"
+              >
+                Reload Page
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col">
@@ -173,32 +365,57 @@ export default function CohortRegistrationPage() {
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#090909]">Welcome to Turing Wings!</h2>
               <p className="text-sm text-black/70">
-                Your seat for <strong className="text-[#090909]">{activeCohortObj.name}</strong> is officially reserved.
+                Your seat for <strong className="text-[#090909]">{cohort?.title}</strong> is officially reserved.
               </p>
             </div>
 
             <div className="bg-[#FAFAFA] border border-black/10 rounded-2xl p-5 text-xs text-left space-y-2.5 font-mono">
               <div className="flex justify-between border-b border-black/10 pb-2">
-                <span className="text-black/60">Transaction Ref:</span>
-                <span className="font-bold text-[#15803D]">{transactionRef}</span>
+                <span className="text-black/60">Payment ID:</span>
+                <span className="font-bold text-[#15803D]">{successData?.paymentId || 'N/A'}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between border-b border-black/10 pb-2">
+                <span className="text-black/60">Registration ID:</span>
+                <span className="font-bold text-black/80">{successData?.registrationId || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between border-b border-black/10 pb-2">
+                <span className="text-black/60">Student ID:</span>
+                <span className="font-bold text-black/80">{successData?.studentId || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between border-b border-black/10 pb-2">
                 <span className="text-black/60">Student Name:</span>
                 <span className="font-bold text-[#090909]">{formData.fullName}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between border-b border-black/10 pb-2">
                 <span className="text-black/60">Email:</span>
                 <span className="font-bold text-[#090909]">{formData.email}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-black/60">Gender / Year:</span>
-                <span className="font-bold text-[#090909]">{formData.gender} · Grad {formData.graduationYear}</span>
+              <div className="flex justify-between border-b border-black/10 pb-2">
+                <span className="text-black/60">Mobile Number:</span>
+                <span className="font-bold text-[#090909]">{formData.mobileNumber}</span>
+              </div>
+              <div className="flex justify-between border-b border-black/10 pb-2">
+                <span className="text-black/60">College & Branch:</span>
+                <span className="font-bold text-[#090909]">{formData.collegeName} {formData.branch ? `(${formData.branch})` : ''}</span>
               </div>
               <div className="flex justify-between pt-2 border-t border-black/10">
                 <span className="text-black/60">Amount Paid:</span>
-                <span className="font-bold text-[#15803D]">₹{activeCohortObj.price} (Razorpay Verified)</span>
+                <span className="font-bold text-[#15803D]">₹{cohort?.price} (Razorpay Verified)</span>
               </div>
             </div>
+
+            {successData?.invoiceUrl && (
+              <div className="pt-2">
+                <a
+                  href={successData.invoiceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cursor-pointer inline-flex items-center gap-2 py-3.5 px-8 rounded-2xl border border-[#22C55E] text-[#15803D] bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-xs font-extrabold uppercase tracking-wider font-mono transition-all shadow-sm"
+                >
+                  <span>Download / View Invoice ↗</span>
+                </a>
+              </div>
+            )}
 
             <p className="text-xs text-black/60">
               Check your email (<span className="text-[#090909] font-bold">{formData.email}</span>) for your Discord invite and onboarding instructions.
@@ -233,7 +450,7 @@ export default function CohortRegistrationPage() {
               </h1>
 
               <p className="text-xs sm:text-sm lg:text-base text-black/70 leading-relaxed lg:max-w-sm">
-                A few details before we lock in your seat for <strong className="text-[#090909]">{activeCohortObj.name}</strong>.
+                A few details before we lock in your seat for <strong className="text-[#090909]">{cohort?.title}</strong>.
               </p>
 
               {/* DESKTOP PHASE INDICATOR */}
@@ -259,8 +476,8 @@ export default function CohortRegistrationPage() {
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#22C55E] shrink-0" />
                   <div className="min-w-0">
-                    <span className="font-bold text-[#090909] block truncate">{activeCohortObj.name}</span>
-                    <span className="text-black/50 text-[11px]">Launch {activeCohortObj.launchDate}</span>
+                    <span className="font-bold text-[#090909] block truncate">{cohort?.title}</span>
+                    <span className="text-black/50 text-[11px]">Launch {activeCohortMeta.launchDate}</span>
                   </div>
                 </div>
                 <Link to="/cohorts" className="cursor-pointer text-[11px] font-bold text-[#15803D] hover:underline shrink-0">
@@ -284,6 +501,13 @@ export default function CohortRegistrationPage() {
                   </div>
                 )}
 
+                {isCohortInactive && (
+                  <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 text-xs font-bold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>Registrations are closed for this cohort.</span>
+                  </div>
+                )}
+
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-[#090909] block">
                     Full Name *
@@ -293,6 +517,7 @@ export default function CohortRegistrationPage() {
                     <input
                       type="text"
                       required
+                      disabled={isCohortInactive}
                       placeholder="Full name"
                       value={formData.fullName}
                       onChange={(e) => handleInputChange('fullName', e.target.value)}
@@ -311,6 +536,7 @@ export default function CohortRegistrationPage() {
                       <input
                         type="email"
                         required
+                        disabled={isCohortInactive}
                         placeholder="Email address"
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
@@ -328,64 +554,30 @@ export default function CohortRegistrationPage() {
                       <input
                         type="tel"
                         required
+                        disabled={isCohortInactive}
                         placeholder="Mobile number"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        value={formData.mobileNumber}
+                        onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
                         className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* GENDER & GRADUATION YEAR */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-[#090909] block">
-                      Gender *
-                    </label>
-                    <select
-                      value={formData.gender}
-                      onChange={(e) => handleInputChange('gender', e.target.value)}
-                      className="cursor-pointer w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] focus:outline-none focus:border-[#22C55E]"
-                    >
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                      <option value="Prefer not to say">Prefer not to say</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-[#090909] block">
-                      Graduation / Passing Year *
-                    </label>
-                    <select
-                      value={formData.graduationYear}
-                      onChange={(e) => handleInputChange('graduationYear', e.target.value)}
-                      className="cursor-pointer w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] focus:outline-none focus:border-[#22C55E]"
-                    >
-                      <option value="2024">2024 (Graduated)</option>
-                      <option value="2025">2025 (Graduating Soon)</option>
-                      <option value="2026">2026 (Current Batch)</option>
-                      <option value="2027">2027</option>
-                      <option value="2028+">2028 or Later</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* COLLEGE & STUDY STATUS */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-[#090909] block">
-                      College / Organization
+                      College Name *
                     </label>
                     <div className="relative">
                       <Building className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black/40 absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
-                        placeholder="College or company name"
-                        value={formData.collegeOrOrg}
-                        onChange={(e) => handleInputChange('collegeOrOrg', e.target.value)}
+                        required
+                        disabled={isCohortInactive}
+                        placeholder="College name"
+                        value={formData.collegeName}
+                        onChange={(e) => handleInputChange('collegeName', e.target.value)}
                         className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
                       />
                     </div>
@@ -393,42 +585,59 @@ export default function CohortRegistrationPage() {
 
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-[#090909] block">
-                      Current Year / Status
+                      Stream (e.g. B.Tech, B.Sc) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      disabled={isCohortInactive}
+                      placeholder="Degree stream"
+                      value={formData.stream}
+                      onChange={(e) => handleInputChange('stream', e.target.value)}
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-[#090909] block">
+                      Branch (Optional, e.g. CSE, ECE)
+                    </label>
+                    <input
+                      type="text"
+                      disabled={isCohortInactive}
+                      placeholder="Specialization branch"
+                      value={formData.branch}
+                      onChange={(e) => handleInputChange('branch', e.target.value)}
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-[#090909] block">
+                      Current Year *
                     </label>
                     <select
-                      value={formData.studyStatus}
-                      onChange={(e) => handleInputChange('studyStatus', e.target.value)}
+                      value={formData.currentYear}
+                      disabled={isCohortInactive}
+                      onChange={(e) => handleInputChange('currentYear', e.target.value)}
                       className="cursor-pointer w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] focus:outline-none focus:border-[#22C55E]"
                     >
-                      <option value="1st Year Undergraduate">1st Year Undergraduate</option>
-                      <option value="2nd Year Undergraduate">2nd Year Undergraduate</option>
-                      <option value="3rd Year Undergraduate">3rd Year Undergraduate</option>
-                      <option value="4th Year Undergraduate">4th Year Undergraduate</option>
-                      <option value="Recent Graduate">Recent Graduate</option>
-                      <option value="Working Professional">Working Professional</option>
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="5th Year">5th Year</option>
+                      <option value="Alumni">Alumni</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#090909] block">
-                    AI & Coding Experience
-                  </label>
-                  <select
-                    value={formData.experienceLevel}
-                    onChange={(e) => handleInputChange('experienceLevel', e.target.value)}
-                    className="cursor-pointer w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] focus:outline-none focus:border-[#22C55E]"
-                  >
-                    <option value="Zero Prior Knowledge (Beginner)">Zero Prior Knowledge (Beginner)</option>
-                    <option value="Self-Taught / Hobbyist Developer">Self-Taught / Hobbyist Developer</option>
-                    <option value="CS Student / Experienced Programmer">CS Student / Experienced Programmer</option>
-                    <option value="Working Software Engineer">Working Software Engineer</option>
-                  </select>
-                </div>
-
                 <button
                   type="submit"
-                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black transition-all flex items-center justify-center gap-2 shadow-xl mt-3 sm:mt-4 font-mono"
+                  disabled={isCohortInactive}
+                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black transition-all flex items-center justify-center gap-2 shadow-xl mt-3 sm:mt-4 font-mono disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <span>Continue to Registration Summary</span>
                   <ArrowRight className="w-5 h-5" />
@@ -492,6 +701,13 @@ export default function CohortRegistrationPage() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-7 lg:pt-2 space-y-7 sm:space-y-9 lg:space-y-10"
             >
+              {errorMessage && (
+                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-bold flex items-center gap-2 font-sans">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
               {/* ITEM ROW */}
               <div className="flex items-start justify-between gap-3 sm:gap-4 pb-5 sm:pb-6 border-b-2 border-[#090909]">
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -499,12 +715,12 @@ export default function CohortRegistrationPage() {
                     <CohortIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-bold uppercase text-[#15803D] font-mono">{activeCohortObj.badge}</span>
-                    <h3 className="text-sm sm:text-lg font-extrabold text-[#090909] truncate">{activeCohortObj.name}</h3>
-                    <p className="text-[11px] sm:text-xs text-black/50">{activeCohortObj.tagline}</p>
+                    <span className="text-[10px] font-bold uppercase text-[#15803D] font-mono">{activeCohortMeta.badge}</span>
+                    <h3 className="text-sm sm:text-lg font-extrabold text-[#090909] truncate">{cohort?.title}</h3>
+                    <p className="text-[11px] sm:text-xs text-black/50">{activeCohortMeta.tagline}</p>
                   </div>
                 </div>
-                <span className="text-lg sm:text-2xl font-extrabold text-[#090909] font-mono shrink-0">₹{activeCohortObj.price}</span>
+                <span className="text-lg sm:text-2xl font-extrabold text-[#090909] font-mono shrink-0">₹{cohort?.price}</span>
               </div>
 
               {/* STUDENT DETAILS — plain rows, no box */}
@@ -522,19 +738,19 @@ export default function CohortRegistrationPage() {
                   </div>
                   <div className="flex items-center justify-between py-3 sm:py-4">
                     <dt className="text-xs text-black/50">Phone Number</dt>
-                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.phone}</dd>
+                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.mobileNumber}</dd>
                   </div>
                   <div className="flex items-center justify-between py-3 sm:py-4">
-                    <dt className="text-xs text-black/50">Gender / Grad Year</dt>
-                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.gender} · {formData.graduationYear}</dd>
+                    <dt className="text-xs text-black/50">College Name</dt>
+                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.collegeName}</dd>
                   </div>
                   <div className="flex items-center justify-between py-3 sm:py-4">
-                    <dt className="text-xs text-black/50">College / Organization</dt>
-                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.collegeOrOrg || 'Not specified'}</dd>
+                    <dt className="text-xs text-black/50">Stream / Branch</dt>
+                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.stream} {formData.branch ? `· ${formData.branch}` : ''}</dd>
                   </div>
                   <div className="flex items-center justify-between py-3 sm:py-4">
-                    <dt className="text-xs text-black/50">Current Year / Status</dt>
-                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.studyStatus}</dd>
+                    <dt className="text-xs text-black/50">Current Year</dt>
+                    <dd className="font-bold text-[#090909] text-xs sm:text-sm text-right">{formData.currentYear}</dd>
                   </div>
                 </dl>
               </div>
@@ -542,18 +758,21 @@ export default function CohortRegistrationPage() {
               {/* TOTAL — the one highlighted moment */}
               <div className="flex items-center justify-between p-5 sm:p-6 rounded-2xl bg-[#22C55E]/15 border border-[#22C55E]/30">
                 <span className="text-xs sm:text-sm font-bold text-[#090909]">Total Amount</span>
-                <span className="text-xl sm:text-2xl font-extrabold text-[#15803D] font-mono">₹{activeCohortObj.price}</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-[#15803D] font-mono">₹{cohort?.price}</span>
               </div>
 
               {/* PAYMENT ACTIONS */}
               <div className="space-y-4 sm:space-y-5">
                 <button
                   type="button"
-                  onClick={() => setShowRazorpayModal(true)}
-                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl font-mono"
+                  onClick={handleRazorpayPayment}
+                  disabled={isSubmitting}
+                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl font-mono disabled:cursor-not-allowed disabled:opacity-75"
                 >
                   <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Proceed to Razorpay Payment • ₹{activeCohortObj.price}</span>
+                  <span>
+                    {isSubmitting ? 'Processing Payment...' : `Proceed to Razorpay Payment • ₹${cohort?.price}`}
+                  </span>
                 </button>
 
                 <div className="flex flex-wrap gap-3 justify-between items-center text-xs font-mono">
@@ -577,116 +796,6 @@ export default function CohortRegistrationPage() {
         )}
 
       </main>
-
-      {/* RAZORPAY PAYMENT SIMULATION MODAL */}
-      <AnimatePresence>
-        {showRazorpayModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white border border-black/15 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 shadow-2xl relative"
-            >
-              <div className="flex items-center justify-between border-b border-black/10 pb-4">
-                <div className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-[#15803D]" />
-                  <span className="text-sm font-bold text-[#090909]">Razorpay Checkout</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowCancelConfirmModal(true)}
-                  className="cursor-pointer p-1.5 rounded-full hover:bg-black/5 text-black/40 hover:text-black transition-colors"
-                  title="Cancel Payment"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="space-y-3 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-[#FAFAFA] border border-black/10 space-y-1">
-                  <span className="text-black/50 text-[10px] uppercase block font-mono">Paying To</span>
-                  <span className="font-bold text-[#090909] block">Turing Wings Education Technologies</span>
-                  <span className="text-[#15803D] font-bold block pt-1">{activeCohortObj.name}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-3.5 rounded-xl bg-[#FAFAFA] border border-black/10 font-mono">
-                  <span className="text-black/60">Total Amount:</span>
-                  <span className="text-lg font-extrabold text-[#15803D]">₹{activeCohortObj.price}</span>
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <button
-                  onClick={handleRazorpayPaymentComplete}
-                  disabled={isSubmitting}
-                  className="cursor-pointer w-full py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg font-mono disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {isSubmitting ? (
-                    <span>Verifying Payment...</span>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Complete Payment (Razorpay)</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowCancelConfirmModal(true)}
-                  className="cursor-pointer w-full py-2.5 rounded-xl bg-[#FAFAFA] hover:bg-black/5 text-black/60 text-xs font-bold transition-colors font-mono border border-black/10"
-                >
-                  Cancel Transaction
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* CONFIRMATION POPUP FOR CANCELLING PAYMENT / REGISTRATION */}
-      <AnimatePresence>
-        {showCancelConfirmModal && (
-          <div className="fixed inset-0 bg-black/75 backdrop-blur-md z-[60] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.85, opacity: 0 }}
-              className="bg-white border border-red-200 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center space-y-5 shadow-2xl relative"
-            >
-              <div className="w-12 h-12 rounded-full bg-red-100 border border-red-200 text-red-600 flex items-center justify-center mx-auto">
-                <HelpCircle className="w-7 h-7" />
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-extrabold text-[#090909]">Cancel Registration?</h3>
-                <p className="text-xs text-black/70 leading-relaxed">
-                  Are you sure you want to cancel your payment for <strong className="text-[#090909]">{activeCohortObj.name}</strong>? Your reserved seat and early bird discount will be released.
-                </p>
-              </div>
-
-              <div className="space-y-2.5 pt-2 font-mono">
-                <button
-                  type="button"
-                  onClick={handleConfirmCancelRegistration}
-                  className="cursor-pointer w-full py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md"
-                >
-                  Yes, Cancel Registration
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowCancelConfirmModal(false)}
-                  className="cursor-pointer w-full py-3 rounded-2xl bg-[#090909] hover:bg-[#22C55E] hover:text-black text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs"
-                >
-                  No, Continue Payment
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       <Footer />
     </div>
