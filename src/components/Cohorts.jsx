@@ -431,7 +431,14 @@ export default function Cohorts() {
   return (
     <section ref={sectionRef} id="cohorts" className="cohort-showcase-section">
       <div ref={pinRef} className="cohort-showcase-sticky">
-        <h2 className="cohort-section-heading">Cohorts</h2>
+        <div className="absolute top-5 left-5 sm:top-8 sm:left-12 z-20 space-y-1 text-left">
+          <p className="font-mono text-[10px] sm:text-xs font-bold tracking-widest text-black/50 uppercase">
+            04 / FLAGSHIP COHORTS
+          </p>
+          <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#090909] font-product-sans">
+            Flagship <span className="text-black/45 font-serif italic">Cohorts.</span>
+          </h2>
+        </div>
 
         {/* Horizontal card track with smooth scrolling — opens directly on the first cohort */}
         <div ref={trackRef} className="cohort-showcase-track">

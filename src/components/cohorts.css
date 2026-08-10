@@ -401,13 +401,13 @@
     }
 
     .cohort-showcase-track {
-        align-items: flex-end;
-        padding: 0 20px 38px;
+        align-items: center;
+        padding: 75px 20px 25px;
     }
 
     .cohort-showcase-card-wrapper {
-        width: clamp(300px, 84vw, 420px);
-        height: clamp(390px, 55vh, 470px);
+        width: clamp(290px, 86vw, 400px);
+        height: clamp(360px, 53vh, 450px);
     }
 
     .cohort-card-footer {
