@@ -250,7 +250,7 @@ export default function Hero() {
             variants={item}
             className="text-[clamp(3rem,9vw,8rem)] font-bold leading-[0.92] tracking-[-0.04em] text-[#111]"
           >
-            Engineering<br />Reimagined.
+            Engineering<br />Reimagined
           </motion.h1>
 
           <motion.p

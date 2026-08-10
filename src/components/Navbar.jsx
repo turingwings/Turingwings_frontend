@@ -57,17 +57,17 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm' : ''}`}>
+    <nav className="fixed inset-x-0 top-0 z-[100] bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-xs transition-all duration-300 font-product-sans">
       <div className="mx-auto flex h-14 md:h-16 max-w-[1600px] items-center justify-between px-4 sm:px-6 md:px-12">
         <Link to="/" aria-label="Turing Wings home" className="flex items-center overflow-hidden h-7 sm:h-8 md:h-11 shrink-0">
           <img src="/Logos/BlackFillNoBg.png" alt="Turing Wings" className="h-[160%] w-auto object-contain object-top" />
         </Link>
 
-        {/* PC VIEW NAVBAR (UNCHANGED) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
+        {/* PC VIEW NAVBAR */}
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-product-sans">
           <Link
             to="/cohorts"
-            className="group hidden sm:inline-flex items-center gap-1.5 rounded-full border border-black/20 px-4 md:px-6 py-2 text-[9px] md:text-[10px] font-bold tracking-[.1em] md:tracking-[.15em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
+            className="group hidden sm:inline-flex items-center gap-1.5 rounded-full border border-black/20 px-4 md:px-6 py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
           >
             <span>Explore Cohorts</span>
             <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -77,7 +77,7 @@ export default function Navbar() {
 
           <Link
             to="/buildathons"
-            className="group inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[9px] md:text-[10px] font-bold tracking-[.1em] md:tracking-[.15em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+            className="group inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
           >
             <span>Buildathons</span>
             <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -87,7 +87,7 @@ export default function Navbar() {
 
           <Link
             to="/contact"
-            className="group inline-flex items-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3 sm:px-5 md:px-6 py-1.5 sm:py-2 text-[9px] md:text-[10px] font-bold tracking-[.1em] md:tracking-[.15em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+            className="group inline-flex items-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3 sm:px-5 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
           >
             <span>Contact</span>
             <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">

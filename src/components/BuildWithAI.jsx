@@ -1,306 +1,575 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react"
 
-const topics = [
-  ['01', 'AI-native software development', 'Build full products with AI integrated into every step.'],
-  ['02', 'AI-assisted product design', 'Turn early thinking into interfaces worth using.'],
-  ['03', 'AI coding workflows', 'Learn to direct agents, review outputs and own the code.'],
-  ['04', 'Authentication & payments', 'Make production-ready experiences people can trust.'],
-  ['05', 'AI integrations', 'Connect models, data and tools into useful product features.'],
-  ['06', 'Deployment & DevOps', 'Ship confidently using modern cloud workflows.'],
-  ['07', 'AI agents & automations', 'Design systems that can reason and take action.'],
-  ['08', 'AI-powered cyber security', 'Build with security as a creative engineering discipline.'],
+// item shape: [iconKey, label]  — single line, no subpoint copy.
+const traditional = [
+  ['code', 'Write every line manually'],
+  ['branch', 'Sequential handoffs'],
+  ['bug', 'Debug after building'],
+  ['clock', 'Ship in long release cycles'],
 ]
 
-const outcomes = [
-  { value: 40, suffix: '+', label: 'Shipped products' },
-  { value: 92, suffix: '%', label: 'Deployed to real users' },
-  { value: 8, suffix: '', label: 'Weeks, prompt to launch' },
+const native = [
+  ['sparkles', 'Direct AI-assisted building'],
+  ['people', 'Human + AI collaboration'],
+  ['loop', 'Continuous feedback loops'],
+  ['rocket', 'Prototype, test, ship faster'],
 ]
 
-function Counter({ value, suffix, active }) {
-  const [display, setDisplay] = useState(0)
+const stages = [['code', 'BUILD'], ['people', 'COLLABORATE'], ['loop', 'IMPROVE'], ['rocket', 'SHIP']]
+
+// Hand-built inline SVG icon set — no external icon library.
+function CompareIcon({ name, size = 18, strokeWidth = 1.8, color = 'currentColor' }) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: color,
+    strokeWidth,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': true,
+  }
+
+  switch (name) {
+    case 'code':
+      return (
+        <svg {...common}>
+          <path d="M8 6L3 12l5 6" />
+          <path d="M16 6l5 6-5 6" />
+        </svg>
+      )
+    case 'branch':
+      return (
+        <svg {...common}>
+          <line x1="6" y1="3" x2="6" y2="15" />
+          <circle cx="18" cy="6" r="3" />
+          <circle cx="6" cy="18" r="3" />
+          <path d="M18 9a9 9 0 0 1-9 9" />
+        </svg>
+      )
+    case 'bug':
+      return (
+        <svg {...common}>
+          <rect x="7" y="8" width="10" height="10" rx="5" />
+          <path d="M7 12H3" />
+          <path d="M21 12h-4" />
+          <path d="M8 8l-2.5-2.5" />
+          <path d="M16 8l2.5-2.5" />
+          <path d="M8 18l-2.5 2.5" />
+          <path d="M16 18l2.5 2.5" />
+          <path d="M12 8V5" />
+        </svg>
+      )
+    case 'clock':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 3" />
+        </svg>
+      )
+    case 'sparkles':
+      return (
+        <svg {...common}>
+          <path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" />
+          <path d="M19 15l.8 2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z" />
+        </svg>
+      )
+    case 'people':
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="8" r="3" />
+          <path d="M4 20c0-3 2-5 5-5s5 2 5 5" />
+          <circle cx="17" cy="9" r="2.2" />
+          <path d="M15.2 20c.2-2.2 1.6-4 3.6-4.3" />
+        </svg>
+      )
+    case 'loop':
+      return (
+        <svg {...common}>
+          <path d="M4 12a8 8 0 0 1 14-5.3L20 8" />
+          <path d="M20 4v4h-4" />
+          <path d="M20 12a8 8 0 0 1-14 5.3L4 16" />
+          <path d="M4 20v-4h4" />
+        </svg>
+      )
+    case 'rocket':
+      return (
+        <svg {...common}>
+          <path d="M12 2c3 2 5 6 5 10 0 2-1 4-2 5l-3 3-3-3c-1-1-2-3-2-5 0-4 2-8 5-10z" />
+          <circle cx="12" cy="10" r="1.4" />
+          <path d="M9 16l-3 5" />
+          <path d="M15 16l3 5" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
+
+const FONT_STACK = "'Plus Jakarta Sans', 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)'
+const EASE_SPRING = 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= breakpoint
+  )
 
   useEffect(() => {
-    if (!active) return
-    const duration = 1200
-    const start = performance.now()
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`)
+    const handleChange = (e) => setIsMobile(e.matches)
+    handleChange(mq)
+    mq.addEventListener('change', handleChange)
+    return () => mq.removeEventListener('change', handleChange)
+  }, [breakpoint])
 
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      setDisplay(Math.round(eased * value))
-      if (progress < 1) requestAnimationFrame(tick)
-    }
-    const raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [active, value])
+  return isMobile
+}
+
+function Row({ item, modern, visible, index, hovered, activeStage, onHover, onLeave, isMobile }) {
+  const isHovered = hovered === index
+  const isStageActive = activeStage === index
+  const active = isHovered || isStageActive
 
   return (
-    <span>
-      {display}
-      {suffix}
-    </span>
+    <div
+      onMouseEnter={() => onHover(index)}
+      onMouseLeave={onLeave}
+      onClick={() => onHover(index)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: isMobile ? 10 : 12,
+        padding: isMobile ? '10px 12px' : '9px 12px',
+        borderRadius: isMobile ? '10px' : '10px',
+        backgroundColor: isStageActive ? (modern ? '#f0fdf4' : '#f8fafc') : (isHovered ? '#f4f4f5' : 'transparent'),
+        border: `1px solid ${isStageActive ? (modern ? '#bbf7d0' : '#e2e8f0') : 'transparent'}`,
+        opacity: visible ? 1 : 0,
+        transform: visible
+          ? (isHovered ? `translate(${modern ? 6 : -6}px, 0)` : 'translateX(0)')
+          : `translateX(${isMobile ? 0 : (modern ? 20 : -20)}px)`,
+        transition: `all 0.35s ${EASE_OUT}`,
+        transitionDelay: visible ? `${index * (isMobile ? 55 : 80)}ms` : '0ms',
+        willChange: 'transform, opacity, background-color',
+        cursor: 'pointer',
+      }}
+    >
+      <div
+        style={{
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: isMobile ? 26 : 28,
+          height: isMobile ? 26 : 28,
+          borderRadius: '8px',
+          backgroundColor: modern && active ? '#ecfdf5' : '#f4f4f5',
+          transform: active ? 'scale(1.08) rotate(-3deg)' : 'scale(1) rotate(0deg)',
+          transition: `transform 0.35s ${EASE_SPRING}, background-color 0.3s ease`,
+          color: modern && active ? '#10b981' : '#111827',
+        }}
+      >
+        <CompareIcon name={item[0]} size={isMobile ? 14 : 16} strokeWidth={isMobile ? 1.9 : 1.75} />
+      </div>
+      <h4
+        style={{
+          margin: 0,
+          fontWeight: 600,
+          color: '#1f2937',
+          fontSize: isMobile ? '0.8rem' : '0.9rem',
+          lineHeight: 1.3,
+          letterSpacing: '-0.005em',
+        }}
+      >
+        {item[1]}
+      </h4>
+    </div>
   )
 }
 
-export default function BuildWithAI() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [activeOutcomes, setActiveOutcomes] = useState(false)
-  const outcomesRef = useRef(null)
+export default function Evolution() {
+  const sectionRef = useRef(null)
+  const [inView, setInView] = useState(false)
+  const [hovered, setHovered] = useState({ trad: null, modern: null })
+  const [activeStage, setActiveStage] = useState(-1)
+  const [isPaused, setIsPaused] = useState(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
-    const node = outcomesRef.current
+    const el = sectionRef.current
+    if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setActiveOutcomes(true)
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(true)
+            observer.disconnect()
+          }
+        })
       },
       { threshold: 0.2 }
     )
-    if (node) observer.observe(node)
-    return () => {
-      if (node) observer.unobserve(node)
-      observer.disconnect()
-    }
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!inView || isPaused) return
+    let i = activeStage < 0 ? 0 : activeStage
+    setActiveStage(i)
+    const id = setInterval(() => {
+      i = (i + 1) % stages.length
+      setActiveStage(i)
+    }, 1600)
+    return () => clearInterval(id)
+  }, [inView, isPaused, activeStage])
+
+  const handleStageClick = (idx) => {
+    setActiveStage(idx)
+    setIsPaused(true)
+  }
+
   return (
-    <section id="buildwithai" className="bg-[#fafafa] text-[#111] py-20 sm:py-28 md:py-36 px-6 md:px-12 font-sans selection:bg-black selection:text-white overflow-hidden border-b border-black/10">
+    <section
+      id="experience"
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily: FONT_STACK,
+        backgroundColor: '#fafafa',
+        borderBottom: '1px solid rgba(0,0,0,0.1)',
+      }}
+      ref={sectionRef}
+    >
       <style>{`
-        .diagram-container {
-          perspective: 1000px;
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        #experience, #experience * { font-family: ${FONT_STACK}; }
+        @keyframes flowPulse {
+          0% { top: 0%; opacity: 0; }
+          30% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
         }
-        .isometric-layer {
-          transform: rotateX(45deg) rotateZ(-25deg);
-          transform-style: preserve-3d;
-          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-          will-change: transform;
-        }
-        @media (max-width: 640px) {
-          .isometric-layer {
-            transform: rotateX(30deg) rotateZ(-10deg) scale(0.8);
-          }
-        }
-        .isometric-card {
-          transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
-          background: #ffffff;
-          will-change: transform, box-shadow;
-        }
-        .isometric-card.active {
-          transform: translateZ(36px) scale(1.02);
-          box-shadow: -20px 25px 40px -10px rgba(0,0,0,0.15);
-          border-color: rgba(0,0,0,0.9);
-        }
-        .dashed-connector {
-          stroke-dasharray: 4 4;
-          animation: dash 20s linear infinite;
-        }
-        @keyframes dash {
-          to { stroke-dashoffset: -100; }
-        }
-        /* Touch & Mouse Smooth Scrollbar */
-        .cards-touch-container {
-          touch-action: pan-y;
-          -webkit-overflow-scrolling: touch;
-          overscroll-behavior: contain;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-          height: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.03);
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(0, 0, 0, 0.15);
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(0, 0, 0, 0.3);
+        @keyframes flowPulseHorizontal {
+          0% { left: 0%; opacity: 0; }
+          30% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { left: 100%; opacity: 0; }
         }
       `}</style>
 
-      <div className="mx-auto max-w-[1400px]">
-        {/* Section Header */}
-        <div className="mb-8 sm:mb-12 md:mb-16 border-b border-black/10 pb-5 sm:pb-8">
-          <p className="font-mono text-xs font-bold tracking-widest text-black/50 uppercase mb-3">
-            03 / ARCHITECTURE & WORKFLOW
-          </p>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6">
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#090909] max-w-2xl leading-tight">
-              Learn by making <span className="text-black/45 font-serif italic">the future tangible.</span>
+      <div style={{ padding: isMobile ? '44px 0 52px' : '96px 0' }}>
+        <div
+          style={{
+            maxWidth: 1400,
+            margin: '0 auto',
+            padding: isMobile ? '0 20px' : '0 32px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              borderBottom: '1px solid rgba(0,0,0,0.1)',
+              marginBottom: isMobile ? '26px' : '40px',
+              paddingBottom: isMobile ? '18px' : '28px',
+              opacity: inView ? 1 : 0,
+              transform: inView ? 'translateY(0)' : 'translateY(16px)',
+              transition: `opacity 0.8s ${EASE_OUT}, transform 0.8s ${EASE_OUT}`,
+            }}
+          >
+            <p
+              style={{
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: isMobile ? '0.1em' : '0.15em',
+                textTransform: 'uppercase',
+                color: 'rgba(0,0,0,0.5)',
+                fontSize: isMobile ? '0.62rem' : '0.75rem',
+                margin: 0,
+                marginBottom: isMobile ? '8px' : '10px',
+              }}
+            >
+              01 / EVOLUTION &amp; ENGINEERING
+            </p>
+            <h2
+              style={{
+                color: '#090909',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                fontSize: isMobile ? 'clamp(1.35rem, 6.2vw, 1.7rem)' : 'clamp(2.2rem, 3.6vw, 3.2rem)',
+                lineHeight: isMobile ? 1.18 : 1.08,
+                margin: 0,
+                marginBottom: isMobile ? '8px' : '12px',
+              }}
+            >
+              From writing code<br />
+              <span style={{ color: 'rgba(0,0,0,0.45)' }}>to orchestrating intelligence.</span>
             </h2>
-            <p className="text-xs sm:text-sm text-black/60 max-w-sm leading-relaxed">
-              8 Hands-on AI-first engineering workflows structured like modern production stacks.
+            <p
+              style={{
+                color: 'rgba(0,0,0,0.6)',
+                maxWidth: '32rem',
+                lineHeight: 1.55,
+                fontSize: isMobile ? '0.78rem' : '0.95rem',
+                margin: 0,
+              }}
+            >
+              The tools have changed. The role has evolved. Welcome to{' '}
+              <b style={{ color: '#090909' }}>AI-Native Engineering.</b>
             </p>
           </div>
-        </div>
 
-        {/* Stack Architecture Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start my-4 sm:my-8 md:my-12">
-          
-          {/* Left Column: Interactive 8 Topic Cards (Natural Fluid Page Scroll) */}
-          <div className="lg:col-span-5 flex flex-col gap-3.5 w-full order-2 lg:order-1">
-            {topics.map(([num, title, desc], idx) => {
-              const isActive = activeIndex === idx
-              return (
-                <div
-                  key={num}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`p-4 sm:p-5 md:p-6 border rounded-2xl cursor-pointer transition-all duration-300 relative transform-gpu ${
-                    isActive
-                      ? 'bg-[#111] text-white border-[#111] shadow-xl translate-x-1'
-                      : 'bg-white text-[#111] border-black/10 hover:border-black/30 hover:bg-black/[0.02]'
-                  }`}
-                >
-                  {/* Corner Accent Box */}
-                  <div
-                    className={`absolute top-3 right-3 w-2 h-2 border-t border-r transition-colors ${
-                      isActive ? 'border-white' : 'border-black/30'
-                    }`}
-                  />
-                  <div className="flex items-center gap-3 mb-2 font-mono">
-                    <span
-                      className={`text-xs font-semibold px-2 py-0.5 rounded transition-colors ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-black/5 text-black/60'
-                      }`}
-                    >
-                      {num}
-                    </span>
-                    <span className={`text-[10px] sm:text-xs uppercase tracking-wider ${isActive ? 'text-white/60' : 'text-black/40'}`}>
-                      LAYER {idx + 1}
-                    </span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold tracking-tight mb-1.5">{title}</h3>
-                  <p className={`text-xs leading-relaxed ${isActive ? 'text-white/80' : 'text-black/60'}`}>
-                    {desc}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Right Column: Isometric Interactive Stack Diagram (Sticky on Desktop) */}
-          <div className="lg:col-span-7 lg:sticky lg:top-28 relative h-[320px] sm:h-[440px] lg:h-[580px] flex items-center justify-center diagram-container overflow-hidden rounded-2xl border border-black/10 bg-[#fafafa] order-1 lg:order-2">
-            
-            {/* Guide Grid Lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-15" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                  <path d="M 32 0 L 0 0 0 32" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-black" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-
-            {/* Isometric Layers */}
-            <div className="isometric-layer relative w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px]">
-              
-              {/* Vertical Guide Pillars */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ transform: 'translateZ(-40px)' }}>
-                <line x1="0" y1="0" x2="0" y2="280" stroke="black" strokeWidth="1" className="dashed-connector stroke-black/20" />
-                <line x1="100%" y1="0" x2="100%" y2="280" stroke="black" strokeWidth="1" className="dashed-connector stroke-black/20" />
-                <line x1="0" y1="100%" x2="0" y2="380" stroke="black" strokeWidth="1" className="dashed-connector stroke-black/20" />
-                <line x1="100%" y1="100%" x2="100%" y2="380" stroke="black" strokeWidth="1" className="dashed-connector stroke-black/20" />
-              </svg>
-
-              {/* Stack Cards */}
-              {topics.slice(0, 4).map(([num, title], idx) => {
-                const isActive = activeIndex === idx
-                return (
-                  <div
-                    key={num}
-                    onClick={() => setActiveIndex(idx)}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      transform: `translateZ(${idx * 65}px)`,
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'stretch' : 'flex-start',
+              gap: isMobile ? 14 : 28,
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          >
+            {/* Traditional Side */}
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+                opacity: inView ? 1 : 0,
+                transform: inView ? 'translateX(0)' : `translateX(${isMobile ? 0 : -20}px)`,
+                transition: `opacity 0.7s ${EASE_OUT}, transform 0.7s ${EASE_OUT}`,
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: isMobile ? '0.85rem' : '0.95rem',
+                  fontWeight: 700,
+                  color: '#111827',
+                  letterSpacing: '-0.01em',
+                  margin: 0,
+                  marginBottom: isMobile ? '8px' : '10px',
+                }}
+              >
+                Traditional Engineering
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 3 : 4 }}>
+                {traditional.map((item, i) => (
+                  <Row
+                    key={item[1]}
+                    item={item}
+                    index={i}
+                    visible={inView}
+                    hovered={hovered.trad}
+                    activeStage={activeStage}
+                    isMobile={isMobile}
+                    onHover={(idx) => {
+                      setHovered((h) => ({ ...h, trad: idx }))
+                      setActiveStage(idx)
                     }}
-                    className={`isometric-card border rounded-xl p-4 sm:p-6 flex flex-col justify-between cursor-pointer select-none ${
-                      isActive ? 'active border-black' : 'border-black/20 hover:border-black/40 opacity-80 hover:opacity-100'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start">
-                      <span className="font-mono text-xs font-bold tracking-widest text-black/40">{num}</span>
-                      <span className={`w-2 h-2 rounded-full transition-all duration-300 ${isActive ? 'bg-black scale-125' : 'bg-black/20'}`} />
-                    </div>
-                    <div>
-                      <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-black/40 block mb-0.5 sm:mb-1">
-                        STACK COMPONENT 0{idx + 1}
-                      </span>
-                      <h4 className="text-xs sm:text-base font-bold text-[#111] tracking-tight leading-snug">{title}</h4>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-
-            {/* Scale & Controls Indicator */}
-            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-2 bg-white/95 backdrop-blur border border-black/10 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono text-black/60 shadow-xs z-10">
-              <span>Interactive Architecture</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
-            </div>
-          </div>
-        </div>
-
-        {/* Outcomes & Social Proof Section */}
-        <div ref={outcomesRef} className="mt-12 sm:mt-16 md:mt-24 bg-[#fafafa]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-            
-            {/* Left Quote Card */}
-            <div className="lg:col-span-6 bg-white border border-black/10 rounded-2xl p-6 sm:p-8 md:p-12 flex flex-col justify-between shadow-xs">
-              <p className="text-xs font-mono text-black/40 uppercase tracking-widest">
-                FROM THE COMMUNITY
-              </p>
-              <blockquote className="my-6 sm:my-8 text-lg sm:text-2xl md:text-3xl font-light text-[#111] leading-snug tracking-tight">
-                "I stopped waiting for the perfect tutorial and started building products I was proud to share."
-              </blockquote>
-              <cite className="text-xs font-mono text-black/50 not-italic">
-                — Turing Wings Builder
-              </cite>
-            </div>
-
-            {/* Right Metrics Card */}
-            <div className="lg:col-span-6 border border-black/10 rounded-2xl p-6 sm:p-8 md:p-12 flex flex-col justify-between bg-white shadow-xs">
-              <div>
-                <p className="text-xs font-mono text-black/40 uppercase tracking-widest">
-                  PROJECT OUTCOMES
-                </p>
-                <h3 className="text-lg sm:text-2xl md:text-3xl font-light text-[#111] mt-3 sm:mt-4 tracking-tight">
-                  From first prompt to public portfolio.
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3 sm:gap-6 border-t border-black/10 pt-6 sm:pt-8 mt-6 sm:mt-8">
-                {outcomes.map((o) => (
-                  <div key={o.label}>
-                    <p className="text-xl sm:text-3xl md:text-4xl font-light tracking-tight text-[#111] font-mono">
-                      <Counter value={o.value} suffix={o.suffix} active={activeOutcomes} />
-                    </p>
-                    <p className="mt-1.5 sm:mt-2 text-[10px] sm:text-xs text-black/50 leading-tight sm:leading-relaxed">{o.label}</p>
-                  </div>
+                    onLeave={() => setHovered((h) => ({ ...h, trad: null }))}
+                  />
                 ))}
               </div>
             </div>
 
-          </div>
-
-          {/* CTA Footer Link */}
-          <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-black/10 pt-6 sm:pt-8">
-            <p className="text-xs sm:text-sm text-black/60">
-              Curriculum, projects, tools, and outcomes — designed around modern engineering.
-            </p>
-            <a
-              href="#cohorts"
-              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#090909] border-b border-black pb-0.5 hover:text-[#15803D] hover:border-[#15803D] transition-colors self-start sm:self-auto font-mono"
+            {/* Central Spine */}
+            <div
+              aria-label="Compared by building, collaboration, improvement and shipping"
+              style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: isMobile ? 'row' : 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: isMobile ? '100%' : '84px',
+                flexShrink: 0,
+                padding: isMobile ? '6px 0' : '4px 0',
+                gap: isMobile ? 8 : 16,
+              }}
             >
-              Explore our cohorts <span>↗</span>
-            </a>
+              {!isMobile && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '44px',
+                    bottom: '16px',
+                    width: '2px',
+                    background: '#e5e7eb',
+                    zIndex: 0,
+                    borderRadius: '2px',
+                    opacity: inView ? 1 : 0,
+                    transition: 'opacity 0.8s ease',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '40px',
+                      background: 'linear-gradient(to bottom, transparent, #10b981, transparent)',
+                      animation: 'flowPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }}
+                  />
+                </div>
+              )}
+
+              {isMobile && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '3%',
+                    right: '3%',
+                    height: '1.5px',
+                    background: '#e5e7eb',
+                    zIndex: 0,
+                    borderRadius: '2px',
+                    opacity: inView ? 1 : 0,
+                    transition: 'opacity 0.8s ease',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      height: '100%',
+                      width: '28px',
+                      background: 'linear-gradient(to right, transparent, #10b981, transparent)',
+                      animation: 'flowPulseHorizontal 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }}
+                  />
+                </div>
+              )}
+
+              <div
+                style={{
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? 'scale(1)' : 'scale(0.4)',
+                  transition: `opacity 0.6s ${EASE_SPRING}, transform 0.6s ${EASE_SPRING}`,
+                  transitionDelay: inView ? '220ms' : '0ms',
+                  zIndex: 1,
+                  background: '#fff',
+                  fontSize: isMobile ? '0.6rem' : '0.68rem',
+                  padding: isMobile ? '4px 7px' : '4px 8px',
+                  borderRadius: '999px',
+                  border: '1px solid #e5e7eb',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  color: '#6b7280',
+                }}
+              >
+                VS
+              </div>
+
+              <div
+                style={{
+                  zIndex: 1,
+                  display: 'flex',
+                  flexDirection: isMobile ? 'row' : 'column',
+                  flexWrap: isMobile ? 'wrap' : 'nowrap',
+                  justifyContent: 'center',
+                  width: isMobile ? '100%' : undefined,
+                  gap: isMobile ? '6px' : '10px',
+                }}
+              >
+                {stages.map(([icon, label], i) => {
+                  const isActive = activeStage === i
+                  return (
+                    <div
+                      key={label}
+                      onClick={() => handleStageClick(i)}
+                      style={{
+                        cursor: 'pointer',
+                        padding: isMobile ? '5px 8px' : '6px 10px',
+                        borderRadius: isMobile ? '14px' : '18px',
+                        background: isActive ? '#f0fdf4' : '#ffffff',
+                        border: `1px solid ${isActive ? '#86efac' : '#f3f4f6'}`,
+                        boxShadow: isActive ? '0 4px 12px rgba(16, 185, 129, 0.15)' : 'none',
+                        opacity: inView ? 1 : 0,
+                        transform: inView
+                          ? `translateY(0) scale(${isActive ? (isMobile ? 1.04 : 1.06) : 1})`
+                          : `translateY(${isMobile ? 0 : 12}px) scale(1)`,
+                        transition: `all 0.4s ${EASE_SPRING}`,
+                        transitionDelay: inView ? `${340 + i * 110}ms` : '0ms',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: isMobile ? '4px' : '6px',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transform: isActive ? 'scale(1.15) rotate(-4deg)' : 'scale(1)',
+                          transition: `transform 0.4s ${EASE_SPRING}`,
+                          color: isActive ? '#10b981' : '#6b7280',
+                        }}
+                      >
+                        <CompareIcon name={icon} size={isMobile ? 12 : 15} strokeWidth={isMobile ? 2 : 1.8} />
+                      </div>
+                      <span
+                        style={{
+                          fontWeight: isActive ? 700 : 600,
+                          color: isActive ? '#065f46' : '#9ca3af',
+                          opacity: isActive ? 1 : 0.65,
+                          transition: 'opacity 0.4s ease, color 0.4s ease',
+                          fontSize: isMobile ? '0.56rem' : '0.66rem',
+                          letterSpacing: '0.05em',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {label}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* AI-Native Side */}
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+                opacity: inView ? 1 : 0,
+                transform: inView ? 'translateX(0)' : `translateX(${isMobile ? 0 : 20}px)`,
+                transition: `opacity 0.7s ${EASE_OUT}, transform 0.7s ${EASE_OUT}`,
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: isMobile ? '0.85rem' : '0.95rem',
+                  fontWeight: 700,
+                  color: '#111827',
+                  letterSpacing: '-0.01em',
+                  margin: 0,
+                  marginBottom: isMobile ? '8px' : '10px',
+                }}
+              >
+                AI-Native Engineering
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 3 : 4 }}>
+                {native.map((item, i) => (
+                  <Row
+                    key={item[1]}
+                    item={item}
+                    index={i}
+                    modern
+                    visible={inView}
+                    hovered={hovered.modern}
+                    activeStage={activeStage}
+                    isMobile={isMobile}
+                    onHover={(idx) => {
+                      setHovered((h) => ({ ...h, modern: idx }))
+                      setActiveStage(idx)
+                    }}
+                    onLeave={() => setHovered((h) => ({ ...h, modern: null }))}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </section>
   )
