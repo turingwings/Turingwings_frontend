@@ -25,7 +25,7 @@ export default function Footer() {
           <div className="lg:col-span-4 flex flex-col items-start gap-3">
             <Link to="/" aria-label="Turing Wings home" className="inline-block">
               <img
-                src="/Logos/WhiteFillNoBg.png"
+                src="/favicon.png"
                 alt="Turing Wings"
                 className="h-10 sm:h-12 w-auto object-contain shrink-0 hover:opacity-90 transition-opacity"
               />
