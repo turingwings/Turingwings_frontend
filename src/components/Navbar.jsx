@@ -44,7 +44,7 @@ export default function Navbar() {
       <nav className="fixed inset-x-0 top-0 z-[100] bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-xs transition-all duration-300 font-product-sans">
         <div className="mx-auto flex h-14 md:h-16 max-w-[1600px] items-center justify-between px-4 sm:px-6 md:px-12">
           <Link to="/" aria-label="Turing Wings home" className="flex items-center overflow-hidden h-7 sm:h-8 md:h-11 shrink-0">
-            <img src="/Logos/BlackFillNoBg.png" alt="Turing Wings" className="h-[160%] w-auto object-contain object-top" />
+            <img src="/Logos/BlackFillNoBg.jpeg" alt="Turing Wings" className="h-[160%] w-auto object-contain object-top" />
           </Link>
 
           {/* PC VIEW NAVBAR */}
