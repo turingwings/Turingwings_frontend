@@ -25,7 +25,7 @@ export default function Footer() {
           <div className="lg:col-span-4 flex items-center">
             <Link to="/" aria-label="Turing Wings home">
               <img
-                src="/Logos/BlackFillNoBg.png"
+                src="/favicon.png"
                 alt="Turing Wings"
                 className="h-28 sm:h-32 md:h-36 w-auto object-contain shrink-0 brightness-0 invert hover:scale-105 transition-transform duration-300"
               />

@@ -182,6 +182,29 @@ function SocialIcon({ name }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.6 4.6 12 4.6 12 4.6s-5.6 0-7.5.5a3 3 0 0 0-2.1 2.1C2 9.1 2 12 2 12s0 2.9.4 4.8a3 3 0 0 0 2.1 2.1c1.9.5 7.5.5 7.5.5s5.6 0 7.5-.5a3 3 0 0 0 2.1-2.1C22 14.9 22 12 22 12s0-2.9-.4-4.8Z" /><path className="cohort-social-fill" d="m10 15.5 5-3.5-5-3.5v7Z" /></svg>
 }
 
+const defaultCohorts = [
+  {
+    id: 'webdevxai',
+    number: '01',
+    title: 'AI Engineering Cohort',
+    description: 'Ship a full-stack, AI-powered SaaS product in four weeks with Cursor, Claude & Supabase.',
+    technologies: COHORTS_METADATA['webdevxai']?.tools || ['Antigravity', 'Cursor', 'Claude', 'React', 'Node.js', 'Supabase', 'Docker'],
+    duration: '4 weeks',
+    path: '/cohorts/webdevxai',
+    image: aiEngineeringCohort,
+  },
+  {
+    id: 'cyberxai',
+    number: '02',
+    title: 'AI & Cybersecurity Cohort',
+    description: 'Master penetration testing, offensive AI workflows, and SOC automation in four weeks.',
+    technologies: COHORTS_METADATA['cyberxai']?.tools || ['Kali Linux', 'Burp Suite', 'Nmap', 'Wireshark', 'Python', 'Ollama', 'MCP'],
+    duration: '4 weeks',
+    path: '/cohorts/cyberxai',
+    image: aiCybersecurityCohort,
+  },
+]
+
 /* ═══════════════════════════════════════════════════════════════════════════
    MAIN COHORTS SECTION WITH TRIONN SHOWCASE ANIMATION
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -195,15 +218,14 @@ export default function Cohorts() {
   const stRef = useRef(null)
   const prevActiveRef = useRef(-1)
 
-  const [cohorts, setCohorts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [cohorts, setCohorts] = useState(defaultCohorts)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function loadCohorts() {
       try {
-        setLoading(true)
         const result = await cohortService.getActiveCohorts()
-        if (result.success && Array.isArray(result.data)) {
+        if (result.success && Array.isArray(result.data) && result.data.length > 0) {
           const mapped = result.data.map((backendCohort, idx) => {
             const slug = backendCohort.slug
             const meta = COHORTS_METADATA[slug] || {
@@ -225,8 +247,6 @@ export default function Cohorts() {
         }
       } catch (err) {
         console.error('Error fetching cohorts for landing page:', err)
-      } finally {
-        setLoading(false)
       }
     }
     loadCohorts()
@@ -407,20 +427,6 @@ export default function Cohorts() {
       clearTimeout(resizeTimer)
     }
   }, [])
-
-  if (loading) {
-    return (
-      <section id="cohorts" className="cohort-showcase-section min-h-[50vh] flex items-center justify-center">
-        <div className="text-center font-mono text-xs uppercase tracking-widest font-bold text-black/50">
-          Loading Cohorts...
-        </div>
-      </section>
-    )
-  }
-
-  if (cohorts.length === 0) {
-    return null
-  }
 
   return (
     <section ref={sectionRef} id="cohorts" className="cohort-showcase-section">
