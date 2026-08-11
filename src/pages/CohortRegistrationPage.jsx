@@ -11,6 +11,96 @@ import useRazorpay from '../hooks/useRazorpay';
 import { cohortService } from '../services/cohort';
 import { paymentService } from '../services/payment';
 
+const FONT_STACK =
+  "'Product Sans', 'Google Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SECURE CHECKOUT LOADER — concentric pulse rings around a lock, ties into
+   the SSL / encrypted-checkout theme of this page. Distinct from the
+   cube-fold loader used elsewhere. Pure CSS, responsive via clamp().
+   ───────────────────────────────────────────────────────────────────────── */
+function SecureCheckoutLoader() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-6 sm:gap-7 py-16 sm:py-24 px-6">
+      <div
+        className="relative flex items-center justify-center"
+        style={{
+          width: 'clamp(88px, 24vw, 128px)',
+          height: 'clamp(88px, 24vw, 128px)',
+        }}
+      >
+        <span className="scl-ring scl-ring-1" />
+        <span className="scl-ring scl-ring-2" />
+        <span className="scl-ring scl-ring-3" />
+
+        <div className="scl-core" style={{ backgroundColor: '#090909' }}>
+          <Lock className="scl-lock" style={{ color: '#ffffff' }} strokeWidth={2} />
+        </div>
+      </div>
+
+      <div className="text-center space-y-1.5 max-w-xs px-2">
+        <p
+          className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em]"
+          style={{ color: '#090909' }}
+        >
+          Preparing Secure Registration
+        </p>
+        <p className="text-[11px] sm:text-xs leading-relaxed" style={{ color: 'rgba(9,9,9,0.45)' }}>
+          Establishing an encrypted connection to your cohort…
+        </p>
+      </div>
+
+      <style>{`
+        .scl-ring {
+          position: absolute;
+          inset: 0;
+          border-radius: 9999px;
+          border: 1.5px solid #22C55E;
+          opacity: 0;
+          animation: sclRing 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+        }
+        .scl-ring-2 { animation-delay: 0.65s; }
+        .scl-ring-3 { animation-delay: 1.3s; }
+
+        @keyframes sclRing {
+          0%   { transform: scale(0.55); opacity: 0.85; }
+          75%  { opacity: 0; }
+          100% { transform: scale(1.18); opacity: 0; }
+        }
+
+        .scl-core {
+          position: relative;
+          z-index: 2;
+          width: 40%;
+          height: 40%;
+          border-radius: 9999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 10px 26px rgba(9, 9, 9, 0.28);
+          animation: sclPulse 2.4s ease-in-out infinite;
+        }
+        @keyframes sclPulse {
+          0%, 100% { transform: scale(1); }
+          50%      { transform: scale(1.09); }
+        }
+
+        .scl-lock {
+          width: 42%;
+          height: 42%;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .scl-ring, .scl-core {
+            animation: none !important;
+          }
+          .scl-ring { opacity: 0.35; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export default function CohortRegistrationPage() {
   const [searchParams] = useSearchParams();
   const slugParam = searchParams.get('cohort');
@@ -165,7 +255,7 @@ export default function CohortRegistrationPage() {
     try {
       setIsSubmitting(true);
       setErrorMessage('');
-      
+
       const payload = {
         fullName: formData.fullName.trim(),
         mobileNumber: formData.mobileNumber.trim(),
@@ -179,7 +269,7 @@ export default function CohortRegistrationPage() {
         razorpay_payment_id: razorpayResponse.razorpay_payment_id,
         razorpay_signature: razorpayResponse.razorpay_signature,
       };
-      
+
       const verificationResponse = await paymentService.verifyPayment(payload);
       if (verificationResponse.success && verificationResponse.data) {
         setSuccessData(verificationResponse.data);
@@ -191,7 +281,7 @@ export default function CohortRegistrationPage() {
       console.error('Error verifying payment:', err);
       const paymentId = razorpayResponse.razorpay_payment_id;
       setErrorMessage(
-        err.message || 
+        err.message ||
         `Payment verification failed. If your account was debited, please contact manual support with Payment ID: ${paymentId}.`
       );
     } finally {
@@ -204,18 +294,18 @@ export default function CohortRegistrationPage() {
       setErrorMessage('Razorpay SDK is still loading. Please wait or refresh the page.');
       return;
     }
-    
+
     try {
       setIsSubmitting(true);
       setErrorMessage('');
-      
+
       const orderResponse = await paymentService.createOrder(cohort.id);
       if (!orderResponse.success || !orderResponse.data) {
         throw new Error(orderResponse.message || 'Failed to create order on server.');
       }
-      
+
       const orderData = orderResponse.data;
-      
+
       const options = {
         key: orderData.razorpayKey,
         order_id: orderData.orderId,
@@ -241,7 +331,7 @@ export default function CohortRegistrationPage() {
           color: activeCohortMeta.color || '#22C55E'
         }
       };
-      
+
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (resp) {
         setIsSubmitting(false);
@@ -257,12 +347,13 @@ export default function CohortRegistrationPage() {
 
   if (cohortLoadingState === 'loading') {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col relative">
+      <div
+        className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col relative"
+        style={{ fontFamily: FONT_STACK }}
+      >
         <Navbar />
         <main className="flex-1 flex items-center justify-center p-6">
-          <div className="text-center space-y-4 font-mono text-xs uppercase tracking-widest font-bold">
-            <span className="inline-block animate-pulse">Loading Cohort Registration...</span>
-          </div>
+          <SecureCheckoutLoader />
         </main>
         <Footer />
       </div>
@@ -271,7 +362,10 @@ export default function CohortRegistrationPage() {
 
   if (cohortLoadingState === 'not_found') {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col relative">
+      <div
+        className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col relative"
+        style={{ fontFamily: FONT_STACK }}
+      >
         <Navbar />
         <main className="flex-1 flex items-center justify-center p-6">
           <div className="bg-white border border-red-200 rounded-3xl p-8 text-center space-y-5 max-w-md shadow-2xl">
@@ -280,11 +374,11 @@ export default function CohortRegistrationPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-extrabold text-[#090909]">Cohort Not Found</h3>
-              <p className="text-xs text-black/70 leading-relaxed font-mono">
+              <p className="text-xs text-black/70 leading-relaxed">
                 The cohort you are trying to register for does not exist or has been removed.
               </p>
             </div>
-            <div className="pt-2 font-mono">
+            <div className="pt-2">
               <Link
                 to="/cohorts"
                 className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold text-xs uppercase tracking-wider transition-all"
@@ -301,7 +395,10 @@ export default function CohortRegistrationPage() {
 
   if (cohortLoadingState === 'error') {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col relative">
+      <div
+        className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col relative"
+        style={{ fontFamily: FONT_STACK }}
+      >
         <Navbar />
         <main className="flex-1 flex items-center justify-center p-6">
           <div className="bg-white border border-red-200 rounded-3xl p-8 text-center space-y-5 max-w-md shadow-2xl">
@@ -310,11 +407,11 @@ export default function CohortRegistrationPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-extrabold text-[#090909]">System Error</h3>
-              <p className="text-xs text-black/70 leading-relaxed font-mono">
+              <p className="text-xs text-black/70 leading-relaxed">
                 {errorMessage || 'System error. Please try again later.'}
               </p>
             </div>
-            <div className="pt-2 font-mono">
+            <div className="pt-2">
               <button
                 onClick={() => window.location.reload()}
                 className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold text-xs uppercase tracking-wider transition-all"
@@ -330,14 +427,17 @@ export default function CohortRegistrationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black font-sans flex flex-col">
+    <div
+      className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col"
+      style={{ fontFamily: FONT_STACK }}
+    >
       <Navbar />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-5 sm:px-8 pt-14 pb-10 sm:pt-16 sm:pb-14 lg:pt-28 lg:pb-20">
 
         {!paymentSuccess && (
           /* MOBILE-ONLY COMPACT STEP LINE (hidden on desktop, replaced by the split-column header) */
-          <div className="lg:hidden flex items-center justify-center gap-2.5 pb-8 font-mono">
+          <div className="lg:hidden flex items-center justify-center gap-2.5 pb-8">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#15803D] text-[10px] font-bold uppercase tracking-wider">
               <Lock className="w-3 h-3" />
               SSL Secured
@@ -369,7 +469,7 @@ export default function CohortRegistrationPage() {
               </p>
             </div>
 
-            <div className="bg-[#FAFAFA] border border-black/10 rounded-2xl p-5 text-xs text-left space-y-2.5 font-mono">
+            <div className="bg-[#FAFAFA] border border-black/10 rounded-2xl p-5 text-xs text-left space-y-2.5">
               <div className="flex justify-between border-b border-black/10 pb-2">
                 <span className="text-black/60">Payment ID:</span>
                 <span className="font-bold text-[#15803D]">{successData?.paymentId || 'N/A'}</span>
@@ -410,7 +510,7 @@ export default function CohortRegistrationPage() {
                   href={successData.invoiceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="cursor-pointer inline-flex items-center gap-2 py-3.5 px-8 rounded-2xl border border-[#22C55E] text-[#15803D] bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-xs font-extrabold uppercase tracking-wider font-mono transition-all shadow-sm"
+                  className="cursor-pointer inline-flex items-center gap-2 py-3.5 px-8 rounded-2xl border border-[#22C55E] text-[#15803D] bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-xs font-extrabold uppercase tracking-wider transition-all shadow-sm"
                 >
                   <span>Download / View Invoice ↗</span>
                 </a>
@@ -423,7 +523,7 @@ export default function CohortRegistrationPage() {
 
             <Link
               to="/"
-              className="cursor-pointer inline-block py-3.5 px-8 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-xs uppercase tracking-wider transition-all shadow-md font-mono"
+              className="cursor-pointer inline-block py-3.5 px-8 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-xs uppercase tracking-wider transition-all shadow-md"
             >
               Return to Homepage
             </Link>
@@ -440,7 +540,7 @@ export default function CohortRegistrationPage() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start space-y-8 lg:space-y-10 mb-10 lg:mb-0"
             >
-              <div className="hidden lg:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#15803D] text-xs font-bold uppercase tracking-wider font-mono">
+              <div className="hidden lg:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#15803D] text-xs font-bold uppercase tracking-wider">
                 <Lock className="w-3.5 h-3.5" />
                 <span>256-Bit SSL Encrypted Checkout</span>
               </div>
@@ -454,7 +554,7 @@ export default function CohortRegistrationPage() {
               </p>
 
               {/* DESKTOP PHASE INDICATOR */}
-              <div className="hidden lg:flex items-center gap-3 pt-4 font-mono text-xs">
+              <div className="hidden lg:flex items-center gap-3 pt-4 text-xs">
                 <button
                   onClick={() => setCurrentPhase(1)}
                   className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
@@ -472,7 +572,7 @@ export default function CohortRegistrationPage() {
               </div>
 
               {/* ENROLLING COHORT STRIP */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-black/10 flex items-center justify-between gap-3 font-mono text-[11px] sm:text-xs lg:mt-2">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-black/10 flex items-center justify-between gap-3 text-[11px] sm:text-xs lg:mt-2">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#22C55E] shrink-0" />
                   <div className="min-w-0">
@@ -637,7 +737,7 @@ export default function CohortRegistrationPage() {
                 <button
                   type="submit"
                   disabled={isCohortInactive}
-                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black transition-all flex items-center justify-center gap-2 shadow-xl mt-3 sm:mt-4 font-mono disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black transition-all flex items-center justify-center gap-2 shadow-xl mt-3 sm:mt-4 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <span>Continue to Registration Summary</span>
                   <ArrowRight className="w-5 h-5" />
@@ -657,7 +757,7 @@ export default function CohortRegistrationPage() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start space-y-8 lg:space-y-10 mb-10 lg:mb-0"
             >
-              <div className="hidden lg:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#15803D] text-xs font-bold uppercase tracking-wider font-mono">
+              <div className="hidden lg:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#15803D] text-xs font-bold uppercase tracking-wider">
                 <Lock className="w-3.5 h-3.5" />
                 <span>256-Bit SSL Encrypted Checkout</span>
               </div>
@@ -671,7 +771,7 @@ export default function CohortRegistrationPage() {
               </p>
 
               {/* DESKTOP PHASE INDICATOR */}
-              <div className="hidden lg:flex items-center gap-3 pt-4 font-mono text-xs">
+              <div className="hidden lg:flex items-center gap-3 pt-4 text-xs">
                 <button
                   onClick={() => setCurrentPhase(1)}
                   className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full border bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D] hover:bg-[#22C55E]/25 transition-all"
@@ -688,7 +788,7 @@ export default function CohortRegistrationPage() {
               <button
                 type="button"
                 onClick={() => setCurrentPhase(1)}
-                className="cursor-pointer w-full lg:w-auto px-5 py-3 rounded-xl bg-white border border-black/15 text-xs font-bold text-[#090909] hover:bg-[#22C55E]/15 hover:border-[#22C55E] transition-all flex items-center justify-center gap-2 font-mono lg:mt-2"
+                className="cursor-pointer w-full lg:w-auto px-5 py-3 rounded-xl bg-white border border-black/15 text-xs font-bold text-[#090909] hover:bg-[#22C55E]/15 hover:border-[#22C55E] transition-all flex items-center justify-center gap-2 lg:mt-2"
               >
                 <Edit3 className="w-4 h-4 text-[#15803D]" />
                 <span>Edit Details</span>
@@ -702,7 +802,7 @@ export default function CohortRegistrationPage() {
               className="lg:col-span-7 lg:pt-2 space-y-7 sm:space-y-9 lg:space-y-10"
             >
               {errorMessage && (
-                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-bold flex items-center gap-2 font-sans">
+                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-bold flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
@@ -715,17 +815,17 @@ export default function CohortRegistrationPage() {
                     <CohortIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-bold uppercase text-[#15803D] font-mono">{activeCohortMeta.badge}</span>
+                    <span className="text-[10px] font-bold uppercase text-[#15803D]">{activeCohortMeta.badge}</span>
                     <h3 className="text-sm sm:text-lg font-extrabold text-[#090909] truncate">{cohort?.title}</h3>
                     <p className="text-[11px] sm:text-xs text-black/50">{activeCohortMeta.tagline}</p>
                   </div>
                 </div>
-                <span className="text-lg sm:text-2xl font-extrabold text-[#090909] font-mono shrink-0">₹{cohort?.price}</span>
+                <span className="text-lg sm:text-2xl font-extrabold text-[#090909] shrink-0">₹{cohort?.price}</span>
               </div>
 
               {/* STUDENT DETAILS — plain rows, no box */}
               <div className="space-y-4 sm:space-y-5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-black/40 font-mono">Registrant Details</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-black/40">Registrant Details</h3>
 
                 <dl className="divide-y divide-black/10">
                   <div className="flex items-center justify-between py-3 sm:py-4">
@@ -758,7 +858,7 @@ export default function CohortRegistrationPage() {
               {/* TOTAL — the one highlighted moment */}
               <div className="flex items-center justify-between p-5 sm:p-6 rounded-2xl bg-[#22C55E]/15 border border-[#22C55E]/30">
                 <span className="text-xs sm:text-sm font-bold text-[#090909]">Total Amount</span>
-                <span className="text-xl sm:text-2xl font-extrabold text-[#15803D] font-mono">₹{cohort?.price}</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-[#15803D]">₹{cohort?.price}</span>
               </div>
 
               {/* PAYMENT ACTIONS */}
@@ -767,15 +867,22 @@ export default function CohortRegistrationPage() {
                   type="button"
                   onClick={handleRazorpayPayment}
                   disabled={isSubmitting}
-                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xl font-mono disabled:cursor-not-allowed disabled:opacity-75"
+                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 shadow-xl disabled:cursor-not-allowed disabled:opacity-90 relative overflow-hidden"
                 >
-                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>
-                    {isSubmitting ? 'Processing Payment...' : `Proceed to Razorpay Payment • ₹${cohort?.price}`}
-                  </span>
+                  {isSubmitting ? (
+                    <>
+                      <span className="pcl-spinner" />
+                      <span>Processing Payment...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Proceed to Razorpay Payment • ₹{cohort?.price}</span>
+                    </>
+                  )}
                 </button>
 
-                <div className="flex flex-wrap gap-3 justify-between items-center text-xs font-mono">
+                <div className="flex flex-wrap gap-3 justify-between items-center text-xs">
                   <button
                     type="button"
                     onClick={() => setCurrentPhase(1)}
@@ -798,6 +905,24 @@ export default function CohortRegistrationPage() {
       </main>
 
       <Footer />
+
+      <style>{`
+        .pcl-spinner {
+          width: 15px;
+          height: 15px;
+          border-radius: 9999px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: #ffffff;
+          animation: pclSpin 0.7s linear infinite;
+          flex-shrink: 0;
+        }
+        @keyframes pclSpin {
+          to { transform: rotate(360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .pcl-spinner { animation: none; }
+        }
+      `}</style>
     </div>
   );
 }
