@@ -70,8 +70,9 @@ function CohortsLoader() {
   return (
     <div className="flex flex-col items-center justify-center gap-5 sm:gap-6 py-20 sm:py-28">
       <div
-        className="flex items-end gap-1.5 sm:gap-2"
+        className="flex items-center gap-1.5 sm:gap-2"
         style={{
+          overflow: 'visible',
           maskImage: 'linear-gradient(90deg, transparent, black 18%, black 82%, transparent)',
           WebkitMaskImage: 'linear-gradient(90deg, transparent, black 18%, black 82%, transparent)',
         }}
@@ -83,13 +84,30 @@ function CohortsLoader() {
           const opacity = 1 - dist * 0.15;
 
           return (
-            <motion.span
+            <div
               key={i}
-              className="block rounded-full"
-              style={{ width: size, height: size, backgroundColor: '#0A0A0A', filter: `blur(${blur}px)`, opacity }}
-              animate={reduceMotion ? undefined : { y: [0, -9, 0] }}
-              transition={{ duration: 1.05, repeat: Infinity, ease: 'easeInOut', delay: i * 0.075 }}
-            />
+              style={{
+                width: 22,
+                height: 40, // extra vertical room so the -9px bounce + blur never gets sliced
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'visible',
+              }}
+            >
+              <motion.span
+                className="block rounded-full"
+                style={{
+                  width: size,
+                  height: size,
+                  backgroundColor: '#0A0A0A',
+                  filter: `blur(${blur}px)`,
+                  opacity,
+                }}
+                animate={reduceMotion ? undefined : { y: [0, -9, 0] }}
+                transition={{ duration: 1.05, repeat: Infinity, ease: 'easeInOut', delay: i * 0.075 }}
+              />
+            </div>
           );
         })}
       </div>
