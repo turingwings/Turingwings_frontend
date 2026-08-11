@@ -540,10 +540,7 @@ export default function CohortRegistrationPage() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start space-y-8 lg:space-y-10 mb-10 lg:mb-0"
             >
-              <div className="hidden lg:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#15803D] text-xs font-bold uppercase tracking-wider">
-                <Lock className="w-3.5 h-3.5" />
-                <span>256-Bit SSL Encrypted Checkout</span>
-              </div>
+              
 
               <h1 className="text-xl sm:text-3xl lg:text-6xl font-extrabold text-[#090909] leading-tight">
                 Cohort Registration
