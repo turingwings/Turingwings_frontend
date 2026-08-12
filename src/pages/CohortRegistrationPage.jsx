@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import {
   ShieldCheck, Cpu, CheckCircle2, Lock, CreditCard,
-  ArrowRight, ArrowLeft, AlertCircle, Building, User, Mail, Phone, Check, X, HelpCircle, Edit3
+  ArrowRight, ArrowLeft, AlertCircle, Building, User, Mail, Phone, Check, X, HelpCircle, Edit3,
+  Smartphone, Landmark, ChevronDown
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useRazorpay from '../hooks/useRazorpay';
@@ -123,6 +124,18 @@ export default function CohortRegistrationPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [successData, setSuccessData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // ── Custom Checkout state ──────────────────────────────────────────────────
+  // 'idle' → button shows; 'form' → inline payment form visible
+  const [customCheckoutPhase, setCustomCheckoutPhase] = useState('idle');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card'); // 'card' | 'netbanking' | 'upi'
+  const [cardData, setCardData] = useState({ name: '', number: '', cvv: '', expiry_month: '', expiry_year: '' });
+  const [selectedBank, setSelectedBank] = useState('SBIN');
+  const [upiId, setUpiId] = useState('');
+  const [availableBanks, setAvailableBanks] = useState([]);
+  const razorpayInstanceRef = useRef(null);
+  const orderDataRef = useRef(null); // stores { razorpayKey, orderId, amount, currency } from backend
+  // ──────────────────────────────────────────────────────────────────────────
 
   const isRazorpayLoaded = useRazorpay();
 
@@ -289,7 +302,8 @@ export default function CohortRegistrationPage() {
     }
   };
 
-  const handleRazorpayPayment = async () => {
+  // ── Step 1: Create Razorpay order → reveal inline Custom Checkout form ────
+  const handleInitiateCustomCheckout = async () => {
     if (!isRazorpayLoaded) {
       setErrorMessage('Razorpay SDK is still loading. Please wait or refresh the page.');
       return;
@@ -299,50 +313,105 @@ export default function CohortRegistrationPage() {
       setIsSubmitting(true);
       setErrorMessage('');
 
+      // Create order on existing backend — unchanged API
       const orderResponse = await paymentService.createOrder(cohort.id);
       if (!orderResponse.success || !orderResponse.data) {
         throw new Error(orderResponse.message || 'Failed to create order on server.');
       }
 
       const orderData = orderResponse.data;
+      orderDataRef.current = orderData;
 
-      const options = {
+      // Instantiate Razorpay Custom Checkout (NO .open() call — no popup)
+      const rzp = new window.Razorpay({
         key: orderData.razorpayKey,
-        order_id: orderData.orderId,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: 'Turing Wings',
-        description: `${cohort.title} Registration`,
-        prefill: {
-          name: formData.fullName.trim(),
-          email: formData.email.trim().toLowerCase(),
-          contact: formData.mobileNumber.trim()
-        },
-        handler: async function (response) {
-          await verifyPaymentOnBackend(response);
-        },
-        modal: {
-          ondismiss: function () {
-            setIsSubmitting(false);
-            setErrorMessage('Payment process cancelled by the user.');
-          }
-        },
-        theme: {
-          color: activeCohortMeta.color || '#22C55E'
-        }
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function (resp) {
-        setIsSubmitting(false);
-        setErrorMessage(resp.error.description || 'Payment failed. Please try again.');
       });
-      rzp.open();
+
+      // Fetch available payment methods and populate netbanking list
+      rzp.once('ready', function (response) {
+        if (response && response.methods && response.methods.netbanking) {
+          const banks = Object.entries(response.methods.netbanking).map(([code, name]) => ({ code, name }));
+          setAvailableBanks(banks);
+          if (banks.length > 0) setSelectedBank(banks[0].code);
+        }
+      });
+
+      razorpayInstanceRef.current = rzp;
+
+      // Reveal the inline payment form
+      setCustomCheckoutPhase('form');
     } catch (err) {
-      console.error('Error initiating Razorpay checkout:', err);
+      console.error('Error initiating Custom Checkout:', err);
       setErrorMessage(err.message || 'System error. Please try again later.');
+    } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // ── Step 2: Submit collected payment details via razorpay.createPayment() ──
+  const handleSubmitCustomPayment = () => {
+    const rzp = razorpayInstanceRef.current;
+    const orderData = orderDataRef.current;
+    if (!rzp || !orderData) {
+      setErrorMessage('Session expired. Please click "Proceed to Payment" again.');
+      setCustomCheckoutPhase('idle');
+      return;
+    }
+
+    setErrorMessage('');
+    setIsSubmitting(true);
+
+    const base = {
+      amount: orderData.amount,
+      currency: orderData.currency,
+      order_id: orderData.orderId,
+      email: formData.email.trim().toLowerCase(),
+      contact: formData.mobileNumber.trim(),
+    };
+
+    let paymentData = {};
+
+    if (selectedPaymentMethod === 'card') {
+      const [expMonth, expYear] = cardData.expiry.split('/');
+      paymentData = {
+        ...base,
+        method: 'card',
+        'card[name]': cardData.name.trim(),
+        'card[number]': cardData.number.replace(/\s/g, ''),
+        'card[cvv]': cardData.cvv,
+        'card[expiry_month]': (expMonth || '').trim(),
+        'card[expiry_year]': (expYear || '').trim(),
+      };
+    } else if (selectedPaymentMethod === 'netbanking') {
+      paymentData = { ...base, method: 'netbanking', bank: selectedBank };
+    } else if (selectedPaymentMethod === 'upi') {
+      paymentData = {
+        ...base,
+        method: 'upi',
+        upi: { qr: true, timeout: 10 },
+      };
+    }
+
+    // Wire existing success + failure handlers (backend verification unchanged)
+    rzp.on('payment.success', async function (resp) {
+      await verifyPaymentOnBackend(resp);
+    });
+    rzp.on('payment.error', function (resp) {
+      setIsSubmitting(false);
+      setCustomCheckoutPhase('form');
+      setErrorMessage(resp.error?.description || 'Payment failed. Please try again.');
+    });
+
+    rzp.createPayment(paymentData);
+  };
+
+  // ── Helper: cancel / collapse the inline payment form ─────────────────────
+  const handleCancelCustomCheckout = () => {
+    razorpayInstanceRef.current = null;
+    orderDataRef.current = null;
+    setCustomCheckoutPhase('idle');
+    setIsSubmitting(false);
+    setErrorMessage('Payment process cancelled.');
   };
 
   if (cohortLoadingState === 'loading') {
@@ -858,43 +927,237 @@ export default function CohortRegistrationPage() {
                 <span className="text-xl sm:text-2xl font-extrabold text-[#15803D]">₹{cohort?.price}</span>
               </div>
 
-              {/* PAYMENT ACTIONS */}
-              <div className="space-y-4 sm:space-y-5">
-                <button
-                  type="button"
-                  onClick={handleRazorpayPayment}
-                  disabled={isSubmitting}
-                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 shadow-xl disabled:cursor-not-allowed disabled:opacity-90 relative overflow-hidden"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="pcl-spinner" />
-                      <span>Processing Payment...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span>Proceed to Razorpay Payment • ₹{cohort?.price}</span>
-                    </>
-                  )}
-                </button>
-
-                <div className="flex flex-wrap gap-3 justify-between items-center text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentPhase(1)}
-                    className="cursor-pointer text-black/60 hover:text-[#090909] font-bold flex items-center gap-1.5"
+              {/* ── RAZORPAY CUSTOM CHECKOUT ─────────────────────────────── */}
+              <AnimatePresence mode="wait">
+                {customCheckoutPhase === 'idle' ? (
+                  /* ── Phase idle: primary CTA to create order + reveal form ── */
+                  <motion.div
+                    key="idle"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-4 sm:space-y-5"
                   >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Back to Edit Student Details</span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={handleInitiateCustomCheckout}
+                      disabled={isSubmitting}
+                      className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 shadow-xl disabled:cursor-not-allowed disabled:opacity-90"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="pcl-spinner" />
+                          <span>Preparing Secure Payment…</span>
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>Proceed to Payment • ₹{cohort?.price}</span>
+                        </>
+                      )}
+                    </button>
 
-                  <span className="text-black/40 flex items-center gap-1">
-                    <Lock className="w-3.5 h-3.5 text-[#15803D]" />
-                    <span>SSL Encrypted</span>
-                  </span>
-                </div>
-              </div>
+                    <div className="flex flex-wrap gap-3 justify-between items-center text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentPhase(1)}
+                        className="cursor-pointer text-black/60 hover:text-[#090909] font-bold flex items-center gap-1.5"
+                      >
+                        <ArrowLeft className="w-4 h-4" />
+                        <span>Back to Edit Student Details</span>
+                      </button>
+                      <span className="text-black/40 flex items-center gap-1">
+                        <Lock className="w-3.5 h-3.5 text-[#15803D]" />
+                        <span>SSL Encrypted</span>
+                      </span>
+                    </div>
+                  </motion.div>
+                ) : (
+                  /* ── Phase form: inline Custom Checkout payment form ─────── */
+                  <motion.div
+                    key="form"
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    className="space-y-5 border border-black/10 rounded-2xl p-5 sm:p-6 bg-white"
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Lock className="w-3.5 h-3.5 text-[#15803D]" />
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#15803D]">Secure Payment</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleCancelCustomCheckout}
+                        className="cursor-pointer p-1 rounded-full hover:bg-black/5 transition-colors"
+                        aria-label="Cancel payment"
+                      >
+                        <X className="w-4 h-4 text-black/40" />
+                      </button>
+                    </div>
+
+                    {/* Payment method tabs */}
+                    <div className="flex gap-2">
+                      {[
+                        { id: 'card', label: 'Card', icon: CreditCard },
+                        { id: 'netbanking', label: 'Netbanking', icon: Landmark },
+                        { id: 'upi', label: 'UPI QR', icon: Smartphone },
+                      ].map(({ id, label, icon: Icon }) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setSelectedPaymentMethod(id)}
+                          className={`cursor-pointer flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-all ${
+                            selectedPaymentMethod === id
+                              ? 'bg-[#090909] text-white border-[#090909]'
+                              : 'bg-white text-black/60 border-black/15 hover:border-black/30'
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Card form */}
+                    {selectedPaymentMethod === 'card' && (
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-bold text-black/60 block">Name on Card</label>
+                          <input
+                            type="text"
+                            placeholder="Full name as on card"
+                            value={cardData.name}
+                            onChange={e => setCardData(p => ({ ...p, name: e.target.value }))}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909]"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-bold text-black/60 block">Card Number</label>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={19}
+                            placeholder="0000 0000 0000 0000"
+                            value={cardData.number}
+                            onChange={e => {
+                              const raw = e.target.value.replace(/\D/g, '').slice(0, 16);
+                              const formatted = raw.replace(/(\d{4})(?=\d)/g, '$1 ');
+                              setCardData(p => ({ ...p, number: formatted }));
+                            }}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono tracking-widest"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-bold text-black/60 block">Expiry (MM/YY)</label>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              maxLength={5}
+                              placeholder="MM/YY"
+                              value={cardData.expiry}
+                              onChange={e => {
+                                let val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                if (val.length > 2) val = val.slice(0, 2) + '/' + val.slice(2);
+                                setCardData(p => ({ ...p, expiry: val }));
+                              }}
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-bold text-black/60 block">CVV</label>
+                            <input
+                              type="password"
+                              inputMode="numeric"
+                              maxLength={4}
+                              placeholder="•••"
+                              value={cardData.cvv}
+                              onChange={e => setCardData(p => ({ ...p, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) }))}
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Netbanking form */}
+                    {selectedPaymentMethod === 'netbanking' && (
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-black/60 block">Select Bank</label>
+                        <div className="relative">
+                          <select
+                            value={selectedBank}
+                            onChange={e => setSelectedBank(e.target.value)}
+                            className="cursor-pointer w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] focus:outline-none focus:border-[#090909] appearance-none pr-8"
+                          >
+                            {availableBanks.length > 0 ? (
+                              availableBanks.map(b => (
+                                <option key={b.code} value={b.code}>{b.name}</option>
+                              ))
+                            ) : (
+                              /* Fallback list when ready event hasn't fired yet */
+                              [
+                                ['SBIN', 'State Bank of India'],
+                                ['HDFC', 'HDFC Bank'],
+                                ['ICIC', 'ICICI Bank'],
+                                ['UTIB', 'Axis Bank'],
+                                ['KKBK', 'Kotak Mahindra Bank'],
+                                ['PUNB', 'Punjab National Bank'],
+                                ['BKID', 'Bank of India'],
+                                ['CNRB', 'Canara Bank'],
+                                ['INDB', 'IndusInd Bank'],
+                                ['IOBA', 'Indian Overseas Bank'],
+                              ].map(([code, name]) => (
+                                <option key={code} value={code}>{name}</option>
+                              ))
+                            )}
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40 pointer-events-none" />
+                        </div>
+                        <p className="text-[10px] text-black/45 pt-1">You will be redirected to your bank's secure page to complete the payment.</p>
+                      </div>
+                    )}
+
+                    {/* UPI QR */}
+                    {selectedPaymentMethod === 'upi' && (
+                      <div className="text-center space-y-2 py-3">
+                        <Smartphone className="w-8 h-8 mx-auto text-black/30" />
+                        <p className="text-xs text-black/60 leading-relaxed">
+                          A UPI QR code will be displayed on the next screen.<br />
+                          Scan it with any UPI app (GPay, PhonePe, Paytm, etc.) to complete payment.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Pay button */}
+                    <button
+                      type="button"
+                      onClick={handleSubmitCustomPayment}
+                      disabled={isSubmitting}
+                      className="cursor-pointer w-full py-3.5 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 shadow-xl disabled:cursor-not-allowed disabled:opacity-90"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="pcl-spinner" />
+                          <span>Processing…</span>
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4" />
+                          <span>Pay ₹{cohort?.price} Securely</span>
+                        </>
+                      )}
+                    </button>
+
+                    <p className="text-center text-[10px] text-black/40">
+                      Secured by Razorpay · 256-bit SSL Encrypted
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </div>
         )}

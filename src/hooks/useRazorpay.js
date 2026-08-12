@@ -9,7 +9,7 @@ export default function useRazorpay() {
       return;
     }
 
-    const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+    const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/razorpay.js"]');
     if (existingScript) {
       const handleLoad = () => setIsLoaded(true);
       existingScript.addEventListener('load', handleLoad);
@@ -19,7 +19,7 @@ export default function useRazorpay() {
     }
 
     const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.src = 'https://checkout.razorpay.com/v1/razorpay.js';
     script.async = true;
     script.onload = () => setIsLoaded(true);
     script.onerror = () => {
