@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useRazorpay from '../hooks/useRazorpay';
 import { cohortService } from '../services/cohort';
 import { paymentService } from '../services/payment';
+import { getReferralCode } from '../utils/referralStorage';
 
 const FONT_STACK =
   "'Product Sans', 'Google Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
@@ -269,6 +270,8 @@ export default function CohortRegistrationPage() {
       setIsSubmitting(true);
       setErrorMessage('');
 
+      const referralCode = getReferralCode();
+
       const payload = {
         fullName: formData.fullName.trim(),
         mobileNumber: formData.mobileNumber.trim(),
@@ -278,6 +281,7 @@ export default function CohortRegistrationPage() {
         branch: formData.branch.trim() || undefined,
         currentYear: formData.currentYear,
         cohortId: cohort.id,
+        referralCode: referralCode || undefined,
         razorpay_order_id: razorpayResponse.razorpay_order_id,
         razorpay_payment_id: razorpayResponse.razorpay_payment_id,
         razorpay_signature: razorpayResponse.razorpay_signature,

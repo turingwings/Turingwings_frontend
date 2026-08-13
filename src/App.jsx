@@ -17,6 +17,7 @@ import TermsOfServicePage from "./pages/TermsOfServicePage";
 import CohortsListPage from "./pages/CohortsListPage";
 import CohortPage from "./pages/CohortPage";
 import CohortRegistrationPage from "./pages/CohortRegistrationPage";
+import ReferralHandlerPage from "./pages/ReferralHandlerPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function ScrollToTop() {
@@ -81,6 +82,9 @@ export default function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
+
+        {/* Creator Referral Route */}
+        <Route path="/r/:creatorCode" element={<ReferralHandlerPage />} />
 
         {/* Flagship Cohorts Routes */}
         <Route path="/cohorts" element={<CohortsListPage />} />
