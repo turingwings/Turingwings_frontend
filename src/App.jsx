@@ -6,6 +6,7 @@ import Evolution from "./components/Evolution";
 import Stack from "./components/Stack";
 import BuildWithAI from "./components/BuildWithAI";
 import Cohorts from "./components/Cohorts";
+import BuilderOfTheCohort from "./components/BuilderOfTheCohort";
 import WhyTuringWings from "./components/WhyTuringWings";
 import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
@@ -35,6 +36,9 @@ function HomePage() {
       <Stack />
       <BuildWithAI />
       <Cohorts />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BuilderOfTheCohort />
+      </div>
       <WhyTuringWings />
       <Footer />
     </main>

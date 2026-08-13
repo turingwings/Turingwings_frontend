@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import { Cpu, ArrowRight, Clock } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cohortService } from '../services/cohort';
+import BuilderOfTheCohort from '../components/BuilderOfTheCohort';
 
 import { COHORTS_METADATA } from '../data/cohortMetadata';
 
@@ -343,6 +344,9 @@ export default function CohortsListPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Builder of the Cohort Achievement Section */}
+        <BuilderOfTheCohort />
       </main>
 
       <Footer />
