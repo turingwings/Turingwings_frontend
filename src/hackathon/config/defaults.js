@@ -126,8 +126,8 @@ export const defaultEventData = {
   ],
 
   contact: {
-    email: 'hello@hackfinity.dev',
-    phone: '+91 90000 00000',
+    email: 'contact@turingwings.com',
+    phone: '+91 83419 99296',
     address: 'Turing Wings Innovation Campus, Outer Ring Road, Bengaluru',
     socials: { twitter: '#', linkedin: '#', instagram: '#', discord: '#' }
   }

@@ -359,7 +359,7 @@ export default function TermsOfServicePage() {
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 shrink-0 w-full md:w-auto">
             <a
-              href="mailto:contact@turingwings.org"
+              href="mailto:contact@turingwings.com"
               className="button-primary text-xs justify-center w-full sm:w-auto"
             >
               <span>Email Legal Team</span>

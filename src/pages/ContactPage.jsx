@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Mail, Send, ShieldCheck, RefreshCw, Check,
+  Mail, Phone, Send, ShieldCheck, RefreshCw, Check,
   AlertCircle, Award,
   ChevronDown, Clock, Zap
 } from "lucide-react";
@@ -45,7 +45,7 @@ export default function ContactPage() {
     },
     {
       q: "Can organizations partner or sponsor a Buildathon?",
-      a: "Absolutely. Mention sponsorship in your message below or email contact@turingwings.org to discuss custom tracks and talent recruitment."
+      a: "Absolutely. Mention sponsorship in your message below or email contact@turingwings.com to discuss custom tracks and talent recruitment."
     }
   ];
 
@@ -63,7 +63,7 @@ export default function ContactPage() {
     }, 700);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
 
@@ -79,12 +79,39 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/contact@turingwings.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: `[Turing Wings Website] ${formData.subject}`,
+          message: formData.message,
+          _subject: `New Contact Inquiry: ${formData.subject} from ${formData.name}`,
+          _template: "table",
+          _captcha: "false"
+        })
+      });
+
+      const resData = await response.json();
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setFormData({ name: "", email: "", subject: "General Inquiry", message: "" });
+        setCaptchaVerified(false);
+      } else {
+        setErrorMessage(resData.message || "Unable to deliver email automatically. Please email contact@turingwings.com directly.");
+      }
+    } catch (err) {
+      console.error("Form submission error:", err);
+      // Even if network blocks CORS, notify or handle gracefully:
+      setErrorMessage("Network issue. Please send an email directly to contact@turingwings.com.");
+    } finally {
       setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFormData({ name: "", email: "", subject: "General Inquiry", message: "" });
-      setCaptchaVerified(false);
-    }, 1200);
+    }
   };
 
   return (
@@ -161,7 +188,17 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-[#111] uppercase tracking-wider">Email Command</h4>
-                    <p className="text-xs text-[#555] font-medium mt-0.5 break-all">contact@turingwings.org</p>
+                    <a href="mailto:contact@turingwings.com" className="text-xs text-[#555] font-medium mt-0.5 break-all hover:text-[#22C55E] transition-colors block">contact@turingwings.com</a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-[#22C55E] shrink-0">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#111] uppercase tracking-wider">Direct Phone / Call</h4>
+                    <a href="tel:+918341999296" className="text-xs text-[#555] font-medium mt-0.5 hover:text-[#22C55E] transition-colors block">+91 83419 99296</a>
                   </div>
                 </div>
 
@@ -271,11 +308,10 @@ export default function ContactPage() {
                       <button
                         type="button"
                         onClick={handleVerifyCaptcha}
-                        className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-colors shrink-0 ${
-                          captchaVerified
+                        className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-colors shrink-0 ${captchaVerified
                             ? "bg-[#22C55E] border-[#22C55E] text-black"
                             : "border-black/30 hover:border-[#22C55E]"
-                        }`}
+                          }`}
                       >
                         {captchaLoading ? (
                           <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#22C55E]" />

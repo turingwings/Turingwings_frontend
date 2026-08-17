@@ -148,7 +148,7 @@ export default function EventPortalPage() {
           })) : defaultEventData.faqs,
           contact: {
             email: data.contact?.coordinatorEmail || data.contact?.supportEmail || "contact@turingwings.com",
-            phone: data.contact?.coordinatorPhone || data.contact?.emergencyContact || "+91 9876543210",
+            phone: data.contact?.coordinatorPhone || data.contact?.emergencyContact || "+91 83419 99296",
             address: data.venue?.address || "Turing Wings Online Virtual Arena",
             coordinatorName: data.contact?.coordinatorName || "Manoj Kumar Allu",
             socials: {

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { Mail, Phone, ArrowUpRight } from 'lucide-react'
 
 const contactDetails = [
-  { label: 'EMAIL', value: 'contact@turingwings.org', href: 'mailto:contact@turingwings.org', icon: Mail },
-  { label: 'PHONE', value: '+91 93478 69344', href: 'tel:+919347869344', icon: Phone },
+  { label: 'EMAIL', value: 'contact@turingwings.com', href: 'mailto:contact@turingwings.com', icon: Mail },
+  { label: 'PHONE', value: '+91 83419 99296', href: 'tel:+918341999296', icon: Phone },
 ]
 
 const socials = [
