@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import claudeLogo from '../assets/tech_icons/claude-ai-logo-removebg-preview.png';
 import { 
   Trophy, 
   Sparkles, 
@@ -90,8 +91,8 @@ export default function BuilderOfTheCohort() {
             {/* Reward 1 */}
             <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#22C55E]/50 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/30 flex items-center justify-center text-[#22C55E] group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/30 flex items-center justify-center text-[#22C55E] group-hover:scale-110 transition-transform overflow-hidden p-2.5">
+                  <img src={claudeLogo} alt="Claude Pro" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#22C55E]">

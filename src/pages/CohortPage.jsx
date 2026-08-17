@@ -696,8 +696,12 @@ export default function CohortPage() {
                         whileTap={{ scale: 0.97 }}
                         className="cursor-pointer flex items-center gap-3 pl-3 pr-5 py-3 rounded-2xl bg-white border border-black/10 shadow-xs hover:border-[#16A34A]/40 hover:shadow-md transition-all shrink-0"
                       >
-                        <span className="w-9 h-9 rounded-xl bg-black/5 text-black/70 flex items-center justify-center shrink-0">
-                          <Icon className="w-4.5 h-4.5" />
+                        <span className="w-9 h-9 rounded-xl bg-black/5 text-black/70 flex items-center justify-center shrink-0 overflow-hidden p-1.5">
+                          {t.image ? (
+                            <img src={t.image} alt={t.name} className="w-full h-full object-contain" />
+                          ) : (
+                            <Icon className="w-4.5 h-4.5" />
+                          )}
                         </span>
                         <span className="text-left leading-tight">
                           <span className="text-xs font-bold block whitespace-nowrap">{t.name}</span>
@@ -737,8 +741,12 @@ export default function CohortPage() {
                   >
                     <X className="w-4 h-4" />
                   </button>
-                  <span className="w-12 h-12 rounded-2xl bg-black/5 text-black/70 flex items-center justify-center">
-                    {activeTool && <activeTool.icon className="w-6 h-6" />}
+                  <span className="w-12 h-12 rounded-2xl bg-black/5 text-black/70 flex items-center justify-center overflow-hidden p-2">
+                    {activeTool?.image ? (
+                      <img src={activeTool.image} alt={activeTool.name} className="w-full h-full object-contain" />
+                    ) : (
+                      activeTool && <activeTool.icon className="w-6 h-6" />
+                    )}
                   </span>
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-black/50">{activeTool?.desc}</span>
@@ -1122,8 +1130,12 @@ export default function CohortPage() {
                       whileTap={{ scale: 0.97 }}
                       className="flex items-center gap-2.5 sm:gap-3 pl-2.5 sm:pl-3 pr-4 sm:pr-5 py-2.5 sm:py-3 rounded-2xl bg-white border border-black/10 shadow-xs hover:border-[#16A34A]/50 hover:shadow-md transition-all shrink-0"
                     >
-                      <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black/5 text-black/70 flex items-center justify-center shrink-0">
-                        <Icon className="w-4.5 h-4.5" />
+                      <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black/5 text-black/70 flex items-center justify-center shrink-0 overflow-hidden p-1.5">
+                        {t.image ? (
+                          <img src={t.image} alt={t.name} className="w-full h-full object-contain" />
+                        ) : (
+                          <Icon className="w-4.5 h-4.5" />
+                        )}
                       </span>
                       <span className="text-[13px] sm:text-xs font-bold whitespace-nowrap">{t.name}</span>
                     </motion.button>
@@ -1160,8 +1172,12 @@ export default function CohortPage() {
                 >
                   <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
-                <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-black/5 text-black/70 flex items-center justify-center">
-                  {activeTool && <activeTool.icon className="w-5 h-5 sm:w-6 sm:h-6" />}
+                <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-black/5 text-black/70 flex items-center justify-center overflow-hidden p-2">
+                  {activeTool?.image ? (
+                    <img src={activeTool.image} alt={activeTool.name} className="w-full h-full object-contain" />
+                  ) : (
+                    activeTool && <activeTool.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  )}
                 </span>
                 <div>
                   <span className="text-[12px] sm:text-[10px] font-bold uppercase tracking-widest text-black/50">{activeTool?.desc}</span>

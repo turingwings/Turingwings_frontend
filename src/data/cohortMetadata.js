@@ -5,6 +5,23 @@ import {
   TrendingUp, Music, CreditCard, Video, Box, Cloud, Award, Satellite, Compass, Plus
 } from 'lucide-react';
 
+import claudeLogo from '../assets/tech_icons/claude-ai-logo-removebg-preview.png';
+import cursorLogo from '../assets/tech_icons/cursor-removebg-preview.png';
+import mcpLogo from '../assets/tech_icons/mcp-removebg-preview.png';
+import reactLogo from '../assets/tech_icons/React-removebg-preview.png';
+import supabaseLogo from '../assets/tech_icons/supabase-removebg-preview.png';
+import razorpayLogo from '../assets/tech_icons/razorpay-com-logo-removebg-preview.png';
+import vercelLogo from '../assets/tech_icons/vercel-removebg-preview.png';
+
+import kaliLogo from '../assets/tech_icons/kali-linux-removebg-preview.png';
+import burpLogo from '../assets/tech_icons/burpsuite.png';
+import nmapLogo from '../assets/tech_icons/virustotal-removebg-preview.png';
+import wiresharkLogo from '../assets/tech_icons/wireshark-removebg-preview.png';
+import zapLogo from '../assets/tech_icons/owasp-zap-removebg-preview.png';
+import pythonLogo from '../assets/tech_icons/Python-removebg-preview.png';
+import ollamaLogo from '../assets/tech_icons/ollama-removebg-preview.png';
+import openclawLogo from '../assets/tech_icons/openclaw-dark-removebg-preview.png';
+
 export const COHORTS_METADATA = {
   'webdevxai': {
     flagship: 'FLAGSHIP 01',
@@ -189,31 +206,31 @@ export const COHORTS_METADATA = {
     ],
     toolsList: [
       {
-        name: 'Claude Code & Gemini CLI', desc: 'Agentic CLI Tools', icon: Sparkles,
+        name: 'Claude Code & Gemini CLI', desc: 'Agentic CLI Tools', icon: Sparkles, image: claudeLogo,
         mainUse: 'Terminal-native AI agents that navigate, modify, and audit codebases across local files autonomously.',
       },
       {
-        name: 'Cursor & Antigravity', desc: 'AI-Native Editors', icon: Terminal,
+        name: 'Cursor & Antigravity', desc: 'AI-Native Editors', icon: Terminal, image: cursorLogo,
         mainUse: 'IDE environments for specification-driven coding, inline refactoring, and AI-assisted debugging.',
       },
       {
-        name: 'Model Context Protocol (MCP)', desc: 'Agent Tool Connectivity', icon: Box,
+        name: 'Model Context Protocol (MCP)', desc: 'Agent Tool Connectivity', icon: Box, image: mcpLogo,
         mainUse: 'Connects AI agents to live databases, GitHub APIs, and local infrastructure.',
       },
       {
-        name: 'React 18 & Express', desc: 'Full-Stack Core', icon: Cpu,
+        name: 'React 18 & Express', desc: 'Full-Stack Core', icon: Cpu, image: reactLogo,
         mainUse: 'Standard framework stack for modern frontend user interfaces and custom backend servers.',
       },
       {
-        name: 'Supabase & PostgreSQL', desc: 'Database & Auth Engine', icon: Database,
+        name: 'Supabase & PostgreSQL', desc: 'Database & Auth Engine', icon: Database, image: supabaseLogo,
         mainUse: 'Managed relational database storage, built-in user authentication, and Row-Level Security policies.',
       },
       {
-        name: 'Razorpay Integration', desc: 'Monetization Engine', icon: CreditCard,
+        name: 'Razorpay Integration', desc: 'Monetization Engine', icon: CreditCard, image: razorpayLogo,
         mainUse: 'Server-verified payment gateways and webhooks for SaaS subscriptions.',
       },
       {
-        name: 'Vercel & Git Workflows', desc: 'Continuous Deployment', icon: GitBranch,
+        name: 'Vercel & Git Workflows', desc: 'Continuous Deployment', icon: GitBranch, image: vercelLogo,
         mainUse: 'Git-driven delivery pipelines that deploy preview branches and production releases automatically.',
       },
     ],
@@ -379,35 +396,35 @@ export const COHORTS_METADATA = {
     ],
     toolsList: [
       {
-        name: 'Kali Linux', desc: 'Pentesting OS', icon: Terminal,
+        name: 'Kali Linux', desc: 'Pentesting OS', icon: Terminal, image: kaliLogo,
         mainUse: 'Your entire lab runs on it — a Linux distribution pre-loaded with the recon, exploitation, and analysis tools used throughout the cohort.',
       },
       {
-        name: 'Burp Suite', desc: 'Intercept Proxy', icon: Bug,
+        name: 'Burp Suite', desc: 'Intercept Proxy', icon: Bug, image: burpLogo,
         mainUse: 'Sits between your browser and the target app so you can intercept, inspect, and modify every HTTP request — the core tool for manual web pentesting.',
       },
       {
-        name: 'Nmap & Gobuster', desc: 'Reconnaissance', icon: Search,
+        name: 'Nmap & Gobuster', desc: 'Reconnaissance', icon: Search, image: nmapLogo,
         mainUse: 'Maps a target before you attack it — open ports, running services, and hidden directories, so every later step is aimed at something real.',
       },
       {
-        name: 'Wireshark', desc: 'Packet Analyzer', icon: Radio,
+        name: 'Wireshark', desc: 'Packet Analyzer', icon: Radio, image: wiresharkLogo,
         mainUse: 'Captures raw network traffic frame by frame, letting you see exactly what\'s moving across the wire during an attack or a normal session.',
       },
       {
-        name: 'OWASP ZAP & Nikto', desc: 'Vulnerability Scanners', icon: AlertTriangle,
+        name: 'OWASP ZAP & Nikto', desc: 'Vulnerability Scanners', icon: AlertTriangle, image: zapLogo,
         mainUse: 'Automates the first pass of a security audit — scanning an application or server for known misconfigurations and vulnerability classes.',
       },
       {
-        name: 'Python 3', desc: 'Security Automation', icon: Code2,
+        name: 'Python 3', desc: 'Security Automation', icon: Code2, image: pythonLogo,
         mainUse: 'Turns one-off manual checks into repeatable tools — log parsers, port scanners, and OSINT utilities you build and keep.',
       },
       {
-        name: 'Ollama & Llama 3', desc: 'Local AI Models', icon: Sparkles,
+        name: 'Ollama & Llama 3', desc: 'Local AI Models', icon: Sparkles, image: ollamaLogo,
         mainUse: 'Runs an LLM entirely on your own machine, so your security agents can reason about logs and alerts without sending sensitive data anywhere.',
       },
       {
-        name: 'OpenClaw & MCP', desc: 'Agentic Framework', icon: Layers,
+        name: 'OpenClaw & MCP', desc: 'Agentic Framework', icon: Layers, image: openclawLogo,
         mainUse: 'The framework behind Week 4 — lets an AI agent actually call your security tools (Nmap, VirusTotal, log parsers) instead of just talking about them.',
       },
     ],
