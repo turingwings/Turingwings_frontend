@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import NotFoundPage from './NotFoundPage';
+import BuilderOfTheCohort from '../components/BuilderOfTheCohort';
 import {
   Cpu, ShieldCheck, Clock, Layers, Terminal, Bug, Wifi, Code2, Search, AlertTriangle,
   Key, Radio, FileText, Calendar, Eye, X, Sparkles, Rocket, Server, Database, Globe,
@@ -749,6 +750,9 @@ export default function CohortPage() {
             )}
           </AnimatePresence>
 
+          {/* BUILDER OF THE COHORT */}
+          <BuilderOfTheCohort />
+
           {/* BOTTOM BANNER */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -1168,6 +1172,9 @@ export default function CohortPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* BUILDER OF THE COHORT */}
+        <BuilderOfTheCohort />
 
         {/* BOTTOM BANNER */}
         <motion.div
