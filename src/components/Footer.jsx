@@ -15,17 +15,17 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="pt-10 sm:pt-16 pb-0 font-product-sans bg-[#090909] text-white overflow-hidden relative border-t border-white/10">
+    <footer className="pt-8 sm:pt-10 pb-0 font-product-sans bg-[#090909] text-white overflow-hidden relative border-t border-white/10">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 md:px-12">
 
         {/* Top Info, Contact & Social Chips Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pb-8 sm:pb-12 items-center border-b border-white/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pb-4 sm:pb-6 items-center">
 
           {/* Prominent Brand Logo & Tagline */}
-          <div className="lg:col-span-4 flex flex-col items-start gap-3">
+          <div className="lg:col-span-4 flex flex-col items-start gap-2.5">
             <Link to="/" aria-label="Turing Wings home" className="inline-block">
               <img
-                src="/Logos/WhiteFillNoBg.jpeg"
+                src="/Logos/WhiteNoBg.png"
                 alt="Turing Wings"
                 className="h-10 sm:h-12 w-auto object-contain shrink-0 hover:opacity-90 transition-opacity"
               />
@@ -36,15 +36,15 @@ export default function Footer() {
           </div>
 
           {/* Contact Details */}
-          <div className="lg:col-span-5 flex flex-col gap-3">
+          <div className="lg:col-span-5 flex flex-col gap-2">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#22C55E]">
               DIRECT CONTACT
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
               {contactDetails.map((item) => {
                 const ItemIcon = item.icon
                 return (
-                  <div key={item.label} className="flex flex-col gap-1 min-w-0">
+                  <div key={item.label} className="flex flex-col gap-0.5 min-w-0">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40">
                       {item.label}
                     </span>
@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
 
           {/* Social Connect Chips / Pills */}
-          <div className="lg:col-span-3 flex flex-col gap-3">
+          <div className="lg:col-span-3 flex flex-col gap-2">
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#22C55E]">
               COMMUNITY
             </span>
@@ -85,14 +85,14 @@ export default function Footer() {
         </div>
 
         {/* Quote Row */}
-        <div className="py-6 sm:py-8 flex justify-center text-center">
-          <p className="font-serif italic text-base sm:text-2xl text-white/90 font-medium tracking-tight">
+        <div className="py-2 sm:py-3 flex justify-center text-center">
+          <p className="font-serif italic text-sm sm:text-xl text-white/80 font-medium tracking-tight">
             "Built by engineers, for engineers."
           </p>
         </div>
 
         {/* Legal & Copyright Row */}
-        <div className="pt-4 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-white/50 border-t border-white/10">
+        <div className="py-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-white/50">
           <p>© {new Date().getFullYear()} Turing Wings. All rights reserved.</p>
           <div className="flex items-center gap-6 font-semibold">
             <Link
@@ -112,10 +112,17 @@ export default function Footer() {
 
       </div>
 
-      {/* "TURING WINGS" Watermark Banner with Green Letter Outline */}
-            <div className="w-full overflow-hidden pointer-events-none select-none flex justify-center -mb-3 pt-2">
-        <h1 className="text-[11vw] font-black tracking-tighter leading-none uppercase whitespace-nowrap text-center text-white/[0.04] translate-y-[28%] font-product-sans">
-          TURING WINGS
+      {/* "TURING WINGS" Watermark Banner with Green Outline */}
+      <div className="w-full overflow-hidden pointer-events-none select-none flex justify-center pt-2 -mb-4">
+        <h1
+          className="text-[14.5vw] font-black tracking-tighter leading-none uppercase whitespace-nowrap text-center text-[#0e0e0e] font-product-sans opacity-90 translate-y-[25%] flex items-center justify-center gap-[0.25em]"
+          style={{
+            WebkitTextStroke: '1.5px #000000',
+            paintOrder: 'stroke fill',
+          }}
+        >
+          <span>TURING</span>
+          <span>WINGS</span>
         </h1>
       </div>
     </footer>

@@ -51,9 +51,9 @@ export default function Navbar() {
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-product-sans">
             <Link
               to="/cohorts"
-              className="group hidden sm:inline-flex items-center gap-1.5 rounded-full border border-black/20 px-4 md:px-6 py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
+              className="group inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
             >
-              <span>Explore Cohorts</span>
+              <span><span className="sm:hidden">Cohorts</span><span className="hidden sm:inline">Explore Cohorts</span></span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 ↗
               </span>
@@ -61,7 +61,7 @@ export default function Navbar() {
 
             <Link
               to="/buildathons"
-              className="group inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+              className="group hidden sm:inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
             >
               <span>Buildathons</span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">

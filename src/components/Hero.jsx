@@ -248,7 +248,7 @@ export default function Hero() {
         >
           <motion.h1
             variants={item}
-            className="text-[clamp(3rem,9vw,8rem)] font-bold leading-[0.92] tracking-[-0.04em] text-[#111]"
+            className="text-[clamp(3rem,9vw,8rem)] font-bold leading-[1.1] tracking-[-0.04em] text-[#111]"
           >
             Engineering<br />Reimagined
           </motion.h1>

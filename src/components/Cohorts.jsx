@@ -26,7 +26,6 @@ gsap.registerPlugin(ScrollTrigger)
 // whatever sits above/below it.
 if (typeof window !== 'undefined') {
   ScrollTrigger.config({ ignoreMobileResize: true })
-  ScrollTrigger.normalizeScroll(true)
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -330,12 +329,13 @@ export default function Cohorts() {
           : null
       )
 
+      const isMobileDevice = window.innerWidth < 768
       const st = ScrollTrigger.create({
         trigger: pinRef.current,
         start: 'top top',
-        end: () => `+=${getViewportHeight() * (showcaseItems.length - 0.25)}`,
+        end: () => `+=${getViewportHeight() * (isMobileDevice ? (showcaseItems.length - 0.5) * 0.85 : showcaseItems.length - 0.25)}`,
         pin: true,
-        scrub: 0.6,
+        scrub: isMobileDevice ? 0.3 : 0.6,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onRefresh: () => measure(),
