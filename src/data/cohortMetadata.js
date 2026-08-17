@@ -37,7 +37,7 @@ export const COHORTS_METADATA = {
       {
         week: 1,
         icon: Rocket,
-        title: 'Think & Build with AI',
+        title: 'BUILD',
         subtitle: 'Spec-Driven Engineering & Rapid Prototyping',
         goal: 'Turn ideas into technical specifications, generate React interfaces with AI, and establish automated deployment pipelines.',
         classes: [
@@ -75,7 +75,7 @@ export const COHORTS_METADATA = {
       {
         week: 2,
         icon: Cpu,
-        title: 'Full-Stack & Context Architecture',
+        title: 'ENGINEER',
         subtitle: 'APIs, PostgreSQL & Context Engineering',
         goal: 'Build Express backends, model relational database schemas in Supabase, and implement AGENTS.md for AI continuity.',
         classes: [
@@ -113,7 +113,7 @@ export const COHORTS_METADATA = {
       {
         week: 3,
         icon: Compass,
-        title: 'Product Engineering & Integrations',
+        title: 'PRODUCTIZE',
         subtitle: 'AI APIs, Monetization & Webhooks',
         goal: 'Transform full-stack applications into commercial SaaS products with LLM streaming, Razorpay, and storage.',
         classes: [
@@ -151,7 +151,7 @@ export const COHORTS_METADATA = {
       {
         week: 4,
         icon: Satellite,
-        title: 'Agentic & Multi-Agent Workflows',
+        title: 'AGENTIFY',
         subtitle: 'CLI Agents, MCP & Multi-Agent Teams',
         goal: 'Orchestrate teams of specialized AI agents connected via MCP to build and deploy a capstone product.',
         classes: [
