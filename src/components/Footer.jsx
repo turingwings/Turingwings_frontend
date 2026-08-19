@@ -11,9 +11,9 @@ const contactDetails = [
 ]
 
 const socials = [
-  { label: 'LinkedIn', href: 'https://linkedin.com', icon: linkedinIcon },
-  { label: 'Instagram', href: 'https://instagram.com', icon: instagramIcon },
-  { label: 'YouTube', href: 'https://youtube.com', icon: youtubeIcon },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/144508927/', icon: linkedinIcon },
+  { label: 'Instagram', href: 'https://www.instagram.com/turingwings/', icon: instagramIcon },
+  { label: 'YouTube', href: 'https://www.youtube.com/channel/UCyURWChEHfW5nMACFVDtPRw', icon: youtubeIcon },
 ]
 
 export default function Footer() {
