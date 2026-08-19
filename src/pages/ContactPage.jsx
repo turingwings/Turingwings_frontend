@@ -252,7 +252,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors min-h-[44px]"
                         required
                       />
                     </div>
@@ -265,7 +265,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors min-h-[44px]"
                         required
                       />
                     </div>
@@ -278,7 +278,7 @@ export default function ContactPage() {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full appearance-none px-4 py-3 pr-10 rounded-2xl bg-white border border-black/15 text-[#111] text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors"
+                        className="w-full appearance-none px-4 py-3 pr-10 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors min-h-[44px]"
                       >
                         <option value="General Inquiry">General Inquiry</option>
                         <option value="Cohort Application">Cohort Application Question</option>
@@ -297,18 +297,18 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleInputChange}
                       placeholder="Describe your question or build intent..."
-                      className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors resize-none min-h-[120px]"
                       required
                     />
                   </div>
 
                   {/* Security Verification Step */}
-                  <div className="p-4 rounded-2xl bg-white border border-black/10 flex flex-wrap items-center justify-between gap-3">
+                  <div className="p-4 rounded-2xl bg-white border border-black/10 flex flex-wrap items-center justify-between gap-3 min-h-[44px]">
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
                         onClick={handleVerifyCaptcha}
-                        className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-colors shrink-0 ${captchaVerified
+                        className={`w-7 h-7 min-h-[28px] min-w-[28px] rounded-lg border flex items-center justify-center transition-colors shrink-0 ${captchaVerified
                             ? "bg-[#22C55E] border-[#22C55E] text-black"
                             : "border-black/30 hover:border-[#22C55E]"
                           }`}
@@ -331,7 +331,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="button-primary w-full justify-center text-center text-white"
+                    className="button-primary w-full justify-center text-center text-white min-h-[44px]"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">

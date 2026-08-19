@@ -188,7 +188,7 @@ export default function BuilderOfTheCohort() {
             onClick={toggleExpand}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="cursor-pointer group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#22C55E] text-black font-extrabold text-xs sm:text-sm uppercase tracking-[0.18em] shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:shadow-[0_0_45px_rgba(34,197,94,0.5)] transition-all duration-300"
+            className="cursor-pointer group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#22C55E] text-black font-extrabold text-xs sm:text-sm uppercase tracking-[0.18em] shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:shadow-[0_0_45px_rgba(34,197,94,0.5)] transition-all duration-300 min-h-[44px] min-w-[44px] touch-action-manipulation"
           >
             <span>{isExpanded ? "HIDE CRITERIA" : "EXPLORE HOW"}</span>
             <motion.div

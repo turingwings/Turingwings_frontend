@@ -50,7 +50,7 @@ export default function Footer() {
                     </span>
                     <a
                       href={item.href}
-                      className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-white/90 hover:text-[#22C55E] transition-colors truncate"
+                      className="inline-flex items-center gap-2 min-h-[44px] text-xs sm:text-sm font-semibold text-white/90 hover:text-[#22C55E] transition-colors truncate"
                     >
                       <ItemIcon className="w-3.5 h-3.5 text-white/40 shrink-0" />
                       <span className="truncate">{item.value}</span>
@@ -73,7 +73,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 hover:bg-white text-white hover:text-black transition-all border border-white/10 hover:border-white"
+                  className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 hover:bg-white text-white hover:text-black transition-all border border-white/10 hover:border-white touch-action-manipulation"
                 >
                   <span>{social.label}</span>
                   <ArrowUpRight className="w-3.0 h-3.0 opacity-60 shrink-0" />
@@ -97,13 +97,13 @@ export default function Footer() {
           <div className="flex items-center gap-6 font-semibold">
             <Link
               to="/privacy"
-              className="text-white/60 hover:text-[#22C55E] transition-colors"
+              className="inline-flex items-center min-h-[44px] text-white/60 hover:text-[#22C55E] transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               to="/terms"
-              className="text-white/60 hover:text-[#22C55E] transition-colors"
+              className="inline-flex items-center min-h-[44px] text-white/60 hover:text-[#22C55E] transition-colors"
             >
               Terms of Service
             </Link>
@@ -115,7 +115,7 @@ export default function Footer() {
       {/* "TURING WINGS" Watermark Banner with Green Outline */}
       <div className="w-full overflow-hidden pointer-events-none select-none flex justify-center pt-2 -mb-4">
         <h1
-          className="text-[14.5vw] font-black tracking-tighter leading-none uppercase whitespace-nowrap text-center text-[#0e0e0e] font-product-sans opacity-90 translate-y-[25%] flex items-center justify-center gap-[0.25em]"
+          className="text-[clamp(2.2rem,13.5vw,14.5vw)] font-black tracking-tighter leading-none uppercase whitespace-nowrap text-center text-[#0e0e0e] font-product-sans opacity-90 translate-y-[25%] flex items-center justify-center gap-[0.25em]"
           style={{
             WebkitTextStroke: '1.5px #000000',
             paintOrder: 'stroke fill',

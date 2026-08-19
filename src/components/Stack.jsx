@@ -80,17 +80,17 @@ function LogoCard({ item, position }) {
   return (
     <article
       className={`
-        absolute top-0 left-0 w-[30%]
-        flex flex-col items-center justify-center gap-3 rounded-2xl
-        border border-black/[0.08] bg-neutral-50/80 p-5 md:p-6
+        absolute top-0 left-0 w-[31%] sm:w-[30%]
+        flex flex-col items-center justify-center gap-2 sm:gap-3 rounded-2xl
+        border border-black/[0.08] bg-neutral-50/80 p-3 sm:p-5 md:p-6
         transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]
         will-change-transform ${positionStyles[position]}
       `}
     >
-      <div className="relative flex h-12 w-12 items-center justify-center rounded-xl border border-black/5 bg-white p-2 shadow-sm transition-transform duration-300 group-hover:scale-105">
+      <div className="relative flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-xl border border-black/5 bg-white p-1.5 sm:p-2 shadow-sm transition-transform duration-300 group-hover:scale-105">
         <Logo item={item} />
       </div>
-      <p className="text-xs font-bold tracking-wide text-neutral-800 font-product-sans truncate max-w-full">{item.name}</p>
+      <p className="text-[10px] sm:text-xs font-bold tracking-wide text-neutral-800 font-product-sans truncate max-w-full">{item.name}</p>
     </article>
   )
 }

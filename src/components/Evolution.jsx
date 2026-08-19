@@ -142,7 +142,8 @@ function Row({ item, modern, visible, index, hovered, activeStage, onHover, onLe
         display: 'flex',
         alignItems: 'center',
         gap: isMobile ? 10 : 12,
-        padding: isMobile ? '10px 12px' : '9px 12px',
+        padding: isMobile ? '10px 14px' : '9px 12px',
+        minHeight: 44,
         borderRadius: '10px',
         boxSizing: 'border-box',
         backgroundColor: isStageActive ? (modern ? '#f0fdf4' : '#f8fafc') : (isHovered ? '#f4f4f5' : 'transparent'),
@@ -479,7 +480,8 @@ export default function Evolution() {
                       onClick={() => handleStageClick(i)}
                       style={{
                         cursor: 'pointer',
-                        padding: isMobile ? '5px 8px' : '6px 10px',
+                        padding: isMobile ? '8px 12px' : '6px 10px',
+                        minHeight: 44,
                         borderRadius: isMobile ? '14px' : '18px',
                         background: isActive ? '#f0fdf4' : '#ffffff',
                         border: `1px solid ${isActive ? '#86efac' : '#f3f4f6'}`,

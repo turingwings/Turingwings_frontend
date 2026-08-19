@@ -74,7 +74,7 @@ export default function WhyTuringWings() {
                   key={item.num}
                   onClick={() => setActiveIdx(idx)}
                   onMouseEnter={() => setActiveIdx(idx)}
-                  className={`group relative p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none bg-white ${
+                  className={`group relative p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none bg-white min-h-[44px] ${
                     isActive
                       ? 'border-[#090909] shadow-lg ring-1 ring-black/10 translate-x-1 sm:translate-x-2'
                       : 'border-black/10 hover:border-black/30'
@@ -172,7 +172,7 @@ export default function WhyTuringWings() {
 
           <Link
             to="/contact"
-            className="relative z-10 inline-flex items-center justify-between gap-4 bg-[#090909] text-white px-7 py-4 rounded-2xl text-xs font-bold tracking-wider uppercase hover:bg-black/85 transition-all duration-300 transform active:scale-95 shrink-0 group shadow-sm font-mono"
+            className="relative z-10 inline-flex items-center justify-between gap-4 bg-[#090909] text-white px-7 py-4 rounded-2xl text-xs font-bold tracking-wider uppercase hover:bg-black/85 transition-all duration-300 transform active:scale-95 shrink-0 group shadow-sm font-mono min-h-[44px] touch-action-manipulation"
           >
             <span>Join Turing Wings</span>
             <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">

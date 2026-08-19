@@ -208,7 +208,7 @@ function CohortCard({ cohort }) {
             <Link to={cohort.curriculumPath} className="flex-1">
               <motion.div
                 whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 px-5 bg-[#0A0A0A] text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-5 bg-[#0A0A0A] text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 min-h-[44px] touch-action-manipulation"
               >
                 <span>{cohort.ctaLabel}</span>
                 <motion.span variants={arrowVariants} className="inline-flex">
@@ -219,7 +219,7 @@ function CohortCard({ cohort }) {
             <Link to={cohort.registerPath} className="flex-1">
               <motion.div
                 whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 px-5 text-[#0A0A0A] font-bold text-xs text-center border border-black/20"
+                className="w-full py-3.5 px-5 text-[#0A0A0A] font-bold text-xs text-center border border-black/20 flex items-center justify-center min-h-[44px] touch-action-manipulation"
               >
                 Register · ₹{Number(cohort.price).toLocaleString('en-IN')}
               </motion.div>

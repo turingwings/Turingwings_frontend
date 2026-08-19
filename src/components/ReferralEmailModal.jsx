@@ -75,7 +75,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="cursor-pointer absolute top-4 right-4 p-2 rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all"
+            className="cursor-pointer absolute top-4 right-4 p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all touch-action-manipulation"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -137,7 +137,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
                         setEmail(e.target.value);
                         if (errorMessage) setErrorMessage('');
                       }}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/15 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#22C55E] transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/15 text-base sm:text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#22C55E] transition-all min-h-[44px]"
                     />
                   </div>
                 </div>
@@ -145,7 +145,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="cursor-pointer w-full py-3.5 rounded-xl bg-[#22C55E] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#16A34A] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#22C55E]/20"
+                  className="cursor-pointer w-full py-3.5 rounded-xl bg-[#22C55E] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#16A34A] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#22C55E]/20 min-h-[44px] touch-action-manipulation"
                 >
                   {loading ? (
                     <span>Connecting...</span>

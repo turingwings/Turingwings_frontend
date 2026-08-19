@@ -248,21 +248,21 @@ export default function Hero() {
         >
           <motion.h1
             variants={item}
-            className="text-[clamp(3rem,9vw,8rem)] font-bold leading-[1.1] tracking-[-0.04em] text-[#111]"
+            className="text-[clamp(2.4rem,8.5vw,8rem)] font-bold leading-[1.1] tracking-[-0.04em] text-[#111] break-words"
           >
             Engineering<br />Reimagined
           </motion.h1>
 
           <motion.p
             variants={item}
-            className="mt-8 max-w-lg text-[clamp(1rem,1.5vw,1.25rem)] font-light leading-relaxed text-black/60"
+            className="mt-6 sm:mt-8 max-w-lg text-[clamp(0.95rem,1.5vw,1.25rem)] font-light leading-relaxed text-black/60"
           >
             Build with AI. Scale with purpose.
             <br className="hidden sm:block" />
             Lead the future of engineering.
           </motion.p>
 
-          <motion.div variants={item} className="mt-12 flex flex-wrap items-center gap-4">
+          <motion.div variants={item} className="mt-8 sm:mt-12 flex flex-wrap items-center gap-4">
             <Link
               to="/cohorts"
               onClick={(e) => {
@@ -272,7 +272,7 @@ export default function Hero() {
                   el.scrollIntoView({ behavior: 'smooth' })
                 }
               }}
-              className="inline-flex items-center gap-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#111] bg-white border border-black/15 px-6 py-3 rounded-full transition-all hover:bg-[#22C55E] hover:text-black hover:border-[#22C55E] shadow-sm font-mono"
+              className="inline-flex items-center justify-center gap-3 min-h-[44px] text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#111] bg-white border border-black/15 px-6 py-3 rounded-full transition-all hover:bg-[#22C55E] hover:text-black hover:border-[#22C55E] shadow-sm font-mono touch-action-manipulation"
             >
               <span>Explore Flagship Cohorts</span>
               <span className="text-[#22C55E] transition-colors group-hover:text-black">→</span>

@@ -44,7 +44,7 @@ export default function BuildWithAI() {
         }
         @media (max-width: 640px) {
           .isometric-deck {
-            transform: rotateX(24deg) rotateZ(-8deg) scale(0.86);
+            transform: rotateX(20deg) rotateZ(-6deg) scale(0.78);
           }
         }
         .isometric-card-item {
@@ -68,7 +68,7 @@ export default function BuildWithAI() {
               <span>/ ARCHITECTURE & WORKFLOW</span>
             </div>
 
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#090909] leading-[1.08] font-product-sans">
+            <h2 className="text-2xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#090909] leading-[1.08] font-product-sans break-words">
               Learn by making <br />
               <span className="text-black/45 font-serif italic relative inline-block">
                 the future
@@ -83,10 +83,10 @@ export default function BuildWithAI() {
           </div>
 
           {/* Right Column: 3D Isometric Card Stack Graphic */}
-          <div className="lg:col-span-6 relative h-[240px] sm:h-[300px] lg:h-[360px] flex items-center justify-center isometric-stage">
+          <div className="lg:col-span-6 relative h-[220px] sm:h-[300px] lg:h-[360px] flex items-center justify-center isometric-stage">
             
             {/* 3D Stack Container */}
-            <div className="isometric-deck relative w-[270px] sm:w-[350px] lg:w-[410px] h-[170px] sm:h-[210px]">
+            <div className="isometric-deck relative w-[260px] sm:w-[350px] lg:w-[410px] h-[160px] sm:h-[210px]">
               {workflows.map((item, idx) => {
                 const IconComponent = item.icon
                 const isActive = activeTab === idx
@@ -105,7 +105,7 @@ export default function BuildWithAI() {
                       transform: `translateZ(${translateZ}px) translateY(${translateY}px)`,
                       zIndex: zIndex,
                     }}
-                    className={`isometric-card-item bg-white border rounded-2xl p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none shadow-sm ${
+                    className={`isometric-card-item bg-white border rounded-2xl p-3.5 sm:p-5 flex items-center justify-between cursor-pointer select-none shadow-sm min-h-[44px] ${
                       isActive
                         ? 'is-active border-[#090909] ring-2 ring-black/10 opacity-100 shadow-xl'
                         : 'border-black/10 hover:border-black/30 opacity-75 hover:opacity-100'
@@ -141,7 +141,7 @@ export default function BuildWithAI() {
               <div
                 key={item.num}
                 onClick={() => setActiveTab(idx)}
-                className={`bg-white border rounded-2xl p-5 sm:p-6 text-left flex flex-col justify-between gap-6 cursor-pointer transition-all duration-300 ${
+                className={`bg-white border rounded-2xl p-5 sm:p-6 text-left flex flex-col justify-between gap-6 cursor-pointer transition-all duration-300 min-h-[44px] ${
                   isActive
                     ? 'border-[#090909] shadow-xl ring-1 ring-black/10 translate-y-[-4px]'
                     : 'border-black/10 hover:border-black/30 hover:shadow-md'
@@ -181,7 +181,7 @@ export default function BuildWithAI() {
               <div
                 key={item.num}
                 onClick={() => setActiveTab(idx)}
-                className={`bg-white border rounded-2xl p-4 flex items-center justify-between gap-3 text-left transition-all cursor-pointer ${
+                className={`bg-white border rounded-2xl p-3.5 flex items-center justify-between gap-3 text-left transition-all cursor-pointer min-h-[44px] ${
                   isActive
                     ? 'border-[#090909] ring-2 ring-black/10 shadow-md bg-black/[0.02]'
                     : 'border-black/10 active:bg-black/[0.02]'
@@ -210,7 +210,7 @@ export default function BuildWithAI() {
         <div className="pt-2 sm:pt-4 flex justify-center">
           <a
             href="#cohorts"
-            className="inline-flex items-center gap-2 rounded-full border border-black/20 bg-white px-7 py-3 text-xs font-bold text-[#090909] hover:bg-[#090909] hover:text-white transition-all shadow-xs font-mono"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-7 py-3 text-xs font-bold text-[#090909] hover:bg-[#090909] hover:text-white transition-all shadow-xs font-mono min-h-[44px] touch-action-manipulation"
           >
             <span>Explore all workflows</span>
             <ArrowUpRight className="w-4 h-4" />

@@ -270,7 +270,7 @@ export default function TermsOfServicePage() {
           <button
             type="button"
             onClick={() => setTocOpen((v) => !v)}
-            className="w-full flex items-center justify-between rounded-xl border border-black/10 bg-[#F8F8F8] px-4 py-3 text-sm font-bold text-[#111]"
+            className="w-full flex items-center justify-between rounded-xl border border-black/10 bg-[#F8F8F8] px-4 py-3 min-h-[44px] text-sm font-bold text-[#111]"
             aria-expanded={tocOpen}
           >
             <span>Section {SECTIONS[activeIndex]?.num} — {SECTIONS[activeIndex]?.title}</span>
@@ -283,7 +283,7 @@ export default function TermsOfServicePage() {
                   key={s.id}
                   href={`#${s.id}`}
                   onClick={() => setTocOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold ${
+                  className={`flex items-center gap-3 px-4 py-3 min-h-[44px] text-sm font-semibold ${
                     activeId === s.id ? "text-[#22C55E] bg-[#F8F8F8]" : "text-[#333]"
                   }`}
                 >

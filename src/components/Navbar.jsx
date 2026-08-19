@@ -51,7 +51,7 @@ export default function Navbar() {
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-product-sans">
             <Link
               to="/cohorts"
-              className="group inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
+              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-6 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
             >
               <span><span className="sm:hidden">Cohorts</span><span className="hidden sm:inline">Explore Cohorts</span></span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -61,7 +61,7 @@ export default function Navbar() {
 
             <Link
               to="/buildathons"
-              className="group hidden sm:inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+              className="group hidden sm:inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-6 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
             >
               <span>Buildathons</span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -71,7 +71,7 @@ export default function Navbar() {
 
             <Link
               to="/contact"
-              className="group inline-flex items-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3 sm:px-5 md:px-6 py-1.5 sm:py-2 text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3.5 sm:px-5 md:px-6 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
             >
               <span>Contact</span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -82,8 +82,9 @@ export default function Navbar() {
             {/* MOBILE HAMBURGER BUTTON */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden flex items-center justify-center p-2 rounded-full border border-black/20 text-black bg-white shrink-0 shadow-xs relative z-[110]"
+              className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full border border-black/20 text-black bg-white shrink-0 shadow-xs relative z-[110] touch-action-manipulation"
               aria-label={menuOpen ? 'Close Navigation Menu' : 'Toggle Navigation Menu'}
+              aria-expanded={menuOpen}
             >
               {menuOpen ? <X className="w-5 h-5 text-[#22C55E]" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -104,7 +105,7 @@ export default function Navbar() {
             />
 
             {/* Drawer Container */}
-            <div className="relative z-10 w-[82%] max-w-[320px] h-full bg-white flex flex-col shadow-2xl font-product-sans">
+            <div className="relative z-10 w-[85%] max-w-[320px] h-full bg-white flex flex-col shadow-2xl font-product-sans">
               {/* Header */}
               <div className="flex items-center justify-between px-6 h-16 border-b border-black/10 shrink-0 bg-[#FAF9F6]">
                 <span className="text-xs font-mono font-bold uppercase tracking-widest text-black/50">
@@ -112,7 +113,7 @@ export default function Navbar() {
                 </span>
                 <button
                   onClick={() => setMenuOpen(false)}
-                  className="p-2 rounded-full text-black hover:bg-black/5 transition-colors"
+                  className="min-h-[44px] min-w-[44px] p-2.5 rounded-full text-black hover:bg-black/5 flex items-center justify-center transition-colors"
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5 text-black" />
@@ -129,7 +130,7 @@ export default function Navbar() {
                       key={item.label}
                       to={item.path}
                       onClick={() => setMenuOpen(false)}
-                      className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
+                      className={`flex items-center justify-between p-4 min-h-[44px] rounded-2xl border transition-all ${
                         isActive
                           ? 'bg-[#090909] text-white border-[#090909] font-bold shadow-md'
                           : 'bg-[#FAF9F6] text-[#090909] border-black/10 hover:border-[#22C55E] hover:bg-[#22C55E]/10'

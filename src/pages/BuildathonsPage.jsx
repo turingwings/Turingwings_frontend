@@ -269,7 +269,7 @@ export default function BuildathonsPage() {
 
                   <Link
                     to={`/events/${evt.slug}`}
-                    className="button-primary w-full justify-center mt-2 text-center text-white"
+                    className="button-primary w-full justify-center mt-2 text-center text-white min-h-[44px] touch-action-manipulation"
                   >
                     <span>Open Standalone Event Webpage</span>
                     <span className="text-[#22C55E]">↗</span>

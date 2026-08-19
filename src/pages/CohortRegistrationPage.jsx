@@ -691,7 +691,7 @@ export default function CohortRegistrationPage() {
                       placeholder="Full name"
                       value={formData.fullName}
                       onChange={(e) => handleInputChange('fullName', e.target.value)}
-                      className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                      className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                     />
                   </div>
                 </div>
@@ -710,7 +710,7 @@ export default function CohortRegistrationPage() {
                         placeholder="Email address"
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                        className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                       />
                     </div>
                   </div>
@@ -728,7 +728,7 @@ export default function CohortRegistrationPage() {
                         placeholder="Mobile number"
                         value={formData.mobileNumber}
                         onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
-                        className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                        className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                       />
                     </div>
                   </div>
@@ -748,7 +748,7 @@ export default function CohortRegistrationPage() {
                         placeholder="College name"
                         value={formData.collegeName}
                         onChange={(e) => handleInputChange('collegeName', e.target.value)}
-                        className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                        className="w-full pl-9 sm:pl-10 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                       />
                     </div>
                   </div>
@@ -764,7 +764,7 @@ export default function CohortRegistrationPage() {
                       placeholder="Degree stream"
                       value={formData.stream}
                       onChange={(e) => handleInputChange('stream', e.target.value)}
-                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                     />
                   </div>
                 </div>
@@ -780,7 +780,7 @@ export default function CohortRegistrationPage() {
                       placeholder="Specialization branch"
                       value={formData.branch}
                       onChange={(e) => handleInputChange('branch', e.target.value)}
-                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E]"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/40 focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                     />
                   </div>
 
@@ -792,7 +792,7 @@ export default function CohortRegistrationPage() {
                       value={formData.currentYear}
                       disabled={isCohortInactive}
                       onChange={(e) => handleInputChange('currentYear', e.target.value)}
-                      className="cursor-pointer w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-[13px] sm:text-sm text-[#090909] focus:outline-none focus:border-[#22C55E]"
+                      className="cursor-pointer w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-black/15 text-base sm:text-sm text-[#090909] focus:outline-none focus:border-[#22C55E] min-h-[44px]"
                     >
                       <option value="1st Year">1st Year</option>
                       <option value="2nd Year">2nd Year</option>
@@ -807,7 +807,7 @@ export default function CohortRegistrationPage() {
                 <button
                   type="submit"
                   disabled={isCohortInactive}
-                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black transition-all flex items-center justify-center gap-2 shadow-xl mt-3 sm:mt-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer w-full py-3.5 sm:py-4 rounded-2xl bg-[#090909] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black transition-all flex items-center justify-center gap-2 shadow-xl mt-3 sm:mt-4 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] touch-action-manipulation"
                 >
                   <span>Continue to Registration Summary</span>
                   <ArrowRight className="w-5 h-5" />
@@ -1013,7 +1013,7 @@ export default function CohortRegistrationPage() {
                           key={id}
                           type="button"
                           onClick={() => setSelectedPaymentMethod(id)}
-                          className={`cursor-pointer flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-all ${
+                          className={`cursor-pointer flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[44px] rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-all touch-action-manipulation ${
                             selectedPaymentMethod === id
                               ? 'bg-[#090909] text-white border-[#090909]'
                               : 'bg-white text-black/60 border-black/15 hover:border-black/30'
@@ -1035,7 +1035,7 @@ export default function CohortRegistrationPage() {
                             placeholder="Full name as on card"
                             value={cardData.name}
                             onChange={e => setCardData(p => ({ ...p, name: e.target.value }))}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909]"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] min-h-[44px]"
                           />
                         </div>
                         <div className="space-y-1">
@@ -1051,7 +1051,7 @@ export default function CohortRegistrationPage() {
                               const formatted = raw.replace(/(\d{4})(?=\d)/g, '$1 ');
                               setCardData(p => ({ ...p, number: formatted }));
                             }}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono tracking-widest"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono tracking-widest min-h-[44px]"
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
@@ -1068,7 +1068,7 @@ export default function CohortRegistrationPage() {
                                 if (val.length > 2) val = val.slice(0, 2) + '/' + val.slice(2);
                                 setCardData(p => ({ ...p, expiry: val }));
                               }}
-                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono min-h-[44px]"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1080,7 +1080,7 @@ export default function CohortRegistrationPage() {
                               placeholder="•••"
                               value={cardData.cvv}
                               onChange={e => setCardData(p => ({ ...p, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) }))}
-                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-base sm:text-sm text-[#090909] placeholder-black/35 focus:outline-none focus:border-[#090909] font-mono min-h-[44px]"
                             />
                           </div>
                         </div>
@@ -1095,7 +1095,7 @@ export default function CohortRegistrationPage() {
                           <select
                             value={selectedBank}
                             onChange={e => setSelectedBank(e.target.value)}
-                            className="cursor-pointer w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-[13px] text-[#090909] focus:outline-none focus:border-[#090909] appearance-none pr-8"
+                            className="cursor-pointer w-full px-3.5 py-2.5 rounded-xl bg-[#FAFAFA] border border-black/15 text-base sm:text-sm text-[#090909] focus:outline-none focus:border-[#090909] appearance-none pr-8 min-h-[44px]"
                           >
                             {availableBanks.length > 0 ? (
                               availableBanks.map(b => (
@@ -1141,7 +1141,7 @@ export default function CohortRegistrationPage() {
                       type="button"
                       onClick={handleSubmitCustomPayment}
                       disabled={isSubmitting}
-                      className="cursor-pointer w-full py-3.5 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 shadow-xl disabled:cursor-not-allowed disabled:opacity-90"
+                      className="cursor-pointer w-full py-3.5 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-[11px] sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 shadow-xl disabled:cursor-not-allowed disabled:opacity-90 min-h-[44px] touch-action-manipulation"
                     >
                       {isSubmitting ? (
                         <>
