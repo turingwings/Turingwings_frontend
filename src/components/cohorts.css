@@ -18,6 +18,7 @@
     align-items: flex-start;
     position: relative;
     background: #FAFAFA;
+    touch-action: pan-y;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -48,6 +49,7 @@
     height: 100%;
     align-items: center;
     will-change: transform;
+    touch-action: pan-y;
 }
 
 .cohort-showcase-card-wrapper {

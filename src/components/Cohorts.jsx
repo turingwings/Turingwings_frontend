@@ -323,34 +323,50 @@ export default function Cohorts() {
     const setupTimer = setTimeout(() => {
       if (!measure()) return
 
+      const isMobileDevice = window.innerWidth < 768
+
       gsap.set(track, { x: 0, force3D: true })
       gsap.set(cardWrapperRefs.current, { scale: 0.94, opacity: 0.75 })
 
-      quickX = gsap.quickTo(track, 'x', { duration: 0.55, ease: 'power3' })
+      // Low-latency quickTo generator to prevent touch drag lag on mobile
+      quickX = gsap.quickTo(track, 'x', {
+        duration: isMobileDevice ? 0.08 : 0.25,
+        ease: isMobileDevice ? 'none' : 'power2.out',
+      })
 
       if (progressFillRef.current) {
         quickProgress = gsap.quickTo(progressFillRef.current, 'scaleX', {
-          duration: 0.35,
-          ease: 'power2.out',
+          duration: isMobileDevice ? 0.08 : 0.2,
+          ease: 'power1.out',
         })
       }
 
       cardQuick = cardWrapperRefs.current.map((el) =>
         el
           ? {
-              scale: gsap.quickTo(el, 'scale', { duration: 0.45, ease: 'power2.out' }),
-              opacity: gsap.quickTo(el, 'opacity', { duration: 0.45, ease: 'power2.out' }),
+              scale: gsap.quickTo(el, 'scale', {
+                duration: isMobileDevice ? 0.1 : 0.25,
+                ease: 'power1.out',
+              }),
+              opacity: gsap.quickTo(el, 'opacity', {
+                duration: isMobileDevice ? 0.1 : 0.25,
+                ease: 'power1.out',
+              }),
             }
           : null
       )
 
-      const isMobileDevice = window.innerWidth < 768
+      // Mobile pin distance factor: 0.48x viewport height per card gives a natural, 
+      // 1:1 responsive horizontal glide without getting stuck in a long scroll trap.
+      const pinDistanceMultiplier = isMobileDevice ? 0.48 : 0.8
+      const pinDistance = Math.round(getViewportHeight() * (showcaseItems.length * pinDistanceMultiplier))
+
       const st = ScrollTrigger.create({
         trigger: pinRef.current,
         start: 'top top',
-        end: () => `+=${getViewportHeight() * (isMobileDevice ? (showcaseItems.length - 0.5) * 0.85 : showcaseItems.length - 0.25)}`,
+        end: `+=${pinDistance}`,
         pin: true,
-        scrub: isMobileDevice ? 0.3 : 0.6,
+        scrub: isMobileDevice ? 0.05 : 0.2,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onRefresh: () => measure(),
@@ -363,8 +379,8 @@ export default function Cohorts() {
 
           // Card track position — starts right at the first cohort card (x: 0)
           // and scrolls left toward the last card / explore-more card.
-          const scrollStart = 0.02
-          const scrollEnd = 0.98
+          const scrollStart = 0.01
+          const scrollEnd = 0.99
           const normalizedProgress = Math.max(
             0,
             Math.min(1, (progress - scrollStart) / (scrollEnd - scrollStart))
