@@ -27,7 +27,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
       setErrorMessage('');
 
       const response = await referralService.captureEmail(cleanEmail, creatorCode);
-      
+
       markEmailCaptured(cleanEmail);
       setSubmitted(true);
       setStatusMessage(response.message || 'Thank you for connecting with Turing Wings!');

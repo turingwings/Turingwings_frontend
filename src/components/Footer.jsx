@@ -1,6 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, ArrowUpRight } from 'lucide-react'
+import { Mail, Phone } from 'lucide-react'
+import linkedinIcon from '../assets/tech_icons/linkedin.png'
+import instagramIcon from '../assets/tech_icons/instagram.png'
+import youtubeIcon from '../assets/tech_icons/youtube.png'
 
 const contactDetails = [
   { label: 'EMAIL', value: 'contact@turingwings.com', href: 'mailto:contact@turingwings.com', icon: Mail },
@@ -8,9 +11,9 @@ const contactDetails = [
 ]
 
 const socials = [
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
-  { label: 'Instagram', href: 'https://instagram.com' },
-  { label: 'YouTube', href: 'https://youtube.com' },
+  { label: 'LinkedIn', href: 'https://linkedin.com', icon: linkedinIcon },
+  { label: 'Instagram', href: 'https://instagram.com', icon: instagramIcon },
+  { label: 'YouTube', href: 'https://youtube.com', icon: youtubeIcon },
 ]
 
 export default function Footer() {
@@ -66,17 +69,22 @@ export default function Footer() {
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#22C55E]">
               COMMUNITY
             </span>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-2">
               {socials.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 hover:bg-white text-white hover:text-black transition-all border border-white/10 hover:border-white touch-action-manipulation"
+                  aria-label={social.label}
+                  title={social.label}
+                  className="p-2 min-h-[44px] min-w-[44px] rounded-xl border border-transparent hover:border-white bg-transparent flex items-center justify-center transition-all duration-200 hover:scale-110 touch-action-manipulation"
                 >
-                  <span>{social.label}</span>
-                  <ArrowUpRight className="w-3.0 h-3.0 opacity-60 shrink-0" />
+                  <img
+                    src={social.icon}
+                    alt={social.label}
+                    className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
+                  />
                 </a>
               ))}
             </div>

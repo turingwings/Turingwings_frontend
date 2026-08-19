@@ -28,14 +28,18 @@ if (typeof window !== 'undefined') {
   ScrollTrigger.config({ ignoreMobileResize: true })
 }
 
+import linkedinIcon from '../assets/tech_icons/linkedin.png'
+import instagramIcon from '../assets/tech_icons/instagram.png'
+import youtubeIcon from '../assets/tech_icons/youtube.png'
+
 /* ═══════════════════════════════════════════════════════════════════════════
    COHORT DATA
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const socialLinks = [
-  { label: 'LinkedIn', href: '#' },
-  { label: 'Instagram', href: '#' },
-  { label: 'YouTube', href: '#' },
+  { label: 'LinkedIn', href: 'https://linkedin.com', icon: linkedinIcon },
+  { label: 'Instagram', href: 'https://instagram.com', icon: instagramIcon },
+  { label: 'YouTube', href: 'https://youtube.com', icon: youtubeIcon },
 ]
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -162,11 +166,22 @@ function ExploreCard() {
       <Link to="/cohorts" className="cohort-explore-link">Explore all cohorts <span>→</span></Link>
       <div className="cohort-social-block">
         <p>Don&apos;t miss an update.</p>
-        <div className="cohort-social-links">
+        <div className="cohort-social-links flex items-center gap-2">
           {socialLinks.map((social) => (
-            <a key={social.label} href={social.href} aria-label={social.label} title={social.label}>
-              <SocialIcon name={social.label} />
-              <span>{social.label}</span>
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.label}
+              title={social.label}
+              className="p-2 min-h-[44px] min-w-[44px] rounded-xl border border-transparent hover:border-white bg-transparent flex items-center justify-center transition-all duration-200 hover:scale-110 touch-action-manipulation"
+            >
+              <img
+                src={social.icon}
+                alt={social.label}
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
+              />
             </a>
           ))}
         </div>
