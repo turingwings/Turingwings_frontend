@@ -10,7 +10,7 @@ html { scroll-behavior: smooth; background: #fafafa; }
 html, body, #root { min-width: 320px; width: 100%; overflow-x: clip; }
 body { margin: 0; background: #fafafa; color: #090909; font-family: 'Product Sans', 'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif; }
 
-img, video, svg, canvas, iframe { max-width: 100%; height: auto; }
+img, video, svg, canvas, iframe { max-width: 100%; }
 
 /* Form inputs min font-size 16px on mobile to prevent iOS Safari auto-zoom */
 @media (max-width: 639px) {
