@@ -11,11 +11,11 @@ export default function Hero() {
   const [isLaserDone, setIsLaserDone] = useState(false)
   const [wordIndex, setWordIndex] = useState(0)
 
-  // 1. Unmask ENGINEERING via top-to-bottom shutter print over 0.8s with immediate flip trigger
+  // 1. Unmask ENGINEERING via top-to-bottom shutter print over 1.6s (reduced speed)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLaserDone(true)
-    }, 500)
+    }, 1000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -55,45 +55,45 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 sm:px-6 md:px-12 py-16 sm:py-24 bg-[#fafafa] selection:bg-[#22C55E] selection:text-black font-sans"
+      className="relative flex min-h-[85vh] sm:min-h-screen items-center justify-center overflow-hidden px-4 sm:px-6 md:px-12 pt-20 sm:pt-28 pb-12 sm:pb-20 bg-white selection:bg-[#22C55E] selection:text-black font-sans"
     >
       {/* Studio architectural soft lighting backdrop */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_35%,rgba(255,255,255,1),rgba(240,240,244,0.75))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_35%,rgba(255,255,255,1),rgba(245,245,248,0.5))]" />
       
       {/* Soft diagonal ambient studio shadow */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/[0.03] via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/[0.02] via-transparent to-transparent" />
       
       {/* Bottom floor gradient line */}
-      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/[0.04] to-transparent" />
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/[0.02] to-transparent" />
 
-      {/* Subtle Logo Watermark Backdrop (Positioned higher up towards top) */}
+      {/* Subtle Logo Watermark Backdrop (Positioned slightly higher up) */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 flex items-start justify-center overflow-hidden pointer-events-none">
         <img
           src="/Logos/BlackNoBg.png"
           alt=""
-          className="w-[80vw] max-w-[900px] h-auto object-contain opacity-[0.06] select-none pointer-events-none -translate-y-28 sm:-translate-y-44 md:-translate-y-56"
+          className="w-[90vw] sm:w-[80vw] max-w-[900px] h-auto object-contain opacity-[0.06] select-none pointer-events-none -translate-y-24 sm:-translate-y-52 md:-translate-y-64"
         />
       </div>
 
-      <div className="relative z-20 mx-auto flex w-full max-w-[1240px] flex-col items-center text-center my-6 sm:my-10">
+      <div className="relative z-20 mx-auto flex w-full max-w-[1240px] flex-col items-center text-center my-4 sm:my-10">
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="relative flex flex-col items-center text-center max-w-4xl mx-auto space-y-6 sm:space-y-8"
+          className="relative flex flex-col items-center text-center max-w-4xl mx-auto space-y-5 sm:space-y-8"
         >
           {/* Main Headline with Precision Shutter/Slice Laser Reveal */}
           <motion.h1
             variants={item}
-            className="text-[clamp(2.5rem,8vw,6.8rem)] font-extrabold leading-[0.95] tracking-[-0.03em] text-[#090909] uppercase font-sans break-words pt-1"
+            className="text-[clamp(2.1rem,8.2vw,6.8rem)] font-extrabold leading-[1.0] sm:leading-[0.95] tracking-[-0.03em] text-[#090909] uppercase font-sans break-words pt-1"
           >
-            {/* First Line: Precision Shutter / Slice Unmasking for ENGINEERING */}
+            {/* First Line: Precision Shutter / Slice Unmasking for ENGINEERING (1.6s unhurried speed) */}
             <div className="relative inline-block overflow-hidden py-0.5">
               {/* Unmasking typography */}
               <motion.span
                 initial={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', opacity: 0 }}
                 animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
                 className="block font-extrabold select-none tracking-[-0.03em] text-[#090909]"
               >
                 ENGINEERING

@@ -522,10 +522,6 @@ img, video, svg, canvas, iframe { max-width: 100%; }
 }
 
 @media (max-width: 640px) {
-  .cohort-showcase-section {
-    height: 320vh;
-  }
-
   .cohort-showcase-card {
     width: clamp(280px, 82vw, 360px);
     min-height: 440px;
