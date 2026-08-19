@@ -1,268 +1,154 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import heroImg from '../assets/hero1.png'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Play } from 'lucide-react'
+import introVideo from '../assets/intro.mp4'
+import aiEngineerImg from '../assets/aiengineercohort.png'
 
-// ---- Timing constants (seconds) ----
-const ASSEMBLE_DURATION = 1.8   // particles fly in from across the whole screen and form the image
-const CROSSFADE_DURATION = 0.4  // particle canvas -> real <img>
-const MOVE_DELAY = ASSEMBLE_DURATION + 0.3
-const MOVE_DURATION = 1.1       // single clean glide from center to its resting spot on the right
-const OVERLAY_CLEAR_DELAY = ASSEMBLE_DURATION + 0.15
-const OVERLAY_CLEAR_DURATION = 1.1
-const TEXT_DELAY = MOVE_DELAY + MOVE_DURATION * 0.4
-
-const EASE = [0.16, 1, 0.3, 1]
-const PARTICLE_COLOR = '17,17,17'
-const SAMPLE_SIZE = 200 // fixed, small sampling resolution — decoupled from on-screen size, this is what was slow
-
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3)
-}
-
-// Runs fn on the next idle slot instead of blocking the current frame/paint
-function whenIdle(fn) {
-  if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(fn, { timeout: 200 })
-  } else {
-    setTimeout(fn, 0)
-  }
-}
+const FLIP_WORDS = ['AUTOMATED', 'SCALED', 'INTELLIGENT', 'REIMAGINED']
 
 export default function Hero() {
-  const [isMobile, setIsMobile] = useState(false)
-  const [phase, setPhase] = useState('assembling')
-  const canvasRef = useRef(null)
-  const particlesRef = useRef(null)
-  const rafRef = useRef(null)
-  const isMobileRef = useRef(false) // captured once, so a mid-animation breakpoint change can't restart the build
+  const [isLaserDone, setIsLaserDone] = useState(false)
+  const [wordIndex, setWordIndex] = useState(0)
 
-  const [formSize] = useState(() => {
-    if (typeof window === 'undefined') return 640
-    const mobile = window.innerWidth < 768
-    return mobile
-      ? Math.min(window.innerWidth * 0.82, 380)
-      : Math.min(window.innerWidth * 0.5, 860)
-  })
-
-  // isMobileRef is read by the particle-building effect below. It's set here,
-  // in an effect (not during render), and captured once on mount so a
-  // mid-animation breakpoint change can't restart the build.
+  // 1. Unmask ENGINEERING via top-to-bottom shutter print over 0.8s with immediate flip trigger
   useEffect(() => {
-    isMobileRef.current = window.innerWidth < 768
+    const timer = setTimeout(() => {
+      setIsLaserDone(true)
+    }, 500)
+    return () => clearTimeout(timer)
   }, [])
 
+  // 2. Cycle through words with 1.8s unhurried dwell time once laser print completes
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 767px)')
-    const update = () => setIsMobile(mq.matches)
-    update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
-  }, [])
+    if (!isLaserDone) return
 
-  useEffect(() => {
-    const t1 = setTimeout(() => setPhase('assembled'), ASSEMBLE_DURATION * 1000)
-    const t2 = setTimeout(() => setPhase('moving'), MOVE_DELAY * 1000)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [])
-
-  // Build + run the particle field. Runs exactly once — sampling work is deferred off the
-  // critical render path, and done at a small fixed resolution regardless of display size,
-  // which is what actually made this heavy before.
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    let cancelled = false
-
-    const screenW = window.innerWidth
-    const screenH = window.innerHeight
-    const dpr = Math.min(window.devicePixelRatio || 1, 1) // no retina scaling on this transient layer — smoothness over crispness
-    canvas.width = screenW * dpr
-    canvas.height = screenH * dpr
-    canvas.style.width = screenW + 'px'
-    canvas.style.height = screenH + 'px'
-    const ctx = canvas.getContext('2d')
-    ctx.scale(dpr, dpr)
-
-    const offsetX = (screenW - formSize) / 2
-    const offsetY = (screenH - formSize) / 2
-    const scaleToScreen = formSize / SAMPLE_SIZE
-    const mobile = isMobileRef.current
-
-    const img = new Image()
-    img.onload = () => {
-      if (cancelled) return
-      whenIdle(() => {
-        if (cancelled) return
-
-        const off = document.createElement('canvas')
-        off.width = SAMPLE_SIZE
-        off.height = SAMPLE_SIZE
-        const octx = off.getContext('2d', { willReadFrequently: true })
-        const ratio = Math.min(SAMPLE_SIZE / img.width, SAMPLE_SIZE / img.height)
-        const w = img.width * ratio
-        const h = img.height * ratio
-        const ox = (SAMPLE_SIZE - w) / 2
-        const oy = (SAMPLE_SIZE - h) / 2
-        octx.drawImage(img, ox, oy, w, h)
-        const data = octx.getImageData(0, 0, SAMPLE_SIZE, SAMPLE_SIZE).data
-
-        const step = mobile ? 3 : 2
-        const points = []
-        for (let y = 0; y < SAMPLE_SIZE; y += step) {
-          for (let x = 0; x < SAMPLE_SIZE; x += step) {
-            const idx = (y * SAMPLE_SIZE + x) * 4
-            if (data[idx + 3] > 80) {
-              const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3
-              points.push({
-                x: offsetX + x * scaleToScreen,
-                y: offsetY + y * scaleToScreen,
-                shade: brightness
-              })
-            }
-          }
-        }
-
-        const MAX_PARTICLES = mobile ? 500 : 1200
-        const sampled = points.length > MAX_PARTICLES
-          ? points.filter(() => Math.random() < MAX_PARTICLES / points.length)
-          : points
-
-        particlesRef.current = sampled.map((p) => ({
-          sx: Math.random() * screenW,
-          sy: Math.random() * screenH,
-          tx: p.x,
-          ty: p.y,
-          baseOpacity: 0.25 + (p.shade / 255) * 0.6,
-          delay: Math.random() * 0.35
-        }))
-
-        const start = performance.now()
-        const totalMs = ASSEMBLE_DURATION * 1000
-        ctx.fillStyle = `rgb(${PARTICLE_COLOR})`
-
-        const draw = (now) => {
-          if (cancelled) return
-          const elapsed = (now - start) / totalMs
-          ctx.clearRect(0, 0, screenW, screenH)
-          const list = particlesRef.current
-          for (let i = 0; i < list.length; i++) {
-            const particle = list[i]
-            const localT = Math.min(Math.max((elapsed - particle.delay) / (1 - particle.delay), 0), 1)
-            const eased = easeOutCubic(localT)
-            const x = particle.sx + (particle.tx - particle.sx) * eased
-            const y = particle.sy + (particle.ty - particle.sy) * eased
-            ctx.globalAlpha = particle.baseOpacity * eased
-            ctx.fillRect(x - 0.9, y - 0.9, 1.8, 1.8)
-          }
-          ctx.globalAlpha = 1
-          if (elapsed < 1.05) {
-            rafRef.current = requestAnimationFrame(draw)
-          }
-        }
-        rafRef.current = requestAnimationFrame(draw)
-      })
-    }
-    img.src = heroImg
-
-    return () => {
-      cancelled = true
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    }
-  }, [formSize])
+    let current = 0
+    const interval = setInterval(() => {
+      current++
+      if (current < FLIP_WORDS.length) {
+        setWordIndex(current)
+      } else {
+        clearInterval(interval)
+      }
+    }, 1800)
+    return () => clearInterval(interval)
+  }, [isLaserDone])
 
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: TEXT_DELAY }
-    }
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
   }
 
   const item = {
-    hidden: { opacity: 0, x: -40, y: 10 },
-    show: { opacity: 1, x: 0, y: 0, transition: { duration: 0.9, ease: EASE } }
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
   }
 
-  const restTarget = isMobile
-    ? { x: 0, y: 0, scale: 0.85 }
-    : { x: '26vw', y: '2%', scale: 0.98 }
-
-  const centerTarget = { x: 0, y: 0, scale: 1 }
-  const pinned = phase !== 'moving'
+  const isFinalWord = wordIndex === FLIP_WORDS.length - 1
 
   return (
     <section
       id="top"
-      className="relative flex min-h-[52vh] md:min-h-screen items-center justify-center overflow-hidden px-6 md:px-12 bg-[#fafafa]"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 sm:px-6 md:px-12 py-16 sm:py-24 bg-[#fafafa] selection:bg-[#22C55E] selection:text-black font-sans"
     >
-      <motion.div
-        className="pointer-events-none fixed inset-0 z-[40] backdrop-blur-3xl bg-[#fafafa]/70"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{ delay: OVERLAY_CLEAR_DELAY, duration: OVERLAY_CLEAR_DURATION, ease: 'easeOut' }}
-        style={{ willChange: 'opacity' }}
-      />
+      {/* Studio architectural soft lighting backdrop */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_35%,rgba(255,255,255,1),rgba(240,240,244,0.75))]" />
+      
+      {/* Soft diagonal ambient studio shadow */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/[0.03] via-transparent to-transparent" />
+      
+      {/* Bottom floor gradient line */}
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/[0.04] to-transparent" />
 
-      <motion.canvas
-        ref={canvasRef}
-        className="pointer-events-none fixed inset-0 z-[50] h-screen w-screen"
-        animate={{ opacity: phase === 'assembling' ? 1 : 0 }}
-        transition={{ duration: CROSSFADE_DURATION, ease: 'easeInOut' }}
-        style={{ willChange: 'opacity' }}
-      />
-
-      <motion.div
-        className={
-          pinned
-            ? 'pointer-events-none fixed z-[51] left-1/2 top-1/2'
-            : 'pointer-events-none absolute z-0 left-1/2 top-1/2'
-        }
-        style={{ translateX: '-50%', translateY: '-50%', width: formSize, height: formSize, willChange: 'transform' }}
-        initial={{ x: centerTarget.x, y: centerTarget.y, scale: centerTarget.scale }}
-        animate={
-          phase === 'moving'
-            ? { x: restTarget.x, y: restTarget.y, scale: restTarget.scale }
-            : { x: centerTarget.x, y: centerTarget.y, scale: centerTarget.scale }
-        }
-        transition={{ duration: MOVE_DURATION, ease: EASE }}
-      >
-        <motion.img
-          src={heroImg}
+      {/* Subtle Logo Watermark Backdrop (Positioned higher up towards top) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 flex items-start justify-center overflow-hidden pointer-events-none">
+        <img
+          src="/Logos/BlackNoBg.png"
           alt=""
-          draggable={false}
-          className="absolute inset-0 h-full w-full object-contain select-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: phase === 'assembling' ? 0 : 1 }}
-          transition={{ duration: CROSSFADE_DURATION, ease: 'easeInOut' }}
-          style={{ willChange: 'opacity' }}
+          className="w-[80vw] max-w-[900px] h-auto object-contain opacity-[0.06] select-none pointer-events-none -translate-y-28 sm:-translate-y-44 md:-translate-y-56"
         />
-      </motion.div>
+      </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col items-center text-center md:items-start md:text-left mt-6 md:mt-12">
+      <div className="relative z-20 mx-auto flex w-full max-w-[1240px] flex-col items-center text-center my-6 sm:my-10">
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="relative z-20 flex flex-col items-center md:items-start"
+          className="relative flex flex-col items-center text-center max-w-4xl mx-auto space-y-6 sm:space-y-8"
         >
+          {/* Main Headline with Precision Shutter/Slice Laser Reveal */}
           <motion.h1
             variants={item}
-            className="text-[clamp(2.4rem,8.5vw,8rem)] font-bold leading-[1.1] tracking-[-0.04em] text-[#111] break-words"
+            className="text-[clamp(2.5rem,8vw,6.8rem)] font-extrabold leading-[0.95] tracking-[-0.03em] text-[#090909] uppercase font-sans break-words pt-1"
           >
-            Engineering<br />Reimagined
+            {/* First Line: Precision Shutter / Slice Unmasking for ENGINEERING */}
+            <div className="relative inline-block overflow-hidden py-0.5">
+              {/* Unmasking typography */}
+              <motion.span
+                initial={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', opacity: 0 }}
+                animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', opacity: 1 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="block font-extrabold select-none tracking-[-0.03em] text-[#090909]"
+              >
+                ENGINEERING
+              </motion.span>
+            </div>
+
+            <br />
+
+            {/* Second Line: Starts word flip animation after laser print completes */}
+            <span className="inline-block relative overflow-hidden align-bottom py-1 min-h-[1.15em] px-2" style={{ perspective: 1000 }}>
+              <AnimatePresence mode="wait">
+                {isLaserDone && (
+                  <motion.span
+                    key={FLIP_WORDS[wordIndex]}
+                    initial={
+                      isFinalWord
+                        ? { opacity: 0, scale: 1.25, y: 12, filter: 'blur(8px)' }
+                        : { opacity: 0, y: 20, rotateX: -35 }
+                    }
+                    animate={
+                      isFinalWord
+                        ? { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
+                        : { opacity: 1, y: 0, rotateX: 0 }
+                    }
+                    exit={{ opacity: 0, y: -20, rotateX: 35 }}
+                    transition={
+                      isFinalWord
+                        ? { duration: 0.95, ease: [0.175, 0.885, 0.32, 1.2] }
+                        : { duration: 0.75, ease: [0.16, 1, 0.3, 1] }
+                    }
+                    className={
+                      isFinalWord
+                        ? "inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#090909] via-black to-[#22C55E] transform-gpu drop-shadow-[0_0_25px_rgba(34,197,94,0.35)]"
+                        : "inline-block text-black/75 transform-gpu"
+                    }
+                    style={{ transformOrigin: '50% 50% -20px' }}
+                  >
+                    {FLIP_WORDS[wordIndex]}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </span>
           </motion.h1>
 
+          {/* Clean Subheadline */}
           <motion.p
             variants={item}
-            className="mt-6 sm:mt-8 max-w-lg text-[clamp(0.95rem,1.5vw,1.25rem)] font-light leading-relaxed text-black/60"
+            className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl font-normal leading-relaxed text-[#333333] font-sans"
           >
-            Build with AI. Scale with purpose.
-            <br className="hidden sm:block" />
-            Lead the future of engineering.
+            Hands-on, AI-driven engineering cohorts and buildathons for developers ready to build production-scale applications.
           </motion.p>
 
-          <motion.div variants={item} className="mt-8 sm:mt-12 flex flex-wrap items-center gap-4">
+          {/* Dual Call-to-Action Strategy */}
+          <motion.div variants={item} className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
+            {/* Primary CTA */}
             <Link
               to="/cohorts"
               onClick={(e) => {
@@ -272,14 +158,50 @@ export default function Hero() {
                   el.scrollIntoView({ behavior: 'smooth' })
                 }
               }}
-              className="inline-flex items-center justify-center gap-3 min-h-[44px] text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#111] bg-white border border-black/15 px-6 py-3 rounded-full transition-all hover:bg-[#22C55E] hover:text-black hover:border-[#22C55E] shadow-sm font-mono touch-action-manipulation"
+              className="group w-full sm:w-auto inline-flex items-center justify-center min-h-[44px] text-xs sm:text-sm font-bold uppercase tracking-wider text-white bg-[#090909] border border-[#090909] px-8 py-4 rounded-full transition-all duration-300 hover:bg-[#22C55E] hover:text-black hover:border-[#22C55E] shadow-xl font-sans touch-action-manipulation"
             >
-              <span>Explore Flagship Cohorts</span>
-              <span className="text-[#22C55E] transition-colors group-hover:text-black">→</span>
+              <span>EXPLORE FLAGSHIP COHORTS</span>
             </Link>
+
+            {/* Secondary Low-Friction CTA -> Navigates to /buildvault (Commented out for now) */}
+            {/* 
+            <Link
+              to="/buildvault"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 min-h-[44px] text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#090909] bg-[#ffffff] border border-black/20 hover:border-black hover:bg-black/5 px-7 py-4 rounded-full transition-all duration-300 font-sans shadow-sm touch-action-manipulation"
+            >
+              <Play className="w-3.5 h-3.5 text-[#22C55E] fill-[#22C55E]" />
+              <span>SEE COHORT SHOWCASE</span>
+            </Link>
+            */}
           </motion.div>
+
+          {/* Bespoke Product Showcase Frame (Commented out for now) */}
+          {/* 
+          <motion.div
+            id="product-showcase"
+            variants={item}
+            className="w-full max-w-4xl mt-8 sm:mt-12"
+          >
+            <div className="relative rounded-2xl sm:rounded-3xl bg-white border border-black/10 shadow-2xl p-2 sm:p-3 overflow-hidden">
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-video bg-[#090909] flex items-center justify-center">
+                <video
+                  src={introVideo}
+                  poster={aiEngineerImg}
+                  controls
+                  preload="metadata"
+                  className="w-full h-full object-cover rounded-xl sm:rounded-2xl"
+                />
+              </div>
+            </div>
+          </motion.div>
+          */}
+
         </motion.div>
       </div>
     </section>
   )
 }
+
+
+
+

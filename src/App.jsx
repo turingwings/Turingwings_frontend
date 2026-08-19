@@ -18,6 +18,7 @@ import CohortsListPage from "./pages/CohortsListPage";
 import CohortPage from "./pages/CohortPage";
 import CohortRegistrationPage from "./pages/CohortRegistrationPage";
 import ReferralHandlerPage from "./pages/ReferralHandlerPage";
+import BuildVaultPage from "./pages/BuildVaultPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function ScrollToTop() {
@@ -91,7 +92,8 @@ export default function App() {
         <Route path="/cohorts/:slug" element={<CohortPage />} />
         <Route path="/cohorts/register" element={<CohortRegistrationPage />} />
 
-        {/* Standalone Event Template Route */}
+        {/* Standalone Event & BuildVault Routes */}
+        <Route path="/buildvault" element={<BuildVaultPage />} />
         <Route path="/events/:slug" element={<EventPortalPage />} />
 
         {/* Wildcard 404 Route */}
