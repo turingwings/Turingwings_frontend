@@ -3,6 +3,8 @@
 
 .font-product-sans { font-family: 'Product Sans', 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif; }
 .font-lora { font-family: 'Product Sans', 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif; }
+.font-display { font-family: 'Cinzel', 'Instrument Serif', Georgia, serif; }
+.font-serif-display { font-family: 'Instrument Serif', 'Cinzel', Georgia, serif; }
 
 @theme { --font-sans: 'Product Sans', 'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif; }
 * { box-sizing: border-box; }
