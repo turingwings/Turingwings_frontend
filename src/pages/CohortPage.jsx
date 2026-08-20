@@ -153,7 +153,10 @@ export default function CohortPage() {
     return <NotFoundPage />;
   }
 
-  const metadata = COHORTS_METADATA[slug];
+  const isSoldOut = backendCohort.isSoldOut || (backendCohort.seatsRemaining !== undefined && backendCohort.seatsRemaining <= 0);
+  const isCohortActive = (backendCohort.status || 'ACTIVE').toUpperCase() === 'ACTIVE' && !isSoldOut;
+  const currentPrice = backendCohort.currentPricing ? backendCohort.currentPricing.price : backendCohort.price;
+  const currentTierName = backendCohort.currentPricing ? backendCohort.currentPricing.name : 'Standard';
 
   // Combine data — backend business variables are authoritative
   const cohort = {
@@ -161,11 +164,15 @@ export default function CohortPage() {
     id: backendCohort.id,
     slug: backendCohort.slug,
     title: backendCohort.title,
-    price: backendCohort.price,
+    price: currentPrice,
+    currentPricing: backendCohort.currentPricing,
+    pricingTiers: backendCohort.pricingTiers,
+    totalSeats: backendCohort.totalSeats || 70,
+    seatsBooked: backendCohort.seatsBooked || 0,
+    seatsRemaining: backendCohort.seatsRemaining !== undefined ? backendCohort.seatsRemaining : 70,
+    isSoldOut,
     status: backendCohort.status || 'ACTIVE',
   };
-
-  const isCohortActive = cohort.status && cohort.status.toUpperCase() === 'ACTIVE';
 
   // MOTION CONTAINER VARIANTS
   const container = {

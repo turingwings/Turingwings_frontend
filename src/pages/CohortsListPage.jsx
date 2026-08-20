@@ -121,7 +121,7 @@ function CohortsLoader() {
 
 /* ─────────────────────────────────────────────────────────────────────────
    COHORT CARD — spec-sheet structure: hairline rules, monospace data rows,
-   bracketed icon frame. No pill badges, no color fills — pure black / white.
+   bracketed icon frame. Dynamic backend-driven seat counts & pricing tiers.
    ───────────────────────────────────────────────────────────────────────── */
 function CohortCard({ cohort }) {
   const Icon = cohort.icon;
@@ -129,6 +129,11 @@ function CohortCard({ cohort }) {
     cohort.tools.length > 3
       ? `${cohort.tools.slice(0, 3).join(', ')} +${cohort.tools.length - 3} more`
       : cohort.tools.join(', ');
+
+  const isSoldOut = cohort.isSoldOut || (cohort.seatsRemaining !== undefined && cohort.seatsRemaining <= 0);
+  const currentPrice = cohort.currentPricing ? cohort.currentPricing.price : cohort.price;
+  const currentTierName = cohort.currentPricing ? cohort.currentPricing.name : 'Standard';
+  const seatsLeftInTier = cohort.currentPricing ? cohort.currentPricing.seatsRemaining : cohort.seatsRemaining;
 
   return (
     <motion.div variants={cardEntranceVariants} className="h-full">
@@ -145,13 +150,13 @@ function CohortCard({ cohort }) {
           <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-black/70 font-mono">
             {cohort.flagship}
           </span>
-          <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-black/45 font-mono">
+          <span className={`flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] font-mono ${isSoldOut ? 'text-red-600' : 'text-[#15803D]'}`}>
             <motion.span
-              className="w-1.5 h-1.5 rounded-full bg-[#0A0A0A]"
-              animate={{ opacity: [1, 0.25, 1] }}
+              className={`w-1.5 h-1.5 rounded-full ${isSoldOut ? 'bg-red-600' : 'bg-[#22C55E]'}`}
+              animate={{ opacity: isSoldOut ? 1 : [1, 0.25, 1] }}
               transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
             />
-            Enrolling
+            {isSoldOut ? 'SOLD OUT' : `${currentTierName} — ₹${currentPrice}`}
           </span>
         </div>
 
@@ -175,8 +180,29 @@ function CohortCard({ cohort }) {
 
             <p className="text-sm text-black/70 leading-relaxed font-sans">{cohort.description}</p>
 
-            {/* Spec sheet — label / value rows instead of chips */}
+            {/* Spec sheet — dynamic seating & pricing rows */}
             <dl className="border-t border-black/10">
+              <div className="flex items-center justify-between py-2.5 border-b border-black/10 font-mono">
+                <dt className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-black/40">
+                  <Clock className="w-3.5 h-3.5 text-black/40" strokeWidth={1.8} />
+                  Availability
+                </dt>
+                <dd className={`text-xs sm:text-sm font-bold ${isSoldOut ? 'text-red-600' : 'text-[#15803D]'}`}>
+                  {isSoldOut ? 'SOLD OUT' : `${cohort.seatsRemaining} of ${cohort.totalSeats} seats left`}
+                </dd>
+              </div>
+
+              {!isSoldOut && cohort.currentPricing && (
+                <div className="flex items-center justify-between py-2.5 border-b border-black/10 font-mono">
+                  <dt className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-black/40">
+                    Tier Status
+                  </dt>
+                  <dd className="text-xs sm:text-sm font-bold text-[#0A0A0A]">
+                    Only {seatsLeftInTier} {currentTierName} Left
+                  </dd>
+                </div>
+              )}
+
               {cohort.stats.map((stat) => {
                 const StatIcon = stat.icon;
                 return (
@@ -216,14 +242,23 @@ function CohortCard({ cohort }) {
                 </motion.span>
               </motion.div>
             </Link>
-            <Link to={cohort.registerPath} className="flex-1">
-              <motion.div
-                whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 px-5 text-[#0A0A0A] font-bold text-xs text-center border border-black/20 flex items-center justify-center min-h-[44px] touch-action-manipulation"
-              >
-                Register · ₹{Number(cohort.price).toLocaleString('en-IN')}
-              </motion.div>
-            </Link>
+
+            {isSoldOut ? (
+              <div className="flex-1">
+                <div className="w-full py-3.5 px-5 text-red-600 font-bold text-xs text-center border border-red-200 bg-red-50 flex items-center justify-center min-h-[44px]">
+                  SOLD OUT
+                </div>
+              </div>
+            ) : (
+              <Link to={cohort.registerPath} className="flex-1">
+                <motion.div
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full py-3.5 px-5 text-[#0A0A0A] font-bold text-xs text-center border border-black/20 hover:bg-[#22C55E] hover:border-[#22C55E] hover:text-black transition-colors flex items-center justify-center min-h-[44px] touch-action-manipulation"
+                >
+                  Register · ₹{Number(currentPrice).toLocaleString('en-IN')}
+                </motion.div>
+              </Link>
+            )}
           </div>
         </div>
       </motion.div>

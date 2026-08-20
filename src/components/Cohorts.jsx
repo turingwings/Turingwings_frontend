@@ -125,12 +125,26 @@ function CohortVisualStage({ cohort }) {
    SINGLE COHORT CARD (TRIONN Editorial Style)
    ═══════════════════════════════════════════════════════════════════════════ */
 function CohortCard({ cohort }) {
+  const currentPrice = cohort.currentPricing ? cohort.currentPricing.price : (cohort.price || 499);
+  const currentTierName = cohort.currentPricing ? cohort.currentPricing.name : (cohort.isSoldOut ? 'Sold Out' : 'Founding Seats');
+  const isSoldOut = cohort.isSoldOut || (cohort.seatsRemaining !== undefined && cohort.seatsRemaining <= 0);
+
   return (
     <div className="cohort-showcase-card">
       <CohortVisualStage cohort={cohort} />
 
       <div className="cohort-card-footer">
         <div className="cohort-footer-info">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${isSoldOut ? 'bg-red-50 text-red-600 border-red-200' : 'bg-[#22C55E]/10 text-[#15803D] border-[#22C55E]/30'}`}>
+              {isSoldOut ? 'SOLD OUT' : `${currentTierName} — ₹${currentPrice}`}
+            </span>
+            {cohort.seatsRemaining !== undefined && !isSoldOut && (
+              <span className="text-[10px] font-mono text-black/50 font-bold">
+                ({cohort.seatsRemaining} Seats Left)
+              </span>
+            )}
+          </div>
           <h3 className="cohort-showcase-title">{cohort.title}</h3>
           <p className="cohort-showcase-desc">{cohort.description}</p>
           <div className="cohort-tech-list">
@@ -247,9 +261,15 @@ export default function Cohorts() {
               durationLabel: '4 weeks',
             }
             return {
+              ...backendCohort,
               id: slug,
               number: String(idx + 1).padStart(2, '0'),
               title: backendCohort.title,
+              price: backendCohort.currentPricing ? backendCohort.currentPricing.price : backendCohort.price,
+              currentPricing: backendCohort.currentPricing,
+              seatsRemaining: backendCohort.seatsRemaining,
+              totalSeats: backendCohort.totalSeats || 70,
+              isSoldOut: backendCohort.isSoldOut,
               description: backendCohort.description || meta.tagline || 'Master state-of-the-art skills.',
               technologies: meta.tools || [],
               duration: meta.durationLabel || '4 weeks',

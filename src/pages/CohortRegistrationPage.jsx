@@ -152,7 +152,10 @@ export default function CohortRegistrationPage() {
         if (result.success && result.data) {
           const fetchedCohort = result.data;
           setCohort(fetchedCohort);
-          if (fetchedCohort.status && fetchedCohort.status.toUpperCase() === 'ACTIVE') {
+          const isSoldOut = fetchedCohort.isSoldOut || (fetchedCohort.seatsRemaining !== undefined && fetchedCohort.seatsRemaining <= 0);
+          if (isSoldOut) {
+            setCohortLoadingState('sold_out');
+          } else if (fetchedCohort.status && fetchedCohort.status.toUpperCase() === 'ACTIVE') {
             setCohortLoadingState('ready');
           } else {
             setCohortLoadingState('inactive');
@@ -457,6 +460,39 @@ export default function CohortRegistrationPage() {
                 className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold text-xs uppercase tracking-wider transition-all"
               >
                 Back to Cohorts
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (cohortLoadingState === 'sold_out') {
+    return (
+      <div
+        className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col relative"
+        style={{ fontFamily: FONT_STACK }}
+      >
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center p-6">
+          <div className="bg-white border border-red-200 rounded-3xl p-8 text-center space-y-5 max-w-md shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-red-100 border border-red-200 text-red-600 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-7 h-7" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-extrabold text-[#090909]">Cohort Sold Out</h3>
+              <p className="text-xs text-black/70 leading-relaxed">
+                Registrations for <strong className="text-[#090909]">{cohort?.title}</strong> are now completely filled ({cohort?.totalSeats || 70} / {cohort?.totalSeats || 70} seats taken).
+              </p>
+            </div>
+            <div className="pt-2">
+              <Link
+                to="/cohorts"
+                className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold text-xs uppercase tracking-wider transition-all"
+              >
+                Explore Other Cohorts
               </Link>
             </div>
           </div>
