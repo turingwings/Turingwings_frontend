@@ -926,7 +926,44 @@ export default function CohortRegistrationPage() {
                     <p className="text-[11px] sm:text-xs text-black/50">{activeCohortMeta.tagline}</p>
                   </div>
                 </div>
-                <span className="text-lg sm:text-2xl font-extrabold text-[#090909] shrink-0">₹{cohort?.price}</span>
+                <div className="text-right shrink-0">
+                  <span className="text-lg sm:text-2xl font-extrabold text-[#090909] block">₹{cohort?.currentPricing ? cohort.currentPricing.price : cohort?.price}</span>
+                  <span className="text-[10px] font-mono text-[#15803D] font-bold block">{cohort?.currentPricing ? cohort.currentPricing.name : 'Standard'}</span>
+                </div>
+              </div>
+
+              {/* DYNAMIC PRICING BREAKDOWN BANNER */}
+              <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-black/10 space-y-2.5 font-mono text-xs">
+                <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
+                  <span>DYNAMIC PRICING STRUCTURE</span>
+                  <span className="text-[#15803D]">70 TOTAL SEATS</span>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      <span className="font-bold text-[11px]">First 30 Seats (Founding)</span>
+                    </div>
+                    <span className="font-extrabold text-xs">₹499</span>
+                  </div>
+
+                  <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/50'}`}>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      <span className="font-bold text-[11px]">Remaining 40 Seats</span>
+                    </div>
+                    <span className="font-extrabold text-xs">₹599</span>
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-black/70 pt-0.5 text-center font-bold">
+                  {(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? (
+                    <span className="text-[#090909] font-extrabold">Founding tier active · You are locking in the ₹499 Founding Price ({cohort?.currentPricing?.seatsRemaining || cohort?.seatsRemaining} seats remaining).</span>
+                  ) : (
+                    <span className="text-black/80 font-extrabold">Standard tier active · Reserving from the remaining seats at ₹599.</span>
+                  )}
+                </div>
               </div>
 
               {/* STUDENT DETAILS — plain rows, no box */}

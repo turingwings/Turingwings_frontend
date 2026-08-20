@@ -153,6 +153,7 @@ export default function CohortPage() {
     return <NotFoundPage />;
   }
 
+  const metadata = COHORTS_METADATA[slug];
   const isSoldOut = backendCohort.isSoldOut || (backendCohort.seatsRemaining !== undefined && backendCohort.seatsRemaining <= 0);
   const isCohortActive = (backendCohort.status || 'ACTIVE').toUpperCase() === 'ACTIVE' && !isSoldOut;
   const currentPrice = backendCohort.currentPricing ? backendCohort.currentPricing.price : backendCohort.price;
@@ -300,6 +301,42 @@ export default function CohortPage() {
             <motion.p variants={item} className="text-base sm:text-lg text-black/70 font-medium max-w-xl">
               {cohort.tagline}
             </motion.p>
+
+            {/* DYNAMIC PRICING TIER BREAKDOWN BANNER */}
+            <motion.div variants={item} className="p-4 rounded-2xl bg-white border border-black/12 space-y-3 font-mono text-xs max-w-xl shadow-sm">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
+                <span>LIMITED CAPACITY PRICING</span>
+                <span className="text-[#15803D]">70 TOTAL SEATS</span>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${currentTierName.toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-current" />
+                    <span className="font-bold text-xs">First 30 Seats</span>
+                  </div>
+                  <span className="font-extrabold text-sm">₹499</span>
+                </div>
+
+                <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!currentTierName.toLowerCase().includes('founding') && !isSoldOut ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/50'}`}>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-current" />
+                    <span className="font-bold text-xs">Remaining 40 Seats</span>
+                  </div>
+                  <span className="font-extrabold text-sm">₹599</span>
+                </div>
+              </div>
+
+              <div className="text-[11px] text-black/70 pt-0.5 text-center font-bold font-sans">
+                {isSoldOut ? (
+                  <span className="text-red-600 font-extrabold">Registration closed · 70/70 Seats Claimed</span>
+                ) : currentTierName.toLowerCase().includes('founding') ? (
+                  <span className="text-[#090909] font-extrabold">Founding access · Only {cohort.seatsRemaining !== undefined ? (cohort.currentPricing ? cohort.currentPricing.seatsRemaining : cohort.seatsRemaining) : 30} founding seats remaining at ₹499</span>
+                ) : (
+                  <span className="text-[#090909] font-extrabold">Standard access · Currently selling remaining seats at ₹599 ({cohort.seatsRemaining} left)</span>
+                )}
+              </div>
+            </motion.div>
 
             <motion.div variants={item} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
               <Link
