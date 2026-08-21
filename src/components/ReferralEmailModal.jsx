@@ -37,7 +37,6 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
       }, 2000);
     } catch (err) {
       console.error('[ReferralEmailModal] Error capturing email:', err);
-      // Graceful fallback — don't break the user experience
       markEmailCaptured(cleanEmail);
       setSubmitted(true);
       setStatusMessage('Thank you for connecting with Turing Wings!');
@@ -51,7 +50,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 selection:bg-[#22C55E] selection:text-black">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 selection:bg-white selection:text-black">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -66,11 +65,11 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
           initial={{ scale: 0.95, opacity: 0, y: 16 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 16 }}
-          className="relative w-full max-w-md bg-[#090909] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden"
+          className="relative w-full max-w-md bg-[#090909] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden font-product-sans"
         >
           {/* Subtle Ambient Glow */}
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#22C55E]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#22C55E]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
           {/* Close Button */}
           <button
@@ -84,7 +83,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
           {submitted ? (
             /* SUCCESS STATE */
             <div className="text-center py-6 space-y-4">
-              <div className="w-14 h-14 rounded-full bg-[#22C55E]/20 border border-[#22C55E]/40 text-[#22C55E] flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-full bg-white/10 border border-white/30 text-white flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <div className="space-y-1.5">
@@ -98,7 +97,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
             /* EMAIL FORM */
             <div className="space-y-6">
               {/* Badge */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] text-[11px] font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[11px] font-bold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Turing Wings</span>
               </div>
@@ -137,7 +136,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
                         setEmail(e.target.value);
                         if (errorMessage) setErrorMessage('');
                       }}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/15 text-base sm:text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#22C55E] transition-all min-h-[44px]"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/15 text-base sm:text-sm text-white placeholder-white/40 focus:outline-none focus:border-white transition-all min-h-[44px]"
                     />
                   </div>
                 </div>
@@ -145,7 +144,7 @@ export default function ReferralEmailModal({ isOpen, onClose, creatorCode }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="cursor-pointer w-full py-3.5 rounded-xl bg-[#22C55E] text-black font-extrabold text-xs uppercase tracking-wider hover:bg-[#16A34A] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#22C55E]/20 min-h-[44px] touch-action-manipulation"
+                  className="cursor-pointer w-full py-3.5 rounded-xl bg-white text-black font-extrabold text-xs uppercase tracking-wider hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 shadow-lg min-h-[44px] touch-action-manipulation"
                 >
                   {loading ? (
                     <span>Connecting...</span>

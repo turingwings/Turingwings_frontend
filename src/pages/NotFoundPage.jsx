@@ -13,13 +13,9 @@ export default function NotFoundPage() {
 
   return (
     <div
-      className="min-h-screen bg-white text-[#0E0E0E] flex flex-col justify-between selection:bg-[#22C55E] selection:text-black"
+      className="min-h-screen bg-white text-[#0E0E0E] flex flex-col justify-between selection:bg-black selection:text-white"
       style={{ fontFamily: "'Product Sans', 'Plus Jakarta Sans', 'Segoe UI', sans-serif" }}
     >
-      {/* Product Sans is Google's own proprietary typeface and isn't licensed
-          for public web embedding, so it's set first as a soft preference and
-          Plus Jakarta Sans (openly licensed, near-identical geometric shape)
-          is loaded as the real, reliable typeface for the whole page. */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -38,10 +34,10 @@ export default function NotFoundPage() {
 
       <Navbar />
 
-      <main className="py-24 sm:py-32 px-5 sm:px-6 md:px-12 max-w-[1500px] mx-auto w-full flex flex-col items-center justify-center text-center space-y-8 my-auto">
+      <main className="py-24 sm:py-32 px-5 sm:px-6 md:px-12 max-w-[1500px] mx-auto w-full flex flex-col items-center justify-center text-center space-y-8 my-auto font-product-sans">
         <div className="space-y-4 max-w-xl">
           <p
-            className={`enter-item ${loaded ? "enter-in" : ""} text-[#22C55E] font-bold text-[11px] sm:text-xs uppercase tracking-[0.14em]`}
+            className={`enter-item ${loaded ? "enter-in" : ""} text-black/50 font-bold text-[11px] sm:text-xs uppercase tracking-[0.14em]`}
           >
             404 Error / Page Not Found
           </p>
@@ -77,7 +73,7 @@ export default function NotFoundPage() {
           </Link>
           <Link
             to="/buildathons"
-            className="rounded-full border border-black/20 px-6 py-3 text-[11px] font-bold uppercase tracking-[.15em] text-black transition hover:border-[#22C55E] hover:text-[#22C55E] bg-white text-center"
+            className="rounded-full border border-black/20 px-6 py-3 text-[11px] font-bold uppercase tracking-[.15em] text-black transition hover:border-black hover:bg-black/5 bg-white text-center"
           >
             Explore Buildathons ⚡
           </Link>

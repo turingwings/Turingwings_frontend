@@ -374,11 +374,11 @@ export default function Evolution() {
               style={{
                 position: 'relative',
                 display: 'flex',
-                flexDirection: isMobile ? 'row' : 'column',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '100%',
-                padding: isMobile ? '6px 0' : '4px 0',
+                padding: isMobile ? '4px 0 8px' : '4px 0',
                 gap: isMobile ? 8 : 16,
               }}
             >
@@ -412,26 +412,14 @@ export default function Evolution() {
                 <div
                   style={{
                     position: 'absolute',
-                    left: '3%',
-                    right: '3%',
-                    height: '1.5px',
+                    top: '12px',
+                    left: '5%',
+                    right: '5%',
+                    height: '1px',
                     background: '#e5e7eb',
                     zIndex: 0,
-                    borderRadius: '2px',
-                    opacity: inView ? 1 : 0,
-                    transition: 'opacity 0.8s ease',
                   }}
-                >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      height: '100%',
-                      width: '28px',
-                      background: 'linear-gradient(to right, transparent, #090909, transparent)',
-                      animation: 'flowPulseHorizontal 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }}
-                  />
-                </div>
+                />
               )}
 
               <div
@@ -443,7 +431,7 @@ export default function Evolution() {
                   zIndex: 1,
                   background: '#fff',
                   fontSize: isMobile ? '0.6rem' : '0.68rem',
-                  padding: isMobile ? '4px 7px' : '4px 8px',
+                  padding: isMobile ? '3px 9px' : '4px 8px',
                   borderRadius: '999px',
                   border: '1px solid #e5e7eb',
                   fontWeight: 700,
@@ -459,10 +447,12 @@ export default function Evolution() {
                   zIndex: 1,
                   display: 'flex',
                   flexDirection: isMobile ? 'row' : 'column',
-                  flexWrap: isMobile ? 'wrap' : 'nowrap',
-                  justifyContent: 'center',
-                  width: isMobile ? '100%' : undefined,
-                  gap: isMobile ? '6px' : '10px',
+                  flexWrap: 'nowrap',
+                  justifyContent: isMobile ? 'space-between' : 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  gap: isMobile ? '3px' : '10px',
+                  overflowX: isMobile ? 'auto' : 'visible',
                 }}
               >
                 {stages.map(([icon, label], i) => {
@@ -473,21 +463,22 @@ export default function Evolution() {
                       onClick={() => handleStageClick(i)}
                       style={{
                         cursor: 'pointer',
-                        padding: isMobile ? '8px 12px' : '6px 10px',
-                        minHeight: 44,
-                        borderRadius: isMobile ? '14px' : '18px',
+                        padding: isMobile ? '5px 7px' : '6px 10px',
+                        minHeight: isMobile ? 36 : 44,
+                        borderRadius: isMobile ? '10px' : '18px',
                         background: '#ffffff',
                         border: `1px solid ${isActive ? '#090909' : '#f3f4f6'}`,
                         boxShadow: isActive ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none',
                         opacity: inView ? 1 : 0,
                         transform: inView
-                          ? `translateY(0) scale(${isActive ? (isMobile ? 1.04 : 1.06) : 1})`
+                          ? `translateY(0) scale(${isActive ? (isMobile ? 1.02 : 1.06) : 1})`
                           : `translateY(${isMobile ? 0 : 12}px) scale(1)`,
                         transition: `all 0.4s ${EASE_SPRING}`,
                         transitionDelay: inView ? `${340 + i * 110}ms` : '0ms',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: isMobile ? '4px' : '6px',
+                        gap: isMobile ? '3px' : '6px',
+                        flexShrink: 0,
                       }}
                     >
                       <div
@@ -495,12 +486,12 @@ export default function Evolution() {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          transform: isActive ? 'scale(1.15) rotate(-4deg)' : 'scale(1)',
+                          transform: isActive ? 'scale(1.1) rotate(-4deg)' : 'scale(1)',
                           transition: `transform 0.4s ${EASE_SPRING}`,
                           color: isActive ? '#090909' : '#6b7280',
                         }}
                       >
-                        <CompareIcon name={icon} size={isMobile ? 12 : 15} strokeWidth={isMobile ? 2 : 1.8} />
+                        <CompareIcon name={icon} size={isMobile ? 11 : 15} strokeWidth={isMobile ? 2 : 1.8} />
                       </div>
                       <span
                         style={{
@@ -508,8 +499,8 @@ export default function Evolution() {
                           color: isActive ? '#090909' : '#9ca3af',
                           opacity: isActive ? 1 : 0.65,
                           transition: 'opacity 0.4s ease, color 0.4s ease',
-                          fontSize: isMobile ? '0.56rem' : '0.66rem',
-                          letterSpacing: '0.05em',
+                          fontSize: isMobile ? '0.52rem' : '0.66rem',
+                          letterSpacing: '0.04em',
                           whiteSpace: 'nowrap',
                         }}
                       >

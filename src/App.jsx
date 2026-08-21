@@ -10,6 +10,7 @@ import BuilderOfTheCohort from "./components/BuilderOfTheCohort";
 import WhyTuringWings from "./components/WhyTuringWings";
 import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import BuildathonsPage from "./pages/BuildathonsPage";
 import EventPortalPage from "./pages/EventPortalPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
@@ -74,7 +75,7 @@ export default function App() {
       <Routes>
         {/* Main Website Routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/programs" element={<CohortsListPage />} />
         <Route path="/community" element={<HomePage />} />
         <Route path="/buildathons" element={<BuildathonsPage />} />

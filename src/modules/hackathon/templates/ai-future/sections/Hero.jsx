@@ -44,7 +44,7 @@ export default function Hero() {
         <SecondaryButton to={hero.secondaryCta.path} size="lg">{hero.secondaryCta.label}</SecondaryButton>
       </div>
 
-      <p className={`text-xs font-mono mt-8 uppercase tracking-widest ${isGreenSpace ? 'text-[#22C55E] font-bold' : 'text-text-faint'}`}>{meta.venue} · {meta.mode}</p>
+      <p className={`text-xs font-mono mt-8 uppercase tracking-widest ${isGreenSpace ? 'text-white font-bold' : 'text-text-faint'}`}>{meta.venue} · {meta.mode}</p>
     </div>
   );
 

@@ -22,7 +22,7 @@ const FontStyles = () => (
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
     :root {
       --font-primary: 'Product Sans', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      --accent-hover: #16A34A;
+      --accent-hover: #090909;
     }
     .cohort-page, .cohort-page * {
       font-family: var(--font-primary) !important;
@@ -135,7 +135,7 @@ export default function CohortPage() {
             <div className="pt-2">
               <button
                 onClick={() => window.location.reload()}
-                className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-[#16A34A] font-bold text-xs uppercase tracking-wider transition-all"
+                className="cursor-pointer inline-block w-full py-3 rounded-2xl bg-[#090909] text-white hover:bg-black/80 font-bold text-xs uppercase tracking-wider transition-all"
               >
                 Reload Page
               </button>
@@ -226,11 +226,11 @@ export default function CohortPage() {
             <div className="pt-2 flex flex-col sm:flex-row gap-3">
               <Link
                 to={isCohortActive ? `/cohorts/register?cohort=${cohort.slug}` : '#'}
-                className={`py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-lg transition-all ${
+                className="py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-lg transition-all ${
                   isCohortActive
-                    ? 'bg-[#090909] text-white hover:bg-[#16A34A]'
+                    ? 'bg-[#090909] text-white hover:bg-black/80'
                     : 'bg-black/15 text-black/40 cursor-not-allowed'
-                }`}
+                }"
                 onClick={(e) => !isCohortActive && e.preventDefault()}
               >
                 <Zap className="w-4 h-4 fill-current" />
@@ -240,7 +240,7 @@ export default function CohortPage() {
 
               <Link
                 to="/cohorts"
-                className="py-3.5 px-5 rounded-2xl hover:bg-black/5 hover:text-[#16A34A] text-[#090909] font-bold text-xs text-center border border-black/15 hover:border-[#16A34A]/40 transition-all"
+                className="py-3.5 px-5 rounded-2xl hover:bg-black/5 hover:text-black text-[#090909] font-bold text-xs text-center border border-black/15 hover:border-black/40 transition-all"
               >
                 Back to Cohorts list
               </Link>
@@ -307,11 +307,11 @@ export default function CohortPage() {
             <motion.div variants={item} className="p-4 rounded-2xl bg-white border border-black/12 space-y-3 font-mono text-xs max-w-xl shadow-sm">
               <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
                 <span>LIMITED CAPACITY PRICING</span>
-                <span className="text-[#15803D]">70 TOTAL SEATS</span>
+                <span className="text-black font-extrabold">70 TOTAL SEATS</span>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${currentTierName.toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
+                <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${currentTierName.toLowerCase().includes('founding') ? 'bg-black/5 border-black/30 text-black font-extrabold' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-current" />
                     <span className="font-bold text-xs">First 30 Seats</span>
@@ -319,7 +319,7 @@ export default function CohortPage() {
                   <span className="font-extrabold text-sm">₹499</span>
                 </div>
 
-                <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!currentTierName.toLowerCase().includes('founding') && !isSoldOut ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/50'}`}>
+                <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!currentTierName.toLowerCase().includes('founding') && !isSoldOut ? 'bg-black/5 border-black/30 text-black font-extrabold' : 'bg-black/5 border-black/10 text-black/50'}`}>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-current" />
                     <span className="font-bold text-xs">Remaining 40 Seats</span>
@@ -344,7 +344,7 @@ export default function CohortPage() {
                 to={isCohortActive ? `/cohorts/register?cohort=${cohort.slug}` : '#'}
                 className={`group py-3.5 px-7 rounded-2xl font-extrabold text-xs uppercase tracking-wider transition-all text-center flex items-center justify-center gap-2 shadow-lg ${
                   isCohortActive
-                    ? 'bg-[#090909] text-white hover:bg-[#16A34A]'
+                    ? 'bg-[#090909] text-white hover:bg-black/80'
                     : 'bg-black/15 text-black/40 cursor-not-allowed'
                 }`}
                 onClick={(e) => !isCohortActive && e.preventDefault()}
@@ -355,7 +355,7 @@ export default function CohortPage() {
               </Link>
               <a
                 href="#security-schedule"
-                className="py-3.5 px-5 rounded-2xl hover:bg-black/5 hover:text-[#16A34A] text-[#090909] font-bold text-xs text-center border border-black/15 hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2"
+                className="py-3.5 px-5 rounded-2xl hover:bg-black/5 hover:text-black text-[#090909] font-bold text-xs text-center border border-black/15 hover:border-black/40 transition-all flex items-center justify-center gap-2"
               >
                 View 4-Week Schedule
                 <ChevronDown className="w-4 h-4" />
@@ -740,7 +740,7 @@ export default function CohortPage() {
                 to={isCohortActive ? `/cohorts/register?cohort=${cohort.slug}` : '#'}
                 className={`py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg ${
                   isCohortActive
-                    ? 'bg-[#090909] text-white hover:bg-[#16A34A]'
+                    ? 'bg-[#090909] text-white hover:bg-black/80'
                     : 'bg-black/15 text-black/40 cursor-not-allowed'
                 }`}
                 onClick={(e) => !isCohortActive && e.preventDefault()}
@@ -821,11 +821,11 @@ export default function CohortPage() {
           <motion.div variants={item} className="p-4 rounded-2xl bg-white border border-black/12 space-y-3 font-mono text-xs max-w-xl shadow-sm">
             <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
               <span>LIMITED CAPACITY PRICING</span>
-              <span className="text-[#15803D]">70 TOTAL SEATS</span>
+              <span className="text-black font-extrabold">70 TOTAL SEATS</span>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${currentTierName.toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
+              <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${currentTierName.toLowerCase().includes('founding') ? 'bg-black/5 border-black/30 text-black font-extrabold' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-current" />
                   <span className="font-bold text-xs">First 30 Seats</span>
@@ -833,7 +833,7 @@ export default function CohortPage() {
                 <span className="font-extrabold text-sm">₹499</span>
               </div>
 
-              <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!currentTierName.toLowerCase().includes('founding') && !isSoldOut ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/50'}`}>
+              <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!currentTierName.toLowerCase().includes('founding') && !isSoldOut ? 'bg-black/5 border-black/30 text-black font-extrabold' : 'bg-black/5 border-black/10 text-black/50'}`}>
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-current" />
                   <span className="font-bold text-xs">Remaining 40 Seats</span>
@@ -858,7 +858,7 @@ export default function CohortPage() {
               to={isCohortActive ? `/cohorts/register?cohort=${cohort.slug}` : '#'}
               className={`group py-3 sm:py-3.5 px-5 sm:px-7 rounded-2xl font-extrabold text-[13px] sm:text-xs uppercase tracking-wider transition-all text-center flex items-center justify-center gap-2 shadow-lg ${
                 isCohortActive
-                  ? 'bg-[#090909] text-white hover:bg-[#16A34A]'
+                  ? 'bg-[#090909] text-white hover:bg-black/80'
                   : 'bg-black/15 text-black/40 cursor-not-allowed'
               }`}
               onClick={(e) => !isCohortActive && e.preventDefault()}
@@ -869,7 +869,7 @@ export default function CohortPage() {
             </Link>
             <a
               href="#curriculum-schedule"
-              className="py-3 sm:py-3.5 px-4 sm:px-5 rounded-2xl hover:bg-black/5 hover:text-[#16A34A] text-[#090909] font-bold text-[13px] sm:text-xs text-center border border-black/15 hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2"
+              className="py-3 sm:py-3.5 px-4 sm:px-5 rounded-2xl hover:bg-black/5 hover:text-black text-[#090909] font-bold text-[13px] sm:text-xs text-center border border-black/15 hover:border-black/40 transition-all flex items-center justify-center gap-2"
             >
               View 4-Week Schedule
               <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -928,7 +928,7 @@ export default function CohortPage() {
                           backgroundColor: isActive ? '#090909' : isPast ? '#404040' : '#FFFFFF',
                           borderColor: isActive || isPast ? '#090909' : 'rgba(0,0,0,0.15)',
                         }}
-                        whileHover={{ scale: isActive ? 1.08 : 1.05, borderColor: 'rgba(22,163,74,0.5)' }}
+                        whileHover={{ scale: isActive ? 1.08 : 1.05, borderColor: 'rgba(9,9,9,0.5)' }}
                         transition={{ type: 'spring', stiffness: 300, damping: 24 }}
                         className="relative w-14 h-14 rounded-2xl border flex items-center justify-center shadow-sm"
                       >
@@ -1121,7 +1121,7 @@ export default function CohortPage() {
               to={isCohortActive ? `/cohorts/register?cohort=${cohort.slug}` : '#'}
               className={`py-3.5 px-7 sm:px-8 rounded-2xl font-extrabold text-[13px] sm:text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg ${
                 isCohortActive
-                  ? 'bg-[#090909] text-white hover:bg-[#16A34A]'
+                  ? 'bg-[#090909] text-white hover:bg-black/80'
                   : 'bg-black/15 text-black/40 cursor-not-allowed'
               }`}
               onClick={(e) => !isCohortActive && e.preventDefault()}

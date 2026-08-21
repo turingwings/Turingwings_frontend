@@ -4,9 +4,6 @@ import { ShieldCheck, Lock, Eye, FileText, Mail, Clock, ChevronDown } from "luci
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-/**
- * Reveals a block once it scrolls into view.
- */
 function useReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -151,8 +148,6 @@ export default function PrivacyPolicyPage() {
     return () => cancelAnimationFrame(t);
   }, []);
 
-  // Track which section is in view so the table of contents can
-  // highlight where the reader actually is.
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -172,13 +167,9 @@ export default function PrivacyPolicyPage() {
 
   return (
     <div
-      className="w-full min-h-screen relative bg-white text-[#0E0E0E] selection:bg-[#22C55E] selection:text-black"
+      className="w-full min-h-screen relative bg-white text-[#0E0E0E] selection:bg-black selection:text-white"
       style={{ fontFamily: "'Product Sans', 'Plus Jakarta Sans', 'Segoe UI', sans-serif" }}
     >
-      {/* Product Sans is Google's own proprietary typeface and isn't licensed
-          for public web embedding, so it's set first as a soft preference and
-          Plus Jakarta Sans (openly licensed, near-identical geometric shape)
-          is loaded as the real, reliable typeface for the whole page. */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -205,7 +196,7 @@ export default function PrivacyPolicyPage() {
           top: 0;
           bottom: 0;
           width: 2px;
-          background: #22C55E;
+          background: #090909;
           transform: scaleY(0);
           transition: transform 0.25s ease;
         }
@@ -218,13 +209,13 @@ export default function PrivacyPolicyPage() {
 
       <Navbar />
 
-      <main className="pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-24 max-w-[1400px] mx-auto px-5 sm:px-6 md:px-10 lg:px-12">
+      <main className="pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-24 max-w-[1400px] mx-auto px-5 sm:px-6 md:px-10 lg:px-12 font-product-sans">
 
         {/* Document Header */}
         <div className={`hero-enter ${loaded ? "hero-in" : ""} space-y-5 sm:space-y-6 border-b border-black/10 pb-8 sm:pb-12 mb-10 sm:mb-14`}>
           <div className="space-y-3 max-w-3xl">
-            <p className="text-[#22C55E] font-bold flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-[0.14em]">
-              <ShieldCheck className="w-4 h-4 shrink-0" /> 07 / Privacy &amp; Data Transparency
+            <p className="text-black font-bold flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-[0.14em]">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-black" /> 07 / Privacy &amp; Data Transparency
             </p>
             <h1 className="font-extrabold tracking-tight text-[#111] text-[clamp(1.9rem,6vw,3.25rem)] leading-[1.08]">
               Privacy Policy &amp;
@@ -238,11 +229,11 @@ export default function PrivacyPolicyPage() {
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2 sm:pt-4 text-[11px] sm:text-xs font-bold text-[#555]">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#22C55E] shrink-0" />
+              <Clock className="w-4 h-4 text-black shrink-0" />
               <span>Effective Date: August 2026</span>
             </div>
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-[#22C55E] shrink-0" />
+              <Lock className="w-4 h-4 text-black shrink-0" />
               <span>Zero-Trust Security Compliant</span>
             </div>
           </div>
@@ -256,8 +247,8 @@ export default function PrivacyPolicyPage() {
               delay={i * 90}
               className="bg-[#F8F8F8] border border-black/10 rounded-2xl p-5 sm:p-6 space-y-2 shadow-xs"
             >
-              <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-[#22C55E] mb-3">
-                <h.icon className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-black mb-3">
+                <h.icon className="w-5 h-5 text-black" />
               </div>
               <h3 className="text-base font-bold text-[#111]">{h.title}</h3>
               <p className="text-xs text-[#555] leading-relaxed">{h.copy}</p>
@@ -284,7 +275,7 @@ export default function PrivacyPolicyPage() {
                   href={`#${s.id}`}
                   onClick={() => setTocOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 min-h-[44px] text-sm font-semibold ${
-                    activeId === s.id ? "text-[#22C55E] bg-[#F8F8F8]" : "text-[#333]"
+                    activeId === s.id ? "text-black bg-[#F8F8F8]" : "text-[#333]"
                   }`}
                 >
                   <span className="text-xs font-bold text-black/40">{s.num}</span>
@@ -295,7 +286,7 @@ export default function PrivacyPolicyPage() {
           )}
         </div>
 
-        {/* Document body: sticky contents + sections */}
+        {/* Document body */}
         <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-16">
 
           {/* Desktop table of contents */}
@@ -331,7 +322,7 @@ export default function PrivacyPolicyPage() {
                 className="scroll-mt-28 border-b border-black/10 pb-8 sm:pb-10 space-y-3 sm:space-y-4"
               >
                 <div className="flex items-start gap-3">
-                  <span className="text-xs font-bold text-[#22C55E] pt-1 shrink-0">{sec.num}</span>
+                  <span className="text-xs font-bold text-black pt-1 shrink-0">{sec.num}</span>
                   <h2 className="text-xl sm:text-2xl font-bold text-[#111] tracking-tight leading-snug">
                     {sec.title}
                   </h2>
@@ -363,11 +354,11 @@ export default function PrivacyPolicyPage() {
               className="button-primary text-xs justify-center w-full sm:w-auto"
             >
               <span>Email Privacy Team</span>
-              <Mail className="w-4 h-4 text-[#22C55E]" />
+              <Mail className="w-4 h-4 text-white" />
             </a>
             <Link
               to="/contact"
-              className="rounded-full border border-black/20 px-6 py-3 text-[11px] font-bold uppercase tracking-[.15em] text-black transition hover:border-[#22C55E] hover:text-[#22C55E] bg-white text-center w-full sm:w-auto"
+              className="rounded-full border border-black/20 px-6 py-3 text-[11px] font-bold uppercase tracking-[.15em] text-black transition hover:border-black hover:text-black bg-white text-center w-full sm:w-auto"
             >
               Contact Command Center ↗
             </Link>

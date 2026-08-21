@@ -107,7 +107,6 @@ export default function ContactPage() {
       }
     } catch (err) {
       console.error("Form submission error:", err);
-      // Even if network blocks CORS, notify or handle gracefully:
       setErrorMessage("Network issue. Please send an email directly to contact@turingwings.com.");
     } finally {
       setIsSubmitting(false);
@@ -116,20 +115,16 @@ export default function ContactPage() {
 
   return (
     <div
-      className="w-full min-h-screen relative bg-white text-[#0E0E0E] selection:bg-[#22C55E] selection:text-black"
+      className="w-full min-h-screen relative bg-white text-[#0E0E0E] selection:bg-black selection:text-white"
       style={{ fontFamily: "'Product Sans', 'Plus Jakarta Sans', 'Segoe UI', sans-serif" }}
     >
-      {/* Product Sans is Google's own proprietary typeface and isn't licensed
-          for public web embedding, so it's set first as a soft preference and
-          Plus Jakarta Sans (openly licensed, near-identical geometric shape)
-          is loaded as the real, reliable typeface for the whole page. */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
       `}</style>
 
       <Navbar />
 
-      <main className="pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-24 lg:pb-28 max-w-[1500px] mx-auto px-5 sm:px-6 md:px-10 lg:px-12 space-y-16 sm:space-y-20 lg:space-y-24 text-left">
+      <main className="pt-20 sm:pt-28 lg:pt-32 pb-16 sm:pb-24 lg:pb-28 max-w-[1500px] mx-auto px-5 sm:px-6 md:px-10 lg:px-12 space-y-16 sm:space-y-20 lg:space-y-24 text-left font-product-sans">
 
         {/* Header Hero Section */}
         <div className="space-y-6 sm:space-y-8 border-b border-black/10 pb-10 sm:pb-16">
@@ -151,13 +146,13 @@ export default function ContactPage() {
             {/* Platform Stats Badges */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full lg:w-auto shrink-0">
               <div className="bg-[#F8F8F8] border border-black/10 rounded-2xl p-3 sm:p-4 text-center space-y-1">
-                <Clock className="w-5 h-5 text-[#22C55E] mx-auto" />
+                <Clock className="w-5 h-5 text-black mx-auto" />
                 <div className="text-base sm:text-lg font-bold text-[#111]">24h</div>
                 <div className="text-[9px] sm:text-[10px] text-[#666] uppercase font-bold tracking-wider">SLA Response</div>
               </div>
 
               <div className="bg-[#F8F8F8] border border-black/10 rounded-2xl p-3 sm:p-4 text-center space-y-1">
-                <Zap className="w-5 h-5 text-[#22C55E] mx-auto" />
+                <Zap className="w-5 h-5 text-black mx-auto" />
                 <div className="text-base sm:text-lg font-bold text-[#111]">100%</div>
                 <div className="text-[9px] sm:text-[10px] text-[#666] uppercase font-bold tracking-wider">Builder Support</div>
               </div>
@@ -165,7 +160,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Contact Form Command Center — trimmed to a minimal form */}
+        {/* Contact Form Command Center */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 pt-4 sm:pt-8">
 
           {/* Left Info Panel */}
@@ -183,27 +178,27 @@ export default function ContactPage() {
 
               <div className="space-y-4 pt-4 border-t border-black/10">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-[#22C55E] shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-black shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-[#111] uppercase tracking-wider">Email Command</h4>
-                    <a href="mailto:contact@turingwings.com" className="text-xs text-[#555] font-medium mt-0.5 break-all hover:text-[#22C55E] transition-colors block">contact@turingwings.com</a>
+                    <a href="mailto:contact@turingwings.com" className="text-xs text-[#555] font-medium mt-0.5 break-all hover:text-black transition-colors block">contact@turingwings.com</a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-[#22C55E] shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-black shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-[#111] uppercase tracking-wider">Direct Phone / Call</h4>
-                    <a href="tel:+918341999296" className="text-xs text-[#555] font-medium mt-0.5 hover:text-[#22C55E] transition-colors block">+91 83419 99296</a>
+                    <a href="tel:+918341999296" className="text-xs text-[#555] font-medium mt-0.5 hover:text-black transition-colors block">+91 83419 99296</a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-[#22C55E] shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-black shrink-0">
                     <Award className="w-5 h-5" />
                   </div>
                   <div>
@@ -215,12 +210,12 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right Form Card — name, email, message only */}
+          {/* Right Form Card */}
           <div className="lg:col-span-7">
             <div className="bg-[#F8F8F8] border border-black/10 rounded-3xl p-6 sm:p-8 lg:p-10 space-y-6 shadow-sm">
               {submitSuccess ? (
                 <div className="py-10 sm:py-12 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-[#22C55E]/10 border border-[#22C55E] text-[#22C55E] flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-black/10 border border-black text-black flex items-center justify-center mx-auto">
                     <Check className="w-8 h-8" />
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-[#111]">Message Dispatched!</h3>
@@ -252,7 +247,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors min-h-[44px]"
+                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-black focus:outline-none transition-colors min-h-[44px]"
                         required
                       />
                     </div>
@@ -265,7 +260,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors min-h-[44px]"
+                        className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-black focus:outline-none transition-colors min-h-[44px]"
                         required
                       />
                     </div>
@@ -278,14 +273,14 @@ export default function ContactPage() {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full appearance-none px-4 py-3 pr-10 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors min-h-[44px]"
+                        className="w-full appearance-none px-4 py-3 pr-10 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-black focus:outline-none transition-colors min-h-[44px]"
                       >
                         <option value="General Inquiry">General Inquiry</option>
                         <option value="Cohort Application">Cohort Application Question</option>
                         <option value="Buildathon Sponsorship">Buildathon Sponsorship</option>
                         <option value="Technical Mentorship">Technical Mentorship</option>
                       </select>
-                      <ChevronDown className="w-4 h-4 text-[#22C55E] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <ChevronDown className="w-4 h-4 text-black absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
 
@@ -297,7 +292,7 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleInputChange}
                       placeholder="Describe your question or build intent..."
-                      className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-[#22C55E] focus:outline-none transition-colors resize-none min-h-[120px]"
+                      className="w-full px-4 py-3 rounded-2xl bg-white border border-black/15 text-[#111] text-base sm:text-sm font-medium focus:border-black focus:outline-none transition-colors resize-none min-h-[120px]"
                       required
                     />
                   </div>
@@ -309,12 +304,12 @@ export default function ContactPage() {
                         type="button"
                         onClick={handleVerifyCaptcha}
                         className={`w-7 h-7 min-h-[28px] min-w-[28px] rounded-lg border flex items-center justify-center transition-colors shrink-0 ${captchaVerified
-                            ? "bg-[#22C55E] border-[#22C55E] text-black"
-                            : "border-black/30 hover:border-[#22C55E]"
+                            ? "bg-black border-black text-white"
+                            : "border-black/30 hover:border-black"
                           }`}
                       >
                         {captchaLoading ? (
-                          <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#22C55E]" />
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin text-black" />
                         ) : captchaVerified ? (
                           <Check className="w-4 h-4 stroke-[3]" />
                         ) : null}
@@ -323,7 +318,7 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex items-center gap-1 text-[10px] text-[#666] font-bold">
-                      <ShieldCheck className="w-4 h-4 text-[#22C55E]" />
+                      <ShieldCheck className="w-4 h-4 text-black" />
                       <span>Security Verified</span>
                     </div>
                   </div>
@@ -340,7 +335,7 @@ export default function ContactPage() {
                     ) : (
                       <>
                         <span>Submit Message</span>
-                        <Send className="w-4 h-4 text-[#22C55E]" />
+                        <Send className="w-4 h-4 text-white" />
                       </>
                     )}
                   </button>
@@ -364,11 +359,11 @@ export default function ContactPage() {
               <div
                 key={index}
                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                className="bg-[#F8F8F8] border border-black/10 rounded-2xl p-5 sm:p-6 cursor-pointer hover:border-[#22C55E] transition-all space-y-3"
+                className="bg-[#F8F8F8] border border-black/10 rounded-2xl p-5 sm:p-6 cursor-pointer hover:border-black/30 transition-all space-y-3"
               >
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="text-sm font-bold text-[#111]">{faq.q}</h3>
-                  <ChevronDown className={`w-5 h-5 text-[#22C55E] transition-transform duration-300 shrink-0 ${openFaq === index ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-5 h-5 text-black transition-transform duration-300 shrink-0 ${openFaq === index ? "rotate-180" : ""}`} />
                 </div>
                 <AnimatePresence initial={false}>
                   {openFaq === index && (

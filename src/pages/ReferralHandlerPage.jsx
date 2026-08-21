@@ -52,7 +52,7 @@ export default function ReferralHandlerPage() {
   }, [creatorCode]);
 
   return (
-    <main className="bg-[#050505] text-white overflow-x-hidden selection:bg-[#22C55E] selection:text-black relative">
+    <main className="bg-[#050505] text-white overflow-x-hidden selection:bg-black selection:text-white relative">
       <Navbar />
       <Hero />
       <Evolution />

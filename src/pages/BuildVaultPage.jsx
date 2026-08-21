@@ -7,10 +7,10 @@ import Footer from '../components/Footer'
 
 export default function BuildVaultPage() {
   return (
-    <div className="min-h-screen bg-[#fafafa] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col justify-between font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#fafafa] text-[#090909] selection:bg-black selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
       <Navbar />
 
-      <main className="relative flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+      <main className="relative flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 sm:py-28 font-product-sans">
         {/* Studio architectural soft lighting backdrop */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_35%,rgba(255,255,255,1),rgba(240,240,244,0.75))]" />
         
@@ -36,9 +36,9 @@ export default function BuildVaultPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight uppercase text-[#090909] font-sans"
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight uppercase text-[#090909]"
           >
-            BUILD <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#090909] via-black to-[#22C55E]">VAULT</span>
+            BUILD <span className="text-black">VAULT</span>
           </motion.h1>
 
           {/* Fully Transparent Announcement Card showing Watermark underneath */}
@@ -49,8 +49,8 @@ export default function BuildVaultPage() {
             className="relative rounded-3xl bg-transparent border border-black/15 p-8 sm:p-12 overflow-hidden text-left space-y-6 group"
           >
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#22C55E]/15 border border-[#22C55E]/30 text-xs font-mono font-bold text-[#1ea34d]">
-                <Rocket className="w-3.5 h-3.5" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/10 border border-black/20 text-xs font-mono font-bold text-black">
+                <Rocket className="w-3.5 h-3.5 text-black" />
                 LAUNCHING SOON
               </span>
               <span className="text-xs font-mono text-black/40">• PRODUCT PREPARATION</span>
@@ -58,26 +58,26 @@ export default function BuildVaultPage() {
 
             {/* Core Message */}
             <div className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-snug tracking-tight text-[#090909] uppercase font-sans">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-snug tracking-tight text-[#090909] uppercase">
                 REGISTER FOR OUR COHORTS AND YOU MIGHT BECOME THE SHOWCASE HERE BECAUSE WE HAVE NOT LAUNCHED YET!
               </h2>
-              <p className="text-sm sm:text-base md:text-lg text-[#333333] font-sans leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg text-[#333333] font-medium leading-relaxed">
                 Our flagship cohorts are preparing for liftoff. Register now to build production-grade AI &amp; cybersecurity solutions and get your project featured in the official Turing Wings Build Vault!
               </p>
             </div>
 
             {/* Feature Highlights Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-black/10 text-xs font-sans text-[#090909]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-black/10 text-xs text-[#090909]">
               <div className="flex items-center gap-2.5 bg-white/40 border border-black/10 p-3.5 rounded-xl backdrop-blur-sm">
-                <Trophy className="w-4 h-4 text-[#22C55E] shrink-0" />
+                <Trophy className="w-4 h-4 text-black shrink-0" />
                 <span className="font-semibold">Featured Product Showcase</span>
               </div>
               <div className="flex items-center gap-2.5 bg-white/40 border border-black/10 p-3.5 rounded-xl backdrop-blur-sm">
-                <ShieldCheck className="w-4 h-4 text-[#22C55E] shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-black shrink-0" />
                 <span className="font-semibold">Production Architecture</span>
               </div>
               <div className="flex items-center gap-2.5 bg-white/40 border border-black/10 p-3.5 rounded-xl backdrop-blur-sm">
-                <Sparkles className="w-4 h-4 text-[#22C55E] shrink-0" />
+                <Sparkles className="w-4 h-4 text-black shrink-0" />
                 <span className="font-semibold">Early Access Pass</span>
               </div>
             </div>
@@ -86,7 +86,7 @@ export default function BuildVaultPage() {
             <div className="pt-4 flex flex-col sm:flex-row items-center gap-4">
               <Link
                 to="/cohorts"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#090909] text-white border border-[#090909] font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#22C55E] hover:text-black hover:border-[#22C55E] transition-all duration-300 shadow-xl"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#090909] text-white border border-[#090909] font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-black/80 hover:border-black transition-all duration-300 shadow-xl"
               >
                 <span>REGISTER FOR OUR COHORTS</span>
                 <ArrowRight className="w-4 h-4" />

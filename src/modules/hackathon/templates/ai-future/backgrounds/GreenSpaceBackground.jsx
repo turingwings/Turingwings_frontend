@@ -48,7 +48,7 @@ export default function GreenSpaceBackground() {
       <div
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `linear-gradient(rgba(34, 197, 94, 0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 197, 94, 0.25) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
@@ -58,7 +58,7 @@ export default function GreenSpaceBackground() {
         {circuitNodes.map((node) => (
           <div
             key={node.id}
-            className="absolute bg-green-400 rounded-full"
+            className="absolute bg-white rounded-full"
             style={{
               left: `${node.x}%`,
               top: `${node.y}%`,
@@ -68,18 +68,18 @@ export default function GreenSpaceBackground() {
               animation: `pulseAndMove ${node.pulse}s ease-in-out infinite`,
               animationDelay: `${Math.random() * 5}s`,
               boxShadow:
-                "0 0 8px rgba(74, 222, 128, 0.8), 0 0 16px rgba(34, 197, 94, 0.4)",
+                "0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.4)",
             }}
           />
         ))}
       </div>
 
-      {/* Flowing lime dots */}
+      {/* Flowing white dots */}
       <div className="absolute inset-0">
         {flowingDots.map((dot) => (
           <div
             key={dot.id}
-            className="absolute bg-lime-400 rounded-full"
+            className="absolute bg-neutral-200 rounded-full"
             style={{
               left: `${dot.startX}%`,
               top: `${dot.y}%`,
@@ -89,18 +89,18 @@ export default function GreenSpaceBackground() {
               animation: `flowFullScreen ${dot.speed}s linear infinite`,
               animationDelay: `${dot.delay}s`,
               boxShadow:
-                "0 0 6px rgba(163, 230, 53, 1), 0 0 12px rgba(132, 204, 22, 0.7)",
+                "0 0 6px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 255, 255, 0.5)",
             }}
           />
         ))}
       </div>
 
-      {/* Fast cyan particles */}
+      {/* Fast particles */}
       <div className="absolute inset-0">
         {fastParticles.map((particle) => (
           <div
             key={particle.id}
-            className="absolute bg-cyan-400 rounded-full"
+            className="absolute bg-neutral-400 rounded-full"
             style={{
               left: `${particle.startX}%`,
               top: `${particle.y}%`,
@@ -109,7 +109,7 @@ export default function GreenSpaceBackground() {
               opacity: 0,
               animation: `fastFullScreen ${particle.speed}s linear infinite`,
               animationDelay: `${particle.delay}s`,
-              boxShadow: "0 0 4px rgba(34, 211, 238, 0.8)",
+              boxShadow: "0 0 4px rgba(255, 255, 255, 0.8)",
             }}
           />
         ))}

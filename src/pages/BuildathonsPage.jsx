@@ -6,13 +6,9 @@ import Footer from "../components/Footer";
 const FONT_STACK =
   "'Product Sans', 'Google Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
-/* ─────────────────────────────────────────────────────────────────────────
-   CUBE-NET LOADER — flat cross folds into a box, holds, unfolds, repeats.
-   Fixed 3s cycle. Pure CSS 3D transforms, no framer-motion needed.
-   ───────────────────────────────────────────────────────────────────────── */
 function CubeNetLoader() {
   return (
-    <div className="flex flex-col items-center justify-center gap-6 py-24 sm:py-28">
+    <div className="flex flex-col items-center justify-center gap-6 py-24 sm:py-28 font-product-sans">
       <div
         className="relative"
         style={{
@@ -35,7 +31,7 @@ function CubeNetLoader() {
           }}
         >
           <div className="cw-face" style={{ backgroundColor: "#0A0A0A" }} />
-          <div className="cw-face cw-top" style={{ backgroundColor: "#22C55E" }} />
+          <div className="cw-face cw-top" style={{ backgroundColor: "#0A0A0A" }} />
           <div className="cw-face cw-bottom" style={{ backgroundColor: "#171717" }} />
           <div
             className="cw-face cw-left"
@@ -141,10 +137,7 @@ function CubeNetLoader() {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   PAGE
-   ───────────────────────────────────────────────────────────────────────── */
-const MIN_LOADER_MS = 3000; // loader always completes one full 3s cycle
+const MIN_LOADER_MS = 3000;
 
 export default function BuildathonsPage() {
   const [events, setEvents] = useState([]);
@@ -181,23 +174,22 @@ export default function BuildathonsPage() {
 
   return (
     <div
-      className="w-full min-h-screen relative bg-white text-[#090909] selection:bg-[#22C55E] selection:text-black"
+      className="w-full min-h-screen relative bg-white text-[#090909] selection:bg-black selection:text-white font-product-sans"
       style={{ fontFamily: FONT_STACK }}
     >
       <Navbar />
 
       <main className="pt-24 sm:pt-32 lg:pt-36 pb-24 max-w-[1500px] mx-auto px-6 md:px-12 space-y-16 text-left">
 
-           {/* Section Header */}
+        {/* Section Header */}
         <div className="space-y-3 max-w-3xl">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#111]">
-            Buildathons & Hackathons Directory
+            Buildathons &amp; Hackathons Directory
           </h1>
           <p className="section-copy text-[#444] font-medium max-w-xl">
             Explore live hackathons and buildathons created on Turing Wings. Click any event card to open its dedicated standalone event portal.
           </p>
         </div>
-
 
         {/* Events Cards Grid */}
         {loading ? (
@@ -214,7 +206,7 @@ export default function BuildathonsPage() {
             {events.map((evt) => (
               <article
                 key={evt._id}
-                className="bg-[#F8F8F8] border border-black/10 hover:border-[#22C55E] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                className="bg-[#F8F8F8] border border-black/10 hover:border-black/30 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
               >
                 <div className="relative h-48 w-full bg-[#111] overflow-hidden">
                   <img
@@ -232,7 +224,7 @@ export default function BuildathonsPage() {
                     <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#090909] text-white shadow-md">
                       {evt.type || "Hackathon"}
                     </span>
-                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white text-[#22C55E] border border-[#22C55E]/40 shadow-sm">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white text-black border border-black/20 shadow-sm">
                       {evt.status || "Published"}
                     </span>
                   </div>
@@ -240,7 +232,7 @@ export default function BuildathonsPage() {
 
                 <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-[#111] group-hover:text-[#22C55E] transition-colors line-clamp-1">
+                    <h3 className="text-xl font-bold text-[#111] group-hover:text-black/80 transition-colors line-clamp-1">
                       {evt.name}
                     </h3>
                     <p className="text-xs text-[#444] font-medium line-clamp-2 leading-relaxed">
@@ -272,7 +264,7 @@ export default function BuildathonsPage() {
                     className="button-primary w-full justify-center mt-2 text-center text-white min-h-[44px] touch-action-manipulation"
                   >
                     <span>Open Standalone Event Webpage</span>
-                    <span className="text-[#22C55E]">↗</span>
+                    <span className="text-white">↗</span>
                   </Link>
                 </div>
               </article>

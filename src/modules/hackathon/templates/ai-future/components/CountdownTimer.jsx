@@ -31,13 +31,13 @@ export default function CountdownTimer({ target, className = '' }) {
   // Dynamic Card Styles according to Template Mode
   const boxStyle =
     theme.mode === "greenspace" || theme.mode === "cyberpunk"
-      ? "bg-black/60 backdrop-blur-md border border-[#22C55E]/50 text-[#4ADE80] shadow-[0_0_20px_rgba(74,222,128,0.4)]"
+      ? "bg-black/60 backdrop-blur-md border border-white/50 text-white shadow-2xl"
       : theme.mode === "space"
       ? "bg-indigo-950/70 border border-indigo-500/40 text-indigo-300 shadow-[0_0_25px_rgba(99,102,241,0.3)]"
       : theme.mode === "corporate"
       ? "bg-slate-900 border border-slate-700 text-white font-mono"
       : theme.mode === "3d"
-      ? "bg-[#121212] border border-[#10B981]/50 text-[#10B981] shadow-2xl"
+      ? "bg-[#121212] border border-white/50 text-white shadow-2xl"
       : theme.mode === "minimal"
       ? "bg-white border border-black/15 text-[#111] shadow-xs"
       : "bg-slate-900/80 border border-amber-500/30 text-amber-400";

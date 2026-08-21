@@ -13,21 +13,21 @@ export default function Button({ children, to, href, onClick, type = 'button', v
   // Dynamic template primary styles
   const primaryStyle =
     theme.mode === "greenspace" || theme.mode === "cyberpunk"
-      ? "bg-[#22C55E] text-black font-extrabold uppercase tracking-widest shadow-[0_0_25px_rgba(34,197,94,0.6)] hover:bg-[#4ADE80] hover:scale-105"
+      ? "bg-white text-black font-extrabold uppercase tracking-widest shadow-lg hover:bg-neutral-200 hover:scale-105"
       : theme.mode === "space"
       ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold tracking-wider shadow-lg shadow-indigo-500/30 hover:scale-105"
       : theme.mode === "corporate"
       ? "bg-[#2563EB] hover:bg-blue-600 text-white font-bold uppercase tracking-wider shadow-md"
       : theme.mode === "3d"
-      ? "bg-[#10B981] text-black font-extrabold uppercase tracking-widest shadow-lg shadow-[#10B981]/30 hover:scale-105"
+      ? "bg-white text-black font-extrabold uppercase tracking-widest shadow-lg hover:scale-105"
       : theme.mode === "minimal"
-      ? "bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-bold uppercase tracking-wider shadow-md"
+      ? "bg-[#090909] text-white hover:bg-black/80 font-bold uppercase tracking-wider shadow-md"
       : "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-extrabold uppercase tracking-wider shadow-md shadow-amber-500/20 hover:scale-105";
 
   // Dynamic template secondary styles
   const secondaryStyle =
     theme.mode === "greenspace" || theme.mode === "cyberpunk"
-      ? "bg-black/40 border border-[#22C55E]/60 text-[#4ADE80] font-bold uppercase backdrop-blur-md hover:bg-[#22C55E]/20 hover:text-white"
+      ? "bg-black/40 border border-white/60 text-white font-bold uppercase backdrop-blur-md hover:bg-white/20"
       : theme.mode === "space"
       ? "bg-transparent border border-indigo-400/40 text-indigo-300 font-bold hover:bg-indigo-500/20"
       : theme.mode === "corporate"
@@ -35,7 +35,7 @@ export default function Button({ children, to, href, onClick, type = 'button', v
       : theme.mode === "3d"
       ? "bg-transparent border border-[#F59E0B]/50 text-[#F59E0B] font-bold hover:bg-[#F59E0B]/20"
       : theme.mode === "minimal"
-      ? "bg-white border border-black/20 text-[#111] font-bold hover:border-[#22C55E] hover:text-[#22C55E]"
+      ? "bg-white border border-black/20 text-[#111] font-bold hover:border-black hover:text-black"
       : "bg-transparent border border-slate-700 text-slate-200 font-bold hover:border-amber-500/60 hover:text-amber-400";
 
   const variants = {

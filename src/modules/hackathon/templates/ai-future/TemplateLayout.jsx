@@ -87,16 +87,16 @@ export default function TemplateLayout({ eventData = defaultEventData, themeOver
 
   const bgClass =
     theme.mode === "greenspace" || theme.mode === "cyberpunk"
-      ? "bg-transparent text-white selection:bg-[#22C55E] selection:text-black"
+      ? "bg-transparent text-white selection:bg-white selection:text-black"
       : theme.mode === "space"
       ? "bg-[#030712] text-white selection:bg-[#6366F1] selection:text-white"
       : theme.mode === "corporate"
       ? "bg-[#0f172a] text-white selection:bg-[#2563EB] selection:text-white"
       : theme.mode === "3d"
-      ? "bg-[#0a0a0a] text-white selection:bg-[#10B981] selection:text-black"
+      ? "bg-[#0a0a0a] text-white selection:bg-white selection:text-black"
       : theme.mode === "minimal"
-      ? "bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black"
-      : "bg-[#090d16] text-white selection:bg-[#22C55E] selection:text-black";
+      ? "bg-[#FAFAFA] text-[#090909] selection:bg-black selection:text-white"
+      : "bg-[#090d16] text-white selection:bg-black selection:text-white";
 
   return (
     <ThemeContext.Provider value={theme}>

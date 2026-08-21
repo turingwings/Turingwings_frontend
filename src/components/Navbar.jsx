@@ -32,10 +32,9 @@ export default function Navbar() {
   }, [location.pathname])
 
   const mobileNavItems = [
-    { label: 'Explore', path: '/', icon: Cpu },
     { label: 'Cohorts', path: '/cohorts', icon: ShieldCheck },
     { label: 'Builds', path: '/buildathons', icon: Phone },
-    { label: 'About', path: '/contact', icon: FileText },
+    { label: 'About', path: '/about', icon: FileText },
     { label: 'Privacy Policy', path: '/privacy', icon: Lock },
     { label: 'Terms & Service', path: '/terms', icon: FileText },
   ]
@@ -50,19 +49,6 @@ export default function Navbar() {
 
           {/* PC VIEW NAVBAR */}
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 font-product-sans">
-            <Link
-              to="/"
-              onClick={(e) => {
-                if (location.pathname === '/') {
-                  e.preventDefault()
-                  window.scrollTo({ top: 0, behavior: 'smooth' })
-                }
-              }}
-              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white cursor-pointer whitespace-nowrap"
-            >
-              <span>Explore</span>
-            </Link>
-
             <Link
               to="/cohorts"
               className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white cursor-pointer whitespace-nowrap"
@@ -84,7 +70,7 @@ export default function Navbar() {
             </Link>
 
             <Link
-              to="/contact"
+              to="/about"
               className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white whitespace-nowrap"
             >
               <span>About</span>
