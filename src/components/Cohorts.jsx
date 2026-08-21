@@ -125,76 +125,51 @@ function CohortVisualStage({ cohort }) {
    SINGLE COHORT CARD (TRIONN Editorial Style)
    ═══════════════════════════════════════════════════════════════════════════ */
 function CohortCard({ cohort }) {
+  const totalSeats = Number(cohort.totalSeats || cohort.total_seats || 70);
+  const seatsRemaining = cohort.seatsRemaining !== undefined && cohort.seatsRemaining !== null
+    ? Number(cohort.seatsRemaining)
+    : totalSeats;
+  const isSoldOut = cohort.isSoldOut || seatsRemaining <= 0;
+  
   const currentPrice = cohort.currentPricing ? cohort.currentPricing.price : (cohort.price || 499);
-  const currentTierName = cohort.currentPricing ? cohort.currentPricing.name : (cohort.isSoldOut ? 'Sold Out' : 'Founding Seats');
-  const isSoldOut = cohort.isSoldOut || (cohort.seatsRemaining !== undefined && cohort.seatsRemaining <= 0);
-  const isFoundingActive = currentTierName.toLowerCase().includes('founding') && !isSoldOut;
-
-  const foundingSeatsLeft = cohort.currentPricing ? cohort.currentPricing.seatsRemaining : cohort.seatsRemaining;
-  const seatsRemaining = cohort.seatsRemaining !== undefined ? cohort.seatsRemaining : 70;
-
-  const foundingPrice = cohort.pricingTiers && cohort.pricingTiers[0] ? cohort.pricingTiers[0].price : 499;
-  const regularPrice = cohort.pricingTiers && cohort.pricingTiers[1] ? cohort.pricingTiers[1].price : 599;
+  const currentTierName = cohort.currentPricing ? cohort.currentPricing.name : 'Standard';
 
   return (
     <div className="cohort-showcase-card">
       <CohortVisualStage cohort={cohort} />
 
       <div className="cohort-card-footer">
-        <div className="cohort-footer-info space-y-3">
-          <h3 className="cohort-showcase-title text-xl font-extrabold text-[#090909] tracking-tight">{cohort.title}</h3>
-          <p className="cohort-showcase-desc text-xs text-black/60 leading-relaxed">{cohort.description}</p>
-          
-          <div className="cohort-tech-list text-xs font-mono">
-            {cohort.technologies.map((tech, i) => (
-              <span key={tech} className="cohort-tech-item font-bold text-[#090909]">
+        <div className="cohort-footer-info">
+          <div className="flex items-center gap-2 mb-1.5 font-mono">
+            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${isSoldOut ? 'bg-black/10 text-black border-black/30' : 'bg-black/5 text-[#090909] border-black/20'}`}>
+              {isSoldOut ? 'SOLD OUT' : `${currentTierName.toUpperCase()} — ₹${currentPrice}`}
+            </span>
+            {!isSoldOut && (
+              <span className="text-[10px] text-black/60 font-bold">
+                ({seatsRemaining} of {totalSeats} Seats Left)
+              </span>
+            )}
+          </div>
+          <h3 className="cohort-showcase-title">{cohort.title}</h3>
+          <p className="cohort-showcase-desc">{cohort.description}</p>
+          <div className="cohort-tech-list">
+            {cohort.technologies && cohort.technologies.map((tech, i) => (
+              <span key={tech} className="cohort-tech-item">
                 {tech}
-                {i < cohort.technologies.length - 1 && <span className="cohort-tech-dot text-black/30 font-normal"> · </span>}
+                {i < cohort.technologies.length - 1 && <span className="cohort-tech-dot">·</span>}
               </span>
             ))}
-            <span className="cohort-tech-dot text-black/30 font-normal"> · </span>
-            <span className="font-bold text-[#090909]">{cohort.duration}</span>
-          </div>
-
-          {/* Restrained Pricing & Seats Spec Grid */}
-          <div className="p-3 rounded-xl bg-[#F8F9FA] border border-black/10 font-mono text-[11px] space-y-2">
-            <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1">
-              <span>CAPACITY & PRICING</span>
-              <span className="text-[#15803D]">{cohort.totalSeats || 70} SEATS TOTAL</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div className={`p-2 rounded-lg border ${isFoundingActive ? 'bg-white border-black/20 text-[#090909]' : 'bg-black/5 border-transparent text-black/40 line-through'}`}>
-                <span className="text-[8px] uppercase font-bold text-black/40 block tracking-wider">FOUNDING (1–30)</span>
-                <span className="text-xs font-extrabold block">₹{foundingPrice}</span>
-                <span className="text-[8px] text-black/50 block font-sans">
-                  {isFoundingActive ? `${foundingSeatsLeft} seats left` : 'Claimed'}
-                </span>
-              </div>
-
-              <div className={`p-2 rounded-lg border ${!isFoundingActive && !isSoldOut ? 'bg-white border-black/20 text-[#090909]' : 'bg-black/5 border-transparent text-black/40'}`}>
-                <span className="text-[8px] uppercase font-bold text-black/40 block tracking-wider">STANDARD (31–70)</span>
-                <span className="text-xs font-extrabold block">₹{regularPrice}</span>
-                <span className="text-[8px] text-black/50 block font-sans">
-                  {isSoldOut ? 'Sold out' : (isFoundingActive ? 'Unlocks at 31' : `${seatsRemaining} left`)}
-                </span>
-              </div>
-            </div>
-
-            <div className="text-[9px] text-black/70 pt-0.5 text-center font-bold font-sans">
-              {isSoldOut ? (
-                <span className="text-red-600">Registration closed · 70/70 Seats Filled</span>
-              ) : isFoundingActive ? (
-                <span className="text-[#090909]">Founding access · {foundingSeatsLeft} seats remaining at ₹{foundingPrice}</span>
-              ) : (
-                <span className="text-[#090909]">Standard access · {seatsRemaining} seats remaining at ₹{regularPrice}</span>
-              )}
-            </div>
+            <span className="cohort-tech-dot">·</span>
+            <span>{cohort.duration}</span>
           </div>
         </div>
 
-        <Link to={cohort.path || '/cohorts'} className="cohort-showcase-cta font-mono font-extrabold tracking-wider">
-          ENTER PROGRAM →
+        <Link to={cohort.path || '/cohorts'} className="cohort-showcase-cta">
+          Explore Cohort
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
         </Link>
       </div>
     </div>
@@ -512,12 +487,12 @@ export default function Cohorts() {
   return (
     <section ref={sectionRef} id="cohorts" className="cohort-showcase-section">
       <div ref={pinRef} className="cohort-showcase-sticky">
-        <div className="absolute top-5 left-5 sm:top-8 sm:left-12 z-20 space-y-1 text-left">
+        <div className="absolute top-5 left-5 sm:top-8 sm:left-12 z-20 space-y-1 text-left max-w-sm">
           <p className="font-mono text-[10px] sm:text-xs font-bold tracking-widest text-black/50 uppercase">
-            04 / FLAGSHIP COHORTS
+            04 / WHAT'S IN FLIGHT
           </p>
           <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#090909] font-product-sans">
-            Flagship <span className="text-black/45 font-serif italic">Cohorts.</span>
+            Programs <span className="text-black/45 font-serif italic">in motion.</span>
           </h2>
         </div>
 

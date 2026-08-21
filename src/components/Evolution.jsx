@@ -2,20 +2,20 @@ import React, { useEffect, useRef, useState } from "react"
 
 // item shape: [iconKey, label]  — single line, no subpoint copy.
 const traditional = [
-  ['code', 'Write every line manually'],
-  ['branch', 'Sequential handoffs'],
-  ['bug', 'Debug after building'],
-  ['clock', 'Ship in long release cycles'],
+  ['code', 'Execute every step manually'],
+  ['branch', 'One tool at a time'],
+  ['bug', 'Build after planning'],
+  ['clock', 'Ship finished outputs'],
 ]
 
 const native = [
-  ['sparkles', 'Direct AI-assisted building'],
-  ['people', 'Human + AI collaboration'],
-  ['loop', 'Continuous feedback loops'],
-  ['rocket', 'Prototype, test, ship faster'],
+  ['sparkles', 'Direct intelligent systems'],
+  ['people', 'Connected intelligence'],
+  ['loop', 'Explore while building'],
+  ['rocket', 'Continuously create and iterate'],
 ]
 
-const stages = [['code', 'BUILD'], ['people', 'COLLABORATE'], ['loop', 'IMPROVE'], ['rocket', 'SHIP']]
+const stages = [['code', 'IMAGINE'], ['people', 'ORCHESTRATE'], ['loop', 'CREATE'], ['rocket', 'SHIP']]
 
 // Hand-built inline SVG icon set — no external icon library.
 function CompareIcon({ name, size = 18, strokeWidth = 1.8, color = 'currentColor' }) {
@@ -35,8 +35,15 @@ function CompareIcon({ name, size = 18, strokeWidth = 1.8, color = 'currentColor
     case 'code':
       return (
         <svg {...common}>
-          <path d="M8 6L3 12l5 6" />
-          <path d="M16 6l5 6-5 6" />
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      )
+    case 'sparkles':
+      return (
+        <svg {...common}>
+          <path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3z" />
+          <path d="M19 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1z" />
         </svg>
       )
     case 'branch':
@@ -48,58 +55,48 @@ function CompareIcon({ name, size = 18, strokeWidth = 1.8, color = 'currentColor
           <path d="M18 9a9 9 0 0 1-9 9" />
         </svg>
       )
-    case 'bug':
-      return (
-        <svg {...common}>
-          <rect x="7" y="8" width="10" height="10" rx="5" />
-          <path d="M7 12H3" />
-          <path d="M21 12h-4" />
-          <path d="M8 8l-2.5-2.5" />
-          <path d="M16 8l2.5-2.5" />
-          <path d="M8 18l-2.5 2.5" />
-          <path d="M16 18l2.5 2.5" />
-          <path d="M12 8V5" />
-        </svg>
-      )
-    case 'clock':
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v5l3 3" />
-        </svg>
-      )
-    case 'sparkles':
-      return (
-        <svg {...common}>
-          <path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" />
-          <path d="M19 15l.8 2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z" />
-        </svg>
-      )
     case 'people':
       return (
         <svg {...common}>
-          <circle cx="9" cy="8" r="3" />
-          <path d="M4 20c0-3 2-5 5-5s5 2 5 5" />
-          <circle cx="17" cy="9" r="2.2" />
-          <path d="M15.2 20c.2-2.2 1.6-4 3.6-4.3" />
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      )
+    case 'bug':
+      return (
+        <svg {...common}>
+          <rect x="8" y="6" width="8" height="14" rx="4" />
+          <line x1="6" y1="18" x2="8" y2="16" />
+          <line x1="18" y1="18" x2="16" y2="16" />
+          <line x1="6" y1="9" x2="8" y2="10" />
+          <line x1="18" y1="9" x2="16" y2="10" />
+          <line x1="6" y1="14" x2="8" y2="14" />
+          <line x1="18" y1="14" x2="16" y2="14" />
+          <line x1="12" y1="6" x2="12" y2="20" />
         </svg>
       )
     case 'loop':
       return (
         <svg {...common}>
-          <path d="M4 12a8 8 0 0 1 14-5.3L20 8" />
-          <path d="M20 4v4h-4" />
-          <path d="M20 12a8 8 0 0 1-14 5.3L4 16" />
-          <path d="M4 20v-4h4" />
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+        </svg>
+      )
+    case 'clock':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
         </svg>
       )
     case 'rocket':
       return (
         <svg {...common}>
-          <path d="M12 2c3 2 5 6 5 10 0 2-1 4-2 5l-3 3-3-3c-1-1-2-3-2-5 0-4 2-8 5-10z" />
-          <circle cx="12" cy="10" r="1.4" />
-          <path d="M9 16l-3 5" />
-          <path d="M15 16l3 5" />
+          <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71.19-1.81-.47-2.47l-2.06-2.06c-.66-.66-1.76-1.18-2.47-.47z" />
+          <path d="M12 15l-3-3 7.5-7.5c1.47-1.47 4.5-1.5 4.5-1.5s-.03 3.03-1.5 4.5L12 15z" />
+          <path d="M9 18l3 3" />
+          <path d="M6 15l3 3" />
         </svg>
       )
     default:
@@ -107,24 +104,19 @@ function CompareIcon({ name, size = 18, strokeWidth = 1.8, color = 'currentColor
   }
 }
 
-const FONT_STACK = "'Plus Jakarta Sans', 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+const FONT_STACK =
+  "'Product Sans', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
 const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)'
 const EASE_SPRING = 'cubic-bezier(0.34, 1.56, 0.64, 1)'
 
-function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth <= breakpoint
-  )
-
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`)
-    const handleChange = (e) => setIsMobile(e.matches)
-    handleChange(mq)
-    mq.addEventListener('change', handleChange)
-    return () => mq.removeEventListener('change', handleChange)
-  }, [breakpoint])
-
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
   return isMobile
 }
 
@@ -146,8 +138,8 @@ function Row({ item, modern, visible, index, hovered, activeStage, onHover, onLe
         minHeight: 44,
         borderRadius: '10px',
         boxSizing: 'border-box',
-        backgroundColor: isStageActive ? (modern ? '#f0fdf4' : '#f8fafc') : (isHovered ? '#f4f4f5' : 'transparent'),
-        border: `1px solid ${isStageActive ? (modern ? '#bbf7d0' : '#e2e8f0') : '#f1f1f2'}`,
+        backgroundColor: isStageActive ? '#f4f4f5' : (isHovered ? '#f4f4f5' : 'transparent'),
+        border: `1px solid ${isStageActive ? '#090909' : '#f1f1f2'}`,
         opacity: visible ? 1 : 0,
         transform: visible
           ? (isHovered ? `translate(${modern ? 6 : -6}px, 0)` : 'translateX(0)')
@@ -167,10 +159,10 @@ function Row({ item, modern, visible, index, hovered, activeStage, onHover, onLe
           width: isMobile ? 26 : 28,
           height: isMobile ? 26 : 28,
           borderRadius: '8px',
-          backgroundColor: modern && active ? '#ecfdf5' : '#f4f4f5',
+          backgroundColor: active ? '#090909' : '#f4f4f5',
           transform: active ? 'scale(1.08) rotate(-3deg)' : 'scale(1) rotate(0deg)',
           transition: `transform 0.35s ${EASE_SPRING}, background-color 0.3s ease`,
-          color: modern && active ? '#10b981' : '#111827',
+          color: active ? '#ffffff' : '#111827',
         }}
       >
         <CompareIcon name={item[0]} size={isMobile ? 14 : 16} strokeWidth={isMobile ? 1.9 : 1.75} />
@@ -183,7 +175,9 @@ function Row({ item, modern, visible, index, hovered, activeStage, onHover, onLe
           fontSize: isMobile ? '0.8rem' : '0.9rem',
           lineHeight: 1.3,
           letterSpacing: '-0.005em',
+          fontFamily: FONT_STACK,
         }}
+        className="font-product-sans"
       >
         {item[1]}
       </h4>
@@ -236,6 +230,7 @@ export default function Evolution() {
   return (
     <section
       id="experience"
+      className="font-product-sans relative overflow-hidden bg-[#fafafa] border-b border-black/10"
       style={{
         position: 'relative',
         overflow: 'hidden',
@@ -246,7 +241,6 @@ export default function Evolution() {
       ref={sectionRef}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         #experience, #experience * { font-family: ${FONT_STACK}; }
         @keyframes flowPulse {
           0% { top: 0%; opacity: 0; }
@@ -293,7 +287,7 @@ export default function Evolution() {
                 marginBottom: isMobile ? '8px' : '10px',
               }}
             >
-              01 / EVOLUTION &amp; ENGINEERING
+              01 / INTELLIGENCE &amp; CREATION
             </p>
             <h2
               style={{
@@ -306,8 +300,8 @@ export default function Evolution() {
                 marginBottom: isMobile ? '8px' : '12px',
               }}
             >
-              From writing code<br />
-              <span style={{ color: 'rgba(0,0,0,0.45)' }}>to orchestrating intelligence.</span>
+              From using intelligence<br />
+              <span style={{ color: 'rgba(0,0,0,0.45)' }}>to orchestrating it.</span>
             </h2>
             <p
               style={{
@@ -318,8 +312,7 @@ export default function Evolution() {
                 margin: 0,
               }}
             >
-              The tools have changed. The role has evolved. Welcome to{' '}
-              <b style={{ color: '#090909' }}>AI-Native Engineering.</b>
+              AI isn't just another tool in the stack. It changes how we build, create, automate, and solve.
             </p>
           </div>
 
@@ -334,7 +327,7 @@ export default function Evolution() {
               boxSizing: 'border-box',
             }}
           >
-            {/* Traditional Side */}
+            {/* Conventional Side */}
             <div
               style={{
                 minWidth: 0,
@@ -353,7 +346,7 @@ export default function Evolution() {
                   marginBottom: isMobile ? '8px' : '10px',
                 }}
               >
-                Traditional Engineering
+                Conventional
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 3 : 4 }}>
                 {traditional.map((item, i) => (
@@ -408,7 +401,7 @@ export default function Evolution() {
                       position: 'absolute',
                       width: '100%',
                       height: '40px',
-                      background: 'linear-gradient(to bottom, transparent, #10b981, transparent)',
+                      background: 'linear-gradient(to bottom, transparent, #090909, transparent)',
                       animation: 'flowPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }}
                   />
@@ -434,7 +427,7 @@ export default function Evolution() {
                       position: 'absolute',
                       height: '100%',
                       width: '28px',
-                      background: 'linear-gradient(to right, transparent, #10b981, transparent)',
+                      background: 'linear-gradient(to right, transparent, #090909, transparent)',
                       animation: 'flowPulseHorizontal 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }}
                   />
@@ -483,9 +476,9 @@ export default function Evolution() {
                         padding: isMobile ? '8px 12px' : '6px 10px',
                         minHeight: 44,
                         borderRadius: isMobile ? '14px' : '18px',
-                        background: isActive ? '#f0fdf4' : '#ffffff',
-                        border: `1px solid ${isActive ? '#86efac' : '#f3f4f6'}`,
-                        boxShadow: isActive ? '0 4px 12px rgba(16, 185, 129, 0.15)' : 'none',
+                        background: '#ffffff',
+                        border: `1px solid ${isActive ? '#090909' : '#f3f4f6'}`,
+                        boxShadow: isActive ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none',
                         opacity: inView ? 1 : 0,
                         transform: inView
                           ? `translateY(0) scale(${isActive ? (isMobile ? 1.04 : 1.06) : 1})`
@@ -504,7 +497,7 @@ export default function Evolution() {
                           justifyContent: 'center',
                           transform: isActive ? 'scale(1.15) rotate(-4deg)' : 'scale(1)',
                           transition: `transform 0.4s ${EASE_SPRING}`,
-                          color: isActive ? '#10b981' : '#6b7280',
+                          color: isActive ? '#090909' : '#6b7280',
                         }}
                       >
                         <CompareIcon name={icon} size={isMobile ? 12 : 15} strokeWidth={isMobile ? 2 : 1.8} />
@@ -512,7 +505,7 @@ export default function Evolution() {
                       <span
                         style={{
                           fontWeight: isActive ? 700 : 600,
-                          color: isActive ? '#065f46' : '#9ca3af',
+                          color: isActive ? '#090909' : '#9ca3af',
                           opacity: isActive ? 1 : 0.65,
                           transition: 'opacity 0.4s ease, color 0.4s ease',
                           fontSize: isMobile ? '0.56rem' : '0.66rem',
@@ -547,7 +540,7 @@ export default function Evolution() {
                   marginBottom: isMobile ? '8px' : '10px',
                 }}
               >
-                AI-Native Engineering
+                AI-Native
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 3 : 4 }}>
                 {native.map((item, i) => (

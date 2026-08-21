@@ -4,38 +4,38 @@ import { Link } from 'react-router-dom'
 const reasons = [
   {
     num: '01',
-    title: '100% Portfolio-Driven',
-    short: 'Graduate with production-ready projects.',
-    copy: 'Graduate with production-ready projects and a public body of work — not just a certificate.',
-    tag: 'Proof over Promises',
+    title: 'BUILD OVER CONSUME',
+    short: "Don't just learn what exists.",
+    copy: "Don't just learn what exists. Make something with it.",
+    tag: 'Make Something',
   },
   {
     num: '02',
-    title: 'AI-Native Curriculum',
-    short: 'Modern workflows built for current AI tools.',
-    copy: 'Use the workflows, tools and judgment that modern engineering teams rely on every day.',
-    tag: 'Modern Stack',
+    title: 'EXPERIMENT OVER FOLLOW',
+    short: 'Explore what AI makes possible.',
+    copy: 'Explore what AI makes possible and push the boundaries of what can be built.',
+    tag: 'Explore Possibility',
   },
   {
     num: '03',
-    title: 'Live Cohort Experience',
-    short: 'Mentorship and peer-driven friction.',
-    copy: 'Learn through mentorship, discussion and the productive friction of building alongside others.',
-    tag: 'Peer Driven',
+    title: 'PROOF OVER PROMISES',
+    short: 'Show what you can create.',
+    copy: 'Show what you can create with public, functional artifacts and working code.',
+    tag: 'Show Execution',
   },
   {
     num: '04',
-    title: 'Build Before Theory',
-    short: 'Apply concepts directly to functional code.',
-    copy: 'Every idea earns meaning when you apply it to a product that has to work.',
-    tag: 'Hands-on First',
+    title: 'INTELLIGENCE IS A MEDIUM',
+    short: 'Work with models, agents, & tools.',
+    copy: 'Learn to work with models, agents, tools, and systems as a primary creative and technical medium.',
+    tag: 'Orchestrate Systems',
   },
   {
     num: '05',
-    title: 'Industry-Ready Workflows',
-    short: 'Collaborative delivery and deployment.',
-    copy: 'Practice collaborative delivery, deployment and systems thinking from the start.',
-    tag: 'Production Grade',
+    title: 'BUILD TOGETHER',
+    short: 'Great things are rarely built alone.',
+    copy: 'Great things are rarely built alone. Collaborate alongside ambitious builders in active production.',
+    tag: 'Collective Power',
   },
 ]
 
@@ -58,7 +58,7 @@ export default function WhyTuringWings() {
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-black/60 max-w-sm leading-relaxed font-product-sans">
-            Eliminating passive lectures in favor of real products, live engineering cohorts, and active production.
+            Turing Wings exists for people who don't want to simply watch what's next. They want to make it.
           </p>
         </div>
 
@@ -119,37 +119,37 @@ export default function WhyTuringWings() {
             })}
           </div>
 
-          {/* Right Column: Live Interactive Stage (Desktop) */}
-          <div className="hidden sm:flex lg:col-span-5 relative bg-white border border-black/10 rounded-3xl p-6 lg:p-8 flex-col justify-between shadow-lg min-h-[380px]">
+          {/* Right Column / Mobile Preview Stage */}
+          <div className="flex lg:col-span-5 relative bg-[#090909] border border-black rounded-3xl p-5 sm:p-6 lg:p-8 flex-col justify-between shadow-2xl min-h-[260px] sm:min-h-[320px] lg:min-h-[380px] text-white mt-2 lg:mt-0">
             {/* Background Accent Grid */}
-            <div className="absolute inset-0 pointer-events-none opacity-20 rounded-3xl overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none opacity-15 rounded-3xl overflow-hidden">
               <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1" fill="currentColor" className="text-black" />
+                  <circle cx="2" cy="2" r="1" fill="currentColor" className="text-white" />
                 </pattern>
                 <rect width="100%" height="100%" fill="url(#grid-pattern)" />
               </svg>
             </div>
 
             <div className="relative z-10 flex justify-between items-start">
-              <span className="font-mono text-3xl lg:text-4xl font-light text-black/20">
+              <span className="font-mono text-2xl sm:text-3xl lg:text-4xl font-light text-white/30">
                 {reasons[activeIdx].num}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest bg-white border border-black/10 px-3 py-1 rounded-full text-black/70 shadow-xs">
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest bg-white/10 border border-white/15 px-2.5 sm:px-3 py-1 rounded-full text-white/80 shadow-xs">
                 {reasons[activeIdx].tag}
               </span>
             </div>
 
-            <div className="relative z-10 my-auto py-6">
-              <h4 className="text-xl lg:text-2xl font-bold tracking-tight text-[#090909] mb-3">
+            <div className="relative z-10 my-auto py-4 sm:py-6">
+              <h4 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-white mb-2 sm:mb-3">
                 {reasons[activeIdx].title}
               </h4>
-              <p className="text-xs lg:text-sm text-black/70 leading-relaxed font-product-sans">
+              <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-product-sans">
                 {reasons[activeIdx].copy}
               </p>
             </div>
 
-            <div className="relative z-10 pt-3 border-t border-black/10 flex justify-between items-center text-[10px] sm:text-xs font-mono text-black/40">
+            <div className="relative z-10 pt-3 border-t border-white/10 flex justify-between items-center text-[10px] sm:text-xs font-mono text-white/40">
               <span>PRINCIPLE {activeIdx + 1} OF 5</span>
               <span>TURING WINGS</span>
             </div>

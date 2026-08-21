@@ -25,7 +25,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pb-4 sm:pb-6 items-center">
 
           {/* Prominent Brand Logo & Tagline */}
-          <div className="lg:col-span-4 flex flex-col items-start gap-2.5">
+          <div className="lg:col-span-4 flex flex-col items-start gap-2">
             <Link to="/" aria-label="Turing Wings home" className="inline-block">
               <img
                 src="/Logos/WhiteNoBg.png"
@@ -33,14 +33,17 @@ export default function Footer() {
                 className="h-10 sm:h-12 w-auto object-contain shrink-0 hover:opacity-90 transition-opacity"
               />
             </Link>
-            <p className="text-xs text-white/50 max-w-xs leading-relaxed font-product-sans">
-              AI-First Engineering Cohorts & Buildathons. Master production-grade systems by building real products.
+            <p className="text-xs text-white/70 max-w-xs leading-relaxed font-product-sans">
+              An ecosystem for building with AI.
+            </p>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-wider">
+              Engineering. Creation. Automation. Exploration.
             </p>
           </div>
 
           {/* Contact Details */}
           <div className="lg:col-span-5 flex flex-col gap-2">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#22C55E]">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60">
               DIRECT CONTACT
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
@@ -53,7 +56,7 @@ export default function Footer() {
                     </span>
                     <a
                       href={item.href}
-                      className="inline-flex items-center gap-2 min-h-[44px] text-xs sm:text-sm font-semibold text-white/90 hover:text-[#22C55E] transition-colors truncate"
+                      className="inline-flex items-center gap-2 min-h-[44px] text-xs sm:text-sm font-semibold text-white/90 hover:text-white transition-colors truncate"
                     >
                       <ItemIcon className="w-3.5 h-3.5 text-white/40 shrink-0" />
                       <span className="truncate">{item.value}</span>
@@ -66,7 +69,7 @@ export default function Footer() {
 
           {/* Social Connect Chips / Pills */}
           <div className="lg:col-span-3 flex flex-col gap-2">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#22C55E]">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60">
               COMMUNITY
             </span>
             <div className="flex items-center gap-2">
@@ -95,7 +98,7 @@ export default function Footer() {
         {/* Quote Row */}
         <div className="py-2 sm:py-3 flex justify-center text-center">
           <p className="font-serif italic text-sm sm:text-xl text-white/80 font-medium tracking-tight">
-            "Built by engineers, for engineers."
+            "Built by people who build."
           </p>
         </div>
 
@@ -105,13 +108,13 @@ export default function Footer() {
           <div className="flex items-center gap-6 font-semibold">
             <Link
               to="/privacy"
-              className="inline-flex items-center min-h-[44px] text-white/60 hover:text-[#22C55E] transition-colors"
+              className="inline-flex items-center min-h-[44px] text-white/60 hover:text-white transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               to="/terms"
-              className="inline-flex items-center min-h-[44px] text-white/60 hover:text-[#22C55E] transition-colors"
+              className="inline-flex items-center min-h-[44px] text-white/60 hover:text-white transition-colors"
             >
               Terms of Service
             </Link>

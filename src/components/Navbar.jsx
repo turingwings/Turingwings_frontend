@@ -32,9 +32,10 @@ export default function Navbar() {
   }, [location.pathname])
 
   const mobileNavItems = [
-    { label: 'Cohorts', path: '/cohorts', icon: Cpu },
-    { label: 'Buildathons', path: '/buildathons', icon: ShieldCheck },
-    { label: 'Contact', path: '/contact', icon: Phone },
+    { label: 'Explore', path: '/', icon: Cpu },
+    { label: 'Cohorts', path: '/cohorts', icon: ShieldCheck },
+    { label: 'Builds', path: '/buildathons', icon: Phone },
+    { label: 'About', path: '/contact', icon: FileText },
     { label: 'Privacy Policy', path: '/privacy', icon: Lock },
     { label: 'Terms & Service', path: '/terms', icon: FileText },
   ]
@@ -48,12 +49,25 @@ export default function Navbar() {
           </Link>
 
           {/* PC VIEW NAVBAR */}
-          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-product-sans">
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 font-product-sans">
+            <Link
+              to="/"
+              onClick={(e) => {
+                if (location.pathname === '/') {
+                  e.preventDefault()
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+              }}
+              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white cursor-pointer whitespace-nowrap"
+            >
+              <span>Explore</span>
+            </Link>
+
             <Link
               to="/cohorts"
-              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-6 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white cursor-pointer whitespace-nowrap"
+              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white cursor-pointer whitespace-nowrap"
             >
-              <span><span className="sm:hidden">Cohorts</span><span className="hidden sm:inline">Explore Cohorts</span></span>
+              <span>Cohorts</span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 ↗
               </span>
@@ -61,9 +75,9 @@ export default function Navbar() {
 
             <Link
               to="/buildathons"
-              className="group hidden sm:inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-6 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+              className="group hidden sm:inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white whitespace-nowrap"
             >
-              <span>Buildathons</span>
+              <span>Builds</span>
               <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 ↗
               </span>
@@ -71,12 +85,9 @@ export default function Navbar() {
 
             <Link
               to="/contact"
-              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3.5 sm:px-5 md:px-6 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-[#22C55E] hover:text-[#22C55E] bg-white whitespace-nowrap"
+              className="group inline-flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 rounded-full border border-black/20 px-3.5 sm:px-4 md:px-5 py-2 sm:py-2.5 min-h-[44px] text-[10px] md:text-[11px] font-semibold tracking-[.08em] uppercase text-black transition-colors duration-200 hover:border-black hover:bg-black/5 bg-white whitespace-nowrap"
             >
-              <span>Contact</span>
-              <span className="text-[10px] font-mono opacity-40 transition-[transform,opacity] duration-200 ease-out group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                ↗
-              </span>
+              <span>About</span>
             </Link>
 
             {/* MOBILE HAMBURGER BUTTON */}
@@ -86,7 +97,7 @@ export default function Navbar() {
               aria-label={menuOpen ? 'Close Navigation Menu' : 'Toggle Navigation Menu'}
               aria-expanded={menuOpen}
             >
-              {menuOpen ? <X className="w-5 h-5 text-[#22C55E]" /> : <Menu className="w-5 h-5" />}
+              {menuOpen ? <X className="w-5 h-5 text-black" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import NotFoundPage from './NotFoundPage';
 import BuilderOfTheCohort from '../components/BuilderOfTheCohort';
+import CohortTechStack from '../components/CohortTechStack';
 import {
   Cpu, ShieldCheck, Clock, Layers, Terminal, Bug, Wifi, Code2, Search, AlertTriangle,
   Key, Radio, FileText, Calendar, Eye, X, Sparkles, Rocket, Server, Database, Globe,
@@ -713,94 +714,8 @@ export default function CohortPage() {
             </AnimatePresence>
           </div>
 
-          {/* TOOLS & TICKER */}
-          <div className="space-y-5">
-            <div className="text-center space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-extrabold">Tools & Technologies</h2>
-              <p className="text-xs sm:text-sm text-black/50">Tap any tool to see how it's used in the cohort.</p>
-            </div>
-
-            <div className="relative -mx-5 sm:-mx-8">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-24 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-24 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10" />
-
-              <div className="overflow-hidden py-1">
-                <motion.div
-                  className="flex gap-3 w-max px-5 sm:px-8"
-                  animate={{ x: ['0%', '-50%'] }}
-                  transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-                >
-                  {[...cohort.toolsList, ...cohort.toolsList].map((t, i) => {
-                    const Icon = t.icon;
-                    return (
-                      <motion.button
-                        key={`${t.name}-${i}`}
-                        onClick={() => setActiveTool(t)}
-                        whileHover={{ y: -3, scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        className="cursor-pointer flex items-center gap-3 pl-3 pr-5 py-3 rounded-2xl bg-white border border-black/10 shadow-xs hover:border-[#16A34A]/40 hover:shadow-md transition-all shrink-0"
-                      >
-                        <span className="w-9 h-9 rounded-xl bg-black/5 text-black/70 flex items-center justify-center shrink-0 overflow-hidden p-1.5">
-                          {t.image ? (
-                            <img src={t.image} alt={t.name} className="w-full h-full object-contain" />
-                          ) : (
-                            <Icon className="w-4.5 h-4.5" />
-                          )}
-                        </span>
-                        <span className="text-left leading-tight">
-                          <span className="text-xs font-bold block whitespace-nowrap">{t.name}</span>
-                          <span className="text-[10px] text-black/50 block whitespace-nowrap">{t.desc}</span>
-                        </span>
-                      </motion.button>
-                    );
-                  })}
-                </motion.div>
-              </div>
-            </div>
-          </div>
-
-          {/* TOOL MODAL */}
-          <AnimatePresence>
-            {activeTool && (
-              <motion.div
-                className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                  onClick={() => setActiveTool(null)}
-                />
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.92, y: 16 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: 10 }}
-                  transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                  className="relative bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-4"
-                >
-                  <button
-                    onClick={() => setActiveTool(null)}
-                    className="cursor-pointer absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-black/40 hover:bg-black/5 hover:text-black transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                  <span className="w-12 h-12 rounded-2xl bg-black/5 text-black/70 flex items-center justify-center overflow-hidden p-2">
-                    {activeTool?.image ? (
-                      <img src={activeTool.image} alt={activeTool.name} className="w-full h-full object-contain" />
-                    ) : (
-                      activeTool && <activeTool.icon className="w-6 h-6" />
-                    )}
-                  </span>
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-black/50">{activeTool?.desc}</span>
-                    <h3 className="text-lg font-extrabold leading-snug">{activeTool?.name}</h3>
-                  </div>
-                  <p className="text-sm text-black/70 leading-relaxed">{activeTool?.mainUse}</p>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* ROTATING SECURITY & AI TECH STACK CAROUSEL */}
+          <CohortTechStack slug={slug} />
 
           {/* BUILDER OF THE COHORT */}
           <BuilderOfTheCohort />
@@ -901,6 +816,42 @@ export default function CohortPage() {
           <motion.p variants={item} className="text-[15px] sm:text-lg text-black/70 font-medium max-w-xl leading-relaxed">
             {cohort.tagline}
           </motion.p>
+
+          {/* DYNAMIC PRICING TIER BREAKDOWN BANNER */}
+          <motion.div variants={item} className="p-4 rounded-2xl bg-white border border-black/12 space-y-3 font-mono text-xs max-w-xl shadow-sm">
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
+              <span>LIMITED CAPACITY PRICING</span>
+              <span className="text-[#15803D]">70 TOTAL SEATS</span>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${currentTierName.toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-current" />
+                  <span className="font-bold text-xs">First 30 Seats</span>
+                </div>
+                <span className="font-extrabold text-sm">₹499</span>
+              </div>
+
+              <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!currentTierName.toLowerCase().includes('founding') && !isSoldOut ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/50'}`}>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-current" />
+                  <span className="font-bold text-xs">Remaining 40 Seats</span>
+                </div>
+                <span className="font-extrabold text-sm">₹599</span>
+              </div>
+            </div>
+
+            <div className="text-[11px] text-black/70 pt-0.5 text-center font-bold font-sans">
+              {isSoldOut ? (
+                <span className="text-red-600 font-extrabold">Registration closed · 70/70 Seats Claimed</span>
+              ) : currentTierName.toLowerCase().includes('founding') ? (
+                <span className="text-[#090909] font-extrabold">Founding access · Only {cohort.seatsRemaining !== undefined ? (cohort.currentPricing ? cohort.currentPricing.seatsRemaining : cohort.seatsRemaining) : 30} founding seats remaining at ₹499</span>
+              ) : (
+                <span className="text-[#090909] font-extrabold">Standard access · Currently selling remaining seats at ₹599 ({cohort.seatsRemaining} left)</span>
+              )}
+            </div>
+          </motion.div>
 
           <motion.div variants={item} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-1">
             <Link
@@ -1146,92 +1097,8 @@ export default function CohortPage() {
           </AnimatePresence>
         </div>
 
-        {/* TOOLS & STACK */}
-        <div className="space-y-5 sm:space-y-6">
-          <div className="text-center space-y-1.5">
-            <span className="text-[12px] sm:text-xs font-bold uppercase tracking-widest text-black/50">STACK & TOOLS</span>
-            <h2 className="text-xl sm:text-2xl font-extrabold">Technologies Mastered</h2>
-            <p className="text-[13px] sm:text-xs text-black/50">Tap a tool to see how it's used.</p>
-          </div>
-
-          <div className="relative -mx-5 sm:-mx-8">
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-24 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-24 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10" />
-
-            <div className="ticker-row overflow-hidden py-2">
-              <motion.div
-                className="flex gap-3 sm:gap-4 w-max px-5 sm:px-8"
-                animate={{ x: ['0%', '-50%'] }}
-                transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-              >
-                {[...cohort.toolsList, ...cohort.toolsList].map((t, i) => {
-                  const Icon = t.icon;
-                  return (
-                    <motion.button
-                      key={`${t.name}-${i}`}
-                      onClick={() => setActiveTool(t)}
-                      whileHover={{ y: -3, scale: 1.02 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="flex items-center gap-2.5 sm:gap-3 pl-2.5 sm:pl-3 pr-4 sm:pr-5 py-2.5 sm:py-3 rounded-2xl bg-white border border-black/10 shadow-xs hover:border-[#16A34A]/50 hover:shadow-md transition-all shrink-0"
-                    >
-                      <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-black/5 text-black/70 flex items-center justify-center shrink-0 overflow-hidden p-1.5">
-                        {t.image ? (
-                          <img src={t.image} alt={t.name} className="w-full h-full object-contain" />
-                        ) : (
-                          <Icon className="w-4.5 h-4.5" />
-                        )}
-                      </span>
-                      <span className="text-[13px] sm:text-xs font-bold whitespace-nowrap">{t.name}</span>
-                    </motion.button>
-                  );
-                })}
-              </motion.div>
-            </div>
-          </div>
-        </div>
-
-        {/* TOOL DETAIL MODAL */}
-        <AnimatePresence>
-          {activeTool && (
-            <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                onClick={() => setActiveTool(null)}
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92, y: 16 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.94, y: 10 }}
-                transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                className="relative bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 max-w-sm w-full shadow-2xl space-y-3 sm:space-y-4"
-              >
-                <button
-                  onClick={() => setActiveTool(null)}
-                  className="absolute top-3 sm:top-4 right-3 sm:right-4 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-black/40 hover:bg-black/5 hover:text-black transition-colors"
-                >
-                  <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </button>
-                <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-black/5 text-black/70 flex items-center justify-center overflow-hidden p-2">
-                  {activeTool?.image ? (
-                    <img src={activeTool.image} alt={activeTool.name} className="w-full h-full object-contain" />
-                  ) : (
-                    activeTool && <activeTool.icon className="w-5 h-5 sm:w-6 sm:h-6" />
-                  )}
-                </span>
-                <div>
-                  <span className="text-[12px] sm:text-[10px] font-bold uppercase tracking-widest text-black/50">{activeTool?.desc}</span>
-                  <h3 className="text-base sm:text-lg font-extrabold leading-snug">{activeTool?.name}</h3>
-                </div>
-                <p className="text-[14px] sm:text-sm text-black/70 leading-relaxed">{activeTool?.mainUse}</p>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* ROTATING TOOLS & TECH STACK CAROUSEL */}
+        <CohortTechStack slug={slug} />
 
         {/* BUILDER OF THE COHORT */}
         <BuilderOfTheCohort />

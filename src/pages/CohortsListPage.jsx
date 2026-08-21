@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BuilderOfTheCohort from '../components/BuilderOfTheCohort';
 import {
-  Cpu, ShieldCheck, Clock, ArrowRight, AlertCircle, Layers, Terminal
+  Cpu, ShieldCheck, Clock, ArrowRight, AlertCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cohortService } from '../services/cohort';
@@ -12,79 +12,6 @@ import { COHORTS_METADATA } from '../data/cohortMetadata';
 
 const FONT_STACK =
   "'Product Sans', 'Google Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-
-function WebDevDiagram() {
-  return (
-    <svg viewBox="0 0 480 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto max-h-48 rounded-xl border border-black/10 bg-[#FAF9F6]">
-      <rect width="480" height="200" rx="10" fill="#F8F9FA" />
-      <pattern id="web-dots" width="16" height="16" patternUnits="userSpaceOnUse">
-        <circle cx="2" cy="2" r="1" fill="#E2E8F0" />
-      </pattern>
-      <rect width="480" height="200" rx="10" fill="url(#web-dots)" />
-      
-      {/* Node 1: Client UI */}
-      <rect x="25" y="60" width="100" height="80" rx="8" fill="#FFFFFF" stroke="#090909" strokeWidth="1.5" />
-      <text x="75" y="95" textAnchor="middle" fill="#090909" fontSize="10" fontWeight="700" fontFamily="monospace">CLIENT UI</text>
-      <text x="75" y="112" textAnchor="middle" fill="#71717A" fontSize="8" fontFamily="monospace">REACT / NEXT</text>
-
-      {/* Connection 1 -> 2 */}
-      <path d="M125 100 H165" stroke="#090909" strokeWidth="1.5" strokeDasharray="3 3" />
-      <circle cx="145" cy="100" r="3" fill="#090909" />
-
-      {/* Node 2: Agent Core */}
-      <rect x="165" y="45" width="150" height="110" rx="10" fill="#090909" />
-      <text x="240" y="85" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="800" fontFamily="monospace">AGENT RUNTIME</text>
-      <text x="240" y="102" textAnchor="middle" fill="#A1A1AA" fontSize="9" fontFamily="monospace">CLAUDE + MCP</text>
-      <text x="240" y="120" textAnchor="middle" fill="#22C55E" fontSize="8" fontWeight="700" fontFamily="monospace">● ACTIVE EXECUTION</text>
-
-      {/* Connection 2 -> 3 */}
-      <path d="M315 100 H355" stroke="#090909" strokeWidth="1.5" strokeDasharray="3 3" />
-      <circle cx="335" cy="100" r="3" fill="#090909" />
-
-      {/* Node 3: Supabase / DB */}
-      <rect x="355" y="60" width="100" height="80" rx="8" fill="#FFFFFF" stroke="#090909" strokeWidth="1.5" />
-      <text x="405" y="95" textAnchor="middle" fill="#090909" fontSize="10" fontWeight="700" fontFamily="monospace">SUPABASE</text>
-      <text x="405" y="112" textAnchor="middle" fill="#71717A" fontSize="8" fontFamily="monospace">POSTGRES / RAG</text>
-    </svg>
-  );
-}
-
-function CyberDiagram() {
-  return (
-    <svg viewBox="0 0 480 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto max-h-48 rounded-xl border border-black/10 bg-[#FAF9F6]">
-      <rect width="480" height="200" rx="10" fill="#F8F9FA" />
-      <pattern id="cyber-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#F1F5F9" strokeWidth="1"/>
-      </pattern>
-      <rect width="480" height="200" rx="10" fill="url(#cyber-grid)" />
-
-      <rect x="20" y="25" width="440" height="150" rx="8" fill="none" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4" />
-      <text x="35" y="42" fill="#94A3B8" fontSize="8" fontWeight="700" fontFamily="monospace">PERIMETER_DEFENSE_GRID</text>
-
-      {/* Recon Node */}
-      <rect x="40" y="60" width="100" height="80" rx="8" fill="#FFFFFF" stroke="#090909" strokeWidth="1.5" />
-      <text x="90" y="95" textAnchor="middle" fill="#090909" fontSize="10" fontWeight="700" fontFamily="monospace">KALI / NMAP</text>
-      <text x="90" y="112" textAnchor="middle" fill="#64748B" fontSize="8" fontFamily="monospace">RECON / PROBE</text>
-
-      {/* Connection */}
-      <path d="M140 100 H175" stroke="#090909" strokeWidth="1.5" />
-
-      {/* SOC Agent */}
-      <rect x="175" y="45" width="140" height="110" rx="10" fill="#090909" />
-      <text x="245" y="85" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="800" fontFamily="monospace">SOC AGENT</text>
-      <text x="245" y="102" textAnchor="middle" fill="#94A3B8" fontSize="9" fontFamily="monospace">OLLAMA + BURP</text>
-      <text x="245" y="120" textAnchor="middle" fill="#22C55E" fontSize="8" fontWeight="700" fontFamily="monospace">ENCRYPTED TELEMETRY</text>
-
-      {/* Connection */}
-      <path d="M315 100 H350" stroke="#090909" strokeWidth="1.5" />
-
-      {/* Target Node */}
-      <rect x="350" y="60" width="95" height="80" rx="8" fill="#FFFFFF" stroke="#090909" strokeWidth="1.5" />
-      <text x="397" y="95" textAnchor="middle" fill="#090909" fontSize="10" fontWeight="700" fontFamily="monospace">MCP GATEWAY</text>
-      <text x="397" y="122" textAnchor="middle" fill="#64748B" fontSize="8" fontFamily="monospace">HARDENED LAB</text>
-    </svg>
-  );
-}
 
 const listContainerVariants = {
   hidden: { opacity: 0 },
@@ -103,15 +30,25 @@ const cardEntranceVariants = {
   },
 };
 
-const mergeCohortData = (backendCohort, idx) => {
+const cardHoverVariants = {
+  rest: { y: 0, boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)' },
+  hover: { y: -4, boxShadow: '0 12px 28px rgba(0, 0, 0, 0.08)' },
+};
+
+const arrowVariants = {
+  rest: { x: 0 },
+  hover: { x: 4 },
+};
+
+const mergeCohortData = (backendCohort) => {
   const slug = backendCohort.slug;
   const meta = COHORTS_METADATA[slug] || {
-    flagship: 'NEW PROGRAM',
+    flagship: 'FLAGSHIP 01',
     icon: Cpu,
     tagline: 'Master state-of-the-art software engineering',
     stats: [{ icon: Clock, label: '4 Weeks' }],
     tools: [],
-    ctaLabel: 'ENTER PROGRAM',
+    ctaLabel: 'VIEW CURRICULUM',
   };
 
   const totalSeats = Number(backendCohort.totalSeats || backendCohort.total_seats || 70);
@@ -123,7 +60,6 @@ const mergeCohortData = (backendCohort, idx) => {
   return {
     ...meta,
     ...backendCohort,
-    number: String(idx + 1).padStart(2, '0'),
     uuid: backendCohort.id,
     id: slug,
     title: backendCohort.title,
@@ -138,120 +74,154 @@ const mergeCohortData = (backendCohort, idx) => {
 };
 
 /* ─────────────────────────────────────────────────────────────────────────
-   EDITORIAL PROGRAM CARD
+   ORIGINAL EXACT COHORT CARD DESIGN (Matching user screenshot)
    ───────────────────────────────────────────────────────────────────────── */
 function CohortCard({ cohort }) {
-  const isSoldOut = cohort.isSoldOut || (cohort.seatsRemaining !== undefined && cohort.seatsRemaining <= 0);
-  const currentPrice = cohort.currentPricing ? cohort.currentPricing.price : cohort.price;
-  const currentTierName = cohort.currentPricing ? cohort.currentPricing.name : 'Founding Seats';
-  const isFoundingActive = currentTierName.toLowerCase().includes('founding') && !isSoldOut;
+  const Icon = cohort.icon || Cpu;
+  const toolsText =
+    cohort.tools && cohort.tools.length > 3
+      ? `${cohort.tools.slice(0, 3).join(', ')} +${cohort.tools.length - 3} more`
+      : cohort.tools ? cohort.tools.join(', ') : '';
 
-  const foundingSeatsLeft = cohort.currentPricing ? cohort.currentPricing.seatsRemaining : cohort.seatsRemaining;
-  const seatsRemaining = cohort.seatsRemaining !== undefined ? cohort.seatsRemaining : 70;
-
-  const foundingPrice = cohort.pricingTiers && cohort.pricingTiers[0] ? cohort.pricingTiers[0].price : 499;
-  const regularPrice = cohort.pricingTiers && cohort.pricingTiers[1] ? cohort.pricingTiers[1].price : 599;
-
-  const isWebDev = cohort.slug === 'webdevxai' || cohort.slug === 'full-stack-batch-1';
+  const totalSeats = Number(cohort.totalSeats || cohort.total_seats || 70);
+  const seatsRemaining = cohort.seatsRemaining !== undefined && cohort.seatsRemaining !== null
+    ? Number(cohort.seatsRemaining)
+    : totalSeats;
+  const isSoldOut = cohort.isSoldOut || seatsRemaining <= 0;
+  
+  const currentPrice = cohort.currentPricing ? cohort.currentPricing.price : (cohort.price || 499);
+  const currentTierName = cohort.currentPricing ? cohort.currentPricing.name : 'Standard';
+  const seatsLeftInTier = cohort.currentPricing && cohort.currentPricing.seatsRemaining !== undefined
+    ? cohort.currentPricing.seatsRemaining
+    : seatsRemaining;
 
   return (
     <motion.div variants={cardEntranceVariants} className="h-full">
-      <div className="h-full flex flex-col justify-between rounded-2xl border border-black/12 bg-white overflow-hidden p-6 sm:p-8 space-y-6 shadow-sm hover:border-black/30 transition-all duration-300">
-        
-        {/* 1. Header: Program Number + Enrolling Status */}
-        <div className="flex items-center justify-between border-b border-black/10 pb-4 font-mono">
-          <span className="text-xs font-bold uppercase tracking-widest text-black/50">
-            PROGRAM {cohort.number}
+      <motion.div
+        initial="rest"
+        whileHover="hover"
+        animate="rest"
+        variants={cardHoverVariants}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="h-full flex flex-col rounded-2xl border border-black/12 bg-white overflow-hidden"
+      >
+        {/* Header strip */}
+        <div className="flex items-center justify-between px-6 sm:px-7 py-3.5 border-b border-black/10">
+          <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-black/70 font-mono">
+            {cohort.flagship || 'FLAGSHIP 01'}
           </span>
-          <span className={`inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest ${isSoldOut ? 'text-red-600' : 'text-[#15803D]'}`}>
-            <span className={`w-2 h-2 rounded-full ${isSoldOut ? 'bg-red-600' : 'bg-[#22C55E] animate-pulse'}`} />
-            {isSoldOut ? 'SOLD OUT' : 'ENROLLING NOW'}
+          <span className={`flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] font-mono ${isSoldOut ? 'text-black/50' : 'text-[#090909]'}`}>
+            <motion.span
+              className={`w-1.5 h-1.5 rounded-full ${isSoldOut ? 'bg-black/30' : 'bg-black'}`}
+              animate={{ opacity: isSoldOut ? 1 : [1, 0.25, 1] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            {isSoldOut ? 'SOLD OUT' : `${currentTierName.toUpperCase()} — ₹${currentPrice}`}
           </span>
         </div>
 
-        {/* 2. Program Title (PRIMARY VISUAL FOCUS) */}
-        <div className="space-y-2">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#090909] font-sans tracking-tight leading-tight">
-            {cohort.title}
-          </h2>
-          <p className="text-xs sm:text-sm text-black/60 font-sans leading-relaxed">
-            {cohort.description}
-          </p>
-        </div>
-
-        {/* 3. Program Artwork Diagram */}
-        <div className="py-2">
-          {isWebDev ? <WebDevDiagram /> : <CyberDiagram />}
-        </div>
-
-        {/* 4. Technologies & Format Specs */}
-        <div className="space-y-2.5 font-mono text-xs border-t border-black/10 pt-4">
-          <div className="flex justify-between items-center text-black/60">
-            <span className="uppercase text-[10px] font-bold tracking-wider text-black/40">STACK</span>
-            <span className="font-bold text-[#090909] text-right truncate max-w-[240px]">
-              {cohort.tools && cohort.tools.length > 0 ? cohort.tools.slice(0, 4).join(' · ') : 'Cursor · Claude · Supabase'}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-black/60">
-            <span className="uppercase text-[10px] font-bold tracking-wider text-black/40">FORMAT</span>
-            <span className="font-bold text-[#090909]">4 Weeks Intensive · Live Engineering</span>
-          </div>
-        </div>
-
-        {/* 5. Pricing & Seat Availability Block (Restrained, Editorial) */}
-        <div className="py-3 px-4 rounded-xl bg-[#F8F9FA] border border-black/10 font-mono text-xs space-y-2.5">
-          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
-            <span>CAPACITY & PRICING</span>
-            <span className="text-[#15803D]">{cohort.totalSeats || 70} SEATS TOTAL</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className={`p-2.5 rounded-lg border transition-all ${isFoundingActive ? 'bg-white border-black/20 text-[#090909] shadow-xs' : 'bg-black/5 border-transparent text-black/40 line-through'}`}>
-              <span className="text-[9px] uppercase font-bold text-black/40 block tracking-wider">FOUNDING TIER</span>
-              <span className="text-sm font-extrabold block">₹{foundingPrice}</span>
-              <span className="text-[9px] text-black/50 block font-sans">
-                {isFoundingActive ? `${foundingSeatsLeft} seats remaining` : 'Claimed'}
-              </span>
+        <div className="flex-1 flex flex-col justify-between gap-6 px-6 sm:px-7 py-6">
+          <div className="space-y-5">
+            {/* Icon + title */}
+            <div className="flex items-center gap-4">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 flex items-center justify-center">
+                <span className="absolute inset-0 border border-black/15" />
+                <span className="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-black" />
+                <span className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-black" />
+                <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-black" strokeWidth={1.6} />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-[#0A0A0A] font-product-sans leading-tight truncate">
+                  {cohort.title}
+                </h2>
+                <p className="text-xs text-black/50 font-product-sans truncate">{cohort.tagline}</p>
+              </div>
             </div>
 
-            <div className={`p-2.5 rounded-lg border transition-all ${!isFoundingActive && !isSoldOut ? 'bg-white border-black/20 text-[#090909] shadow-xs' : 'bg-black/5 border-transparent text-black/40'}`}>
-              <span className="text-[9px] uppercase font-bold text-black/40 block tracking-wider">STANDARD TIER</span>
-              <span className="text-sm font-extrabold block">₹{regularPrice}</span>
-              <span className="text-[9px] text-black/50 block font-sans">
-                {isSoldOut ? 'Sold out' : (isFoundingActive ? 'Unlocks after founding' : `${seatsRemaining} seats remaining`)}
-              </span>
-            </div>
+            <p className="text-sm text-black/70 leading-relaxed font-product-sans">{cohort.description}</p>
+
+            {/* Spec sheet — label / value rows */}
+            <dl className="border-t border-black/10">
+              <div className="flex items-center justify-between py-2.5 border-b border-black/10 font-mono">
+                <dt className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-black/40">
+                  <Clock className="w-3.5 h-3.5 text-black/40" strokeWidth={1.8} />
+                  Availability
+                </dt>
+                <dd className={`text-xs sm:text-sm font-bold ${isSoldOut ? 'text-black/50' : 'text-[#090909]'}`}>
+                  {isSoldOut ? 'SOLD OUT' : `${seatsRemaining} of ${totalSeats} seats left`}
+                </dd>
+              </div>
+
+              {!isSoldOut && (
+                <div className="flex items-center justify-between py-2.5 border-b border-black/10 font-mono">
+                  <dt className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-black/40">
+                    Tier Status
+                  </dt>
+                  <dd className="text-xs sm:text-sm font-bold text-[#0A0A0A]">
+                    Only {seatsLeftInTier} {currentTierName} Left
+                  </dd>
+                </div>
+              )}
+
+              {cohort.stats && cohort.stats.map((stat, i) => {
+                const StatIcon = stat.icon || Clock;
+                return (
+                  <div
+                    key={stat.label + i}
+                    className="flex items-center justify-between py-2.5 border-b border-black/10 font-mono"
+                  >
+                    <dt className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-black/40">
+                      <StatIcon className="w-3.5 h-3.5 text-black/40" strokeWidth={1.8} />
+                      Format
+                    </dt>
+                    <dd className="text-xs sm:text-sm font-bold text-[#0A0A0A]">{stat.label}</dd>
+                  </div>
+                );
+              })}
+              {toolsText && (
+                <div className="flex items-start justify-between py-2.5 gap-4 font-mono">
+                  <dt className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-black/40 pt-0.5">
+                    Stack
+                  </dt>
+                  <dd className="text-xs sm:text-sm font-bold text-[#0A0A0A] text-right">{toolsText}</dd>
+                </div>
+              )}
+            </dl>
           </div>
 
-          <div className="text-[10px] text-black/70 pt-0.5 text-center font-bold font-sans">
+          {/* ACTIONS */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+            <Link to={cohort.curriculumPath} className="flex-1">
+              <motion.div
+                whileTap={{ scale: 0.97 }}
+                className="w-full py-3.5 px-5 bg-[#0A0A0A] text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 min-h-[44px] touch-action-manipulation"
+              >
+                <span>{cohort.ctaLabel || 'VIEW CURRICULUM'}</span>
+                <motion.span variants={arrowVariants} className="inline-flex">
+                  <ArrowRight className="w-4 h-4" />
+                </motion.span>
+              </motion.div>
+            </Link>
+
             {isSoldOut ? (
-              <span className="text-red-600">Registration closed · 70/70 Seats Filled</span>
-            ) : isFoundingActive ? (
-              <span className="text-[#090909]">Founding access · {foundingSeatsLeft} seats remaining at ₹{foundingPrice}</span>
+              <div className="flex-1">
+                <div className="w-full py-3.5 px-5 text-black/50 font-bold text-xs text-center border border-black/20 bg-black/5 flex items-center justify-center min-h-[44px]">
+                  SOLD OUT
+                </div>
+              </div>
             ) : (
-              <span className="text-[#090909]">Standard access · {seatsRemaining} seats remaining at ₹{regularPrice}</span>
+              <Link to={cohort.registerPath} className="flex-1">
+                <motion.div
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full py-3.5 px-5 text-[#0A0A0A] font-bold text-xs text-center border border-black/20 hover:bg-[#090909] hover:border-[#090909] hover:text-white transition-colors flex items-center justify-center min-h-[44px] touch-action-manipulation"
+                >
+                  Register · ₹{Number(currentPrice).toLocaleString('en-IN')}
+                </motion.div>
+              </Link>
             )}
           </div>
         </div>
-
-        {/* 6. CTA */}
-        <div className="pt-2 flex gap-3">
-          <Link to={cohort.curriculumPath} className="flex-1">
-            <div className="w-full py-3.5 px-4 rounded-xl bg-[#090909] text-white hover:bg-[#22C55E] hover:text-black font-extrabold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2 min-h-[44px]">
-              <span>ENTER PROGRAM</span>
-              <span>→</span>
-            </div>
-          </Link>
-          {!isSoldOut && (
-            <Link to={cohort.registerPath} className="flex-1">
-              <div className="w-full py-3.5 px-4 rounded-xl bg-white border border-black/20 text-[#090909] hover:border-black font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center min-h-[44px]">
-                <span>ENROLL · ₹{currentPrice}</span>
-              </div>
-            </Link>
-          )}
-        </div>
-
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -267,7 +237,7 @@ export default function CohortsListPage() {
         setLoadingState('loading');
         const result = await cohortService.getActiveCohorts();
         if (result.success && Array.isArray(result.data)) {
-          const merged = result.data.map((c, idx) => mergeCohortData(c, idx));
+          const merged = result.data.map((c) => mergeCohortData(c));
           setCohorts(merged);
           setLoadingState('ready');
         } else {
@@ -284,7 +254,7 @@ export default function CohortsListPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-[#22C55E] selection:text-black flex flex-col relative"
+      className="font-product-sans min-h-screen bg-[#FAFAFA] text-[#090909] selection:bg-black selection:text-white flex flex-col relative"
       style={{ fontFamily: FONT_STACK }}
     >
       <Navbar />
@@ -294,27 +264,27 @@ export default function CohortsListPage() {
         {/* Header Section */}
         <div className="space-y-4 pb-12 sm:pb-16 border-b border-black/10">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
+            <span className="w-2 h-2 rounded-full bg-black" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-black/50">
-              TURING WINGS ACADEMY
+              FLAGSHIP COHORTS
             </span>
           </div>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#090909] tracking-tight leading-tight">
-            Engineering Programs
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#090909] font-product-sans tracking-tight leading-tight">
+            Engineering Cohorts
           </h1>
-          <p className="text-sm sm:text-base text-black/70 max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-black/70 max-w-xl leading-relaxed font-product-sans">
             Intensive, project-driven engineering cohorts designed to turn developers into AI-native builders and security engineers.
           </p>
         </div>
 
-        {/* Programs Grid */}
+        {/* Cohorts Grid */}
         {loadingState === 'loading' ? (
-          <div className="py-24 text-center space-y-4">
+          <div className="py-24 text-center space-y-4 font-product-sans">
             <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="font-mono text-xs font-bold uppercase tracking-widest text-black/40">Loading engineering programs...</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-widest text-black/40">Loading active cohorts...</p>
           </div>
         ) : loadingState === 'error' ? (
-          <div className="my-12 p-8 rounded-3xl bg-red-50 border border-red-200 text-center space-y-4 max-w-md mx-auto">
+          <div className="my-12 p-8 rounded-3xl bg-red-50 border border-red-200 text-center space-y-4 max-w-md mx-auto font-product-sans">
             <AlertCircle className="w-8 h-8 text-red-600 mx-auto" />
             <p className="text-xs font-bold text-red-700">{errorMessage}</p>
             <button onClick={() => window.location.reload()} className="px-5 py-2.5 rounded-xl bg-black text-white text-xs font-bold uppercase tracking-wider">

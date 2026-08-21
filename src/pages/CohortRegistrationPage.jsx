@@ -880,7 +880,7 @@ export default function CohortRegistrationPage() {
               <div className="hidden lg:flex items-center gap-3 pt-4 text-xs">
                 <button
                   onClick={() => setCurrentPhase(1)}
-                  className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full border bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D] hover:bg-[#22C55E]/25 transition-all"
+                  className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full border bg-black/5 border-black/20 text-[#090909] hover:bg-black/10 transition-all"
                 >
                   <span>1. Student Details</span>
                   <Check className="w-3.5 h-3.5" />
@@ -894,9 +894,9 @@ export default function CohortRegistrationPage() {
               <button
                 type="button"
                 onClick={() => setCurrentPhase(1)}
-                className="cursor-pointer w-full lg:w-auto px-5 py-3 rounded-xl bg-white border border-black/15 text-xs font-bold text-[#090909] hover:bg-[#22C55E]/15 hover:border-[#22C55E] transition-all flex items-center justify-center gap-2 lg:mt-2"
+                className="cursor-pointer w-full lg:w-auto px-5 py-3 rounded-xl bg-white border border-black/15 text-xs font-bold text-[#090909] hover:bg-black/5 hover:border-black transition-all flex items-center justify-center gap-2 lg:mt-2"
               >
-                <Edit3 className="w-4 h-4 text-[#15803D]" />
+                <Edit3 className="w-4 h-4 text-[#090909]" />
                 <span>Edit Details</span>
               </button>
             </motion.div>
@@ -908,7 +908,7 @@ export default function CohortRegistrationPage() {
               className="lg:col-span-7 lg:pt-2 space-y-7 sm:space-y-9 lg:space-y-10"
             >
               {errorMessage && (
-                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-bold flex items-center gap-2">
+                <div className="p-3.5 rounded-xl bg-black/5 border border-black/20 text-black text-xs font-bold flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
@@ -917,18 +917,18 @@ export default function CohortRegistrationPage() {
               {/* ITEM ROW */}
               <div className="flex items-start justify-between gap-3 sm:gap-4 pb-5 sm:pb-6 border-b-2 border-[#090909]">
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FAFAFA] border border-black/10 flex items-center justify-center text-[#15803D] shrink-0">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FAFAFA] border border-black/10 flex items-center justify-center text-[#090909] shrink-0">
                     <CohortIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-bold uppercase text-[#15803D]">{activeCohortMeta.badge}</span>
+                    <span className="text-[10px] font-bold uppercase text-black/60">{activeCohortMeta.badge}</span>
                     <h3 className="text-sm sm:text-lg font-extrabold text-[#090909] truncate">{cohort?.title}</h3>
                     <p className="text-[11px] sm:text-xs text-black/50">{activeCohortMeta.tagline}</p>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
                   <span className="text-lg sm:text-2xl font-extrabold text-[#090909] block">₹{cohort?.currentPricing ? cohort.currentPricing.price : cohort?.price}</span>
-                  <span className="text-[10px] font-mono text-[#15803D] font-bold block">{cohort?.currentPricing ? cohort.currentPricing.name : 'Standard'}</span>
+                  <span className="text-[10px] font-mono text-black/60 font-bold block">{cohort?.currentPricing ? cohort.currentPricing.name : 'Standard'}</span>
                 </div>
               </div>
 
@@ -936,11 +936,11 @@ export default function CohortRegistrationPage() {
               <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-black/10 space-y-2.5 font-mono text-xs">
                 <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black/50 border-b border-black/10 pb-1.5">
                   <span>DYNAMIC PRICING STRUCTURE</span>
-                  <span className="text-[#15803D]">70 TOTAL SEATS</span>
+                  <span className="text-[#090909]">70 TOTAL SEATS</span>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
+                  <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? 'bg-black/5 border-black/20 text-[#090909]' : 'bg-black/5 border-black/10 text-black/40 line-through'}`}>
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-current" />
                       <span className="font-bold text-[11px]">First 30 Seats (Founding)</span>
@@ -948,7 +948,7 @@ export default function CohortRegistrationPage() {
                     <span className="font-extrabold text-xs">₹499</span>
                   </div>
 
-                  <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? 'bg-[#22C55E]/15 border-[#22C55E]/40 text-[#15803D]' : 'bg-black/5 border-black/10 text-black/50'}`}>
+                  <div className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${!(cohort?.currentPricing?.name || '').toLowerCase().includes('founding') ? 'bg-black/5 border-black/20 text-[#090909]' : 'bg-black/5 border-black/10 text-black/50'}`}>
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-current" />
                       <span className="font-bold text-[11px]">Remaining 40 Seats</span>

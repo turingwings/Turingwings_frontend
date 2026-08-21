@@ -25,8 +25,8 @@ import openclawLogo from '../assets/tech_icons/openclaw-dark-removebg-preview.pn
 export const COHORTS_METADATA = {
   'webdevxai': {
     flagship: 'FLAGSHIP 01',
-    accent: '#22C55E',
-    accentSoft: 'rgba(34,197,94,0.1)',
+    accent: '#000000',
+    accentSoft: 'rgba(0,0,0,0.05)',
     icon: Cpu,
     tagline: 'Become an AI-Native Software Builder',
     stats: [
@@ -49,7 +49,7 @@ export const COHORTS_METADATA = {
     durationLabel: '4 Weeks Live',
     projectsLabel: '1 Evolving SaaS Product',
     launchDateText: 'Launch — August 25, 2026',
-    themeColor: '#15803D',
+    themeColor: '#090909',
     weeksData: [
       {
         week: 1,
@@ -237,8 +237,8 @@ export const COHORTS_METADATA = {
   },
   'cyberxai': {
     flagship: 'FLAGSHIP 02',
-    accent: '#0284C7',
-    accentSoft: 'rgba(2,132,199,0.1)',
+    accent: '#000000',
+    accentSoft: 'rgba(0,0,0,0.05)',
     icon: ShieldCheck,
     tagline: 'Master cybersecurity with AI-powered security',
     stats: [
@@ -262,7 +262,7 @@ export const COHORTS_METADATA = {
     durationLabel: '4 Weeks Live',
     labStandardLabel: 'MCP Agent Framework',
     launchDateText: 'Launch — September 01, 2026',
-    themeColor: '#0284C7',
+    themeColor: '#090909',
     securityMatrix: [
       { code: 'SEC-01', title: 'Network Recon', desc: 'OSI, TCP/IP & Kali Linux setup', icon: Wifi },
       { code: 'SEC-02', title: 'Web App Pentest', desc: 'Burp Suite & OWASP Top 10', icon: Bug },

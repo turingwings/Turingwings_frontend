@@ -1,30 +1,42 @@
 import React, { useState } from 'react'
-import { Code2, Box, Network, Lock, ArrowUpRight } from 'lucide-react'
+import { Compass, Palette, Network, Cpu, CheckCircle2, Send, ArrowUpRight } from 'lucide-react'
 
 const workflows = [
   {
     num: '01',
-    title: 'AI-native software development',
-    desc: 'Build full products with AI integrated into every step.',
-    icon: Code2,
+    title: 'DISCOVER',
+    desc: 'Turn an idea into a direction.',
+    icon: Compass,
   },
   {
     num: '02',
-    title: 'AI-assisted product design',
-    desc: 'Turn early thinking into interfaces worth using.',
-    icon: Box,
+    title: 'DESIGN',
+    desc: 'Shape the experience, system, or story.',
+    icon: Palette,
   },
   {
     num: '03',
-    title: 'AI coding workflows',
-    desc: 'Learn to plan, generate, review and ship code.',
+    title: 'ORCHESTRATE',
+    desc: 'Connect models, tools, agents, and workflows.',
     icon: Network,
   },
   {
     num: '04',
-    title: 'Authentication & payments',
-    desc: 'Make production-ready apps people can trust.',
-    icon: Lock,
+    title: 'BUILD',
+    desc: 'Turn intelligence into something real.',
+    icon: Cpu,
+  },
+  {
+    num: '05',
+    title: 'TEST',
+    desc: 'Break it, evaluate it, and improve it.',
+    icon: CheckCircle2,
+  },
+  {
+    num: '06',
+    title: 'SHIP',
+    desc: 'Put it in the hands of real people.',
+    icon: Send,
   },
 ]
 
@@ -65,20 +77,19 @@ export default function BuildWithAI() {
           <div className="lg:col-span-6 space-y-4 sm:space-y-6 text-left">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-black/50 uppercase">
               <span className="px-2 py-0.5 rounded bg-black/5 border border-black/10 text-black">03</span>
-              <span>/ ARCHITECTURE & WORKFLOW</span>
+              <span>/ HOW WE BUILD</span>
             </div>
 
             <h2 className="text-2xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#090909] leading-[1.08] font-product-sans break-words">
-              Learn by making <br />
+              Ideas become <br />
               <span className="text-black/45 font-serif italic relative inline-block">
-                the future
+                things that work
                 <span className="absolute left-0 bottom-1 w-full h-[2px] bg-black/20 rounded-full" />
-              </span>{' '}
-              tangible.
+              </span>.
             </h2>
 
             <p className="text-xs sm:text-base text-black/60 max-w-lg leading-relaxed font-product-sans">
-              8 hands-on AI-first engineering workflows structured like modern production stacks.
+              Turing Wings is built around experimentation, orchestration, creation, and shipping — not passive learning.
             </p>
           </div>
 
@@ -87,10 +98,10 @@ export default function BuildWithAI() {
             
             {/* 3D Stack Container */}
             <div className="isometric-deck relative w-[260px] sm:w-[350px] lg:w-[410px] h-[160px] sm:h-[210px]">
-              {workflows.map((item, idx) => {
+              {workflows.slice(0, 4).map((item, idx) => {
                 const IconComponent = item.icon
                 const isActive = activeTab === idx
-                const relativeIndex = (idx - activeTab + 4) % 4
+                const relativeIndex = (idx - (activeTab % 4) + 4) % 4
                 const zIndex = 40 - relativeIndex * 10
                 const translateZ = (3 - relativeIndex) * 28
                 const translateY = relativeIndex * 16
@@ -131,8 +142,8 @@ export default function BuildWithAI() {
           </div>
         </div>
 
-        {/* DESKTOP VIEW: 4-COLUMN HORIZONTAL GRID OF FEATURE CARDS (Visible on Desktop & Tablet) */}
-        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* DESKTOP VIEW: 6-COLUMN GRID OF FEATURE CARDS */}
+        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {workflows.map((item, idx) => {
             const IconComponent = item.icon
             const isActive = activeTab === idx
@@ -141,7 +152,7 @@ export default function BuildWithAI() {
               <div
                 key={item.num}
                 onClick={() => setActiveTab(idx)}
-                className={`bg-white border rounded-2xl p-5 sm:p-6 text-left flex flex-col justify-between gap-6 cursor-pointer transition-all duration-300 min-h-[44px] ${
+                className={`bg-white border rounded-2xl p-5 sm:p-6 text-left flex flex-col justify-between gap-6 cursor-pointer transition-all duration-300 min-h-[160px] ${
                   isActive
                     ? 'border-[#090909] shadow-xl ring-1 ring-black/10 translate-y-[-4px]'
                     : 'border-black/10 hover:border-black/30 hover:shadow-md'
@@ -158,8 +169,8 @@ export default function BuildWithAI() {
                 </div>
 
                 {/* Content: Title & Short Copy */}
-                <div className="space-y-2">
-                  <h3 className="text-sm sm:text-base font-extrabold text-[#090909] tracking-tight leading-snug">
+                <div className="space-y-1.5">
+                  <h3 className="text-sm sm:text-base font-extrabold text-[#090909] tracking-tight uppercase">
                     {item.title}
                   </h3>
                   <p className="text-xs text-black/60 leading-relaxed font-product-sans">
@@ -171,7 +182,7 @@ export default function BuildWithAI() {
           })}
         </div>
 
-        {/* MOBILE VIEW: VERTICAL STACK CARDS (Visible Exclusively on Mobile Screens) */}
+        {/* MOBILE VIEW: VERTICAL STACK CARDS */}
         <div className="flex sm:hidden flex-col gap-3">
           {workflows.map((item, idx) => {
             const IconComponent = item.icon
@@ -192,9 +203,12 @@ export default function BuildWithAI() {
                     {item.num}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="text-xs font-bold text-[#090909] tracking-tight truncate">
+                    <h3 className="text-xs font-bold text-[#090909] tracking-tight uppercase">
                       {item.title}
                     </h3>
+                    <p className="text-[10px] text-black/50 font-product-sans truncate">
+                      {item.desc}
+                    </p>
                   </div>
                 </div>
 
@@ -210,7 +224,7 @@ export default function BuildWithAI() {
         <div className="pt-2 sm:pt-4 flex justify-center">
           <a
             href="#cohorts"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-7 py-3 text-xs font-bold text-[#090909] hover:bg-[#090909] hover:text-white transition-all shadow-xs font-mono min-h-[44px] touch-action-manipulation"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-7 py-3 text-xs font-bold text-[#090909] hover:bg-[#090909] hover:text-white transition-all shadow-xs font-mono min-h-[44px] touch-action-manipulation uppercase tracking-wider"
           >
             <span>Explore all workflows</span>
             <ArrowUpRight className="w-4 h-4" />
